@@ -28,11 +28,12 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
+require_relative 'end_uses'
+require_relative 'end_use'
+require_relative 'date'
+require_relative 'validator'
+
 require 'json'
-require 'urbanopt/scenario/default_reports/end_uses'
-require 'urbanopt/scenario/default_reports/end_use'
-require 'urbanopt/scenario/default_reports/date'
-require 'urbanopt/scenario/default_reports/validator'
 require 'json-schema'
 
 module URBANopt

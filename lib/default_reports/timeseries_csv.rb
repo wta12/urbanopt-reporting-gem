@@ -28,11 +28,12 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
+require_relative 'validator'
+require_relative 'logger'
+
 require 'csv'
 require 'pathname'
 require 'json-schema'
-require 'urbanopt/scenario/default_reports/validator'
-require 'urbanopt/scenario/default_reports/logger'
 
 module URBANopt
   module Scenario

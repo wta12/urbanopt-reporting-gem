@@ -28,8 +28,9 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
+require_relative  'validator'
+
 require 'json'
-require 'urbanopt/scenario/default_reports/validator'
 require 'json-schema'
 
 module URBANopt

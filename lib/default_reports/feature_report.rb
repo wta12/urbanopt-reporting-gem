@@ -28,17 +28,16 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
-require 'urbanopt/scenario/default_reports/construction_cost'
-require 'urbanopt/scenario/default_reports/program'
-require 'urbanopt/scenario/default_reports/location'
-require 'urbanopt/scenario/default_reports/reporting_period'
-require 'urbanopt/scenario/default_reports/timeseries_csv'
-require 'urbanopt/scenario/default_reports/distributed_generation'
-require 'urbanopt/scenario/default_reports/power_distribution'
+require_relative  'construction_cost'
+require_relative  'program'
+require_relative  'location'
+require_relative  'reporting_period'
+require_relative  'timeseries_csv'
+require_relative  'distributed_generation'
+require_relative  'power_distribution'
+require_relative  'validator'
 
-require 'urbanopt/scenario/default_reports/validator'
 require 'json-schema'
-
 require 'json'
 
 module URBANopt
