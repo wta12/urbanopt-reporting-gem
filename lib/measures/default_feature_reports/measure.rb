@@ -28,7 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
-require_relative '../../default_reports'
+require 'urbanopt/reporting/default_reports'
 require 'csv'
 require 'benchmark'
 require 'logger'
@@ -300,7 +300,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     epw_file = epw_file.get
 
     # create output feature_report report object
-    feature_report = URBANopt::Scenario::DefaultReports::FeatureReport.new
+    feature_report = URBANopt::Reporting::DefaultReports::FeatureReport.new
     feature_report.id = feature_id
     feature_report.name = feature_name
     feature_report.feature_type = feature_type
@@ -311,7 +311,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     feature_report.simulation_status = 'Complete'
 
-    feature_report.reporting_periods << URBANopt::Scenario::DefaultReports::ReportingPeriod.new
+    feature_report.reporting_periods << URBANopt::Reporting::DefaultReports::ReportingPeriod.new
 
     ###########################################################################
     ##

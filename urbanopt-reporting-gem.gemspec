@@ -1,7 +1,7 @@
 
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'version'
+require 'urbanopt/reporting/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'urbanopt-reporting'
@@ -29,8 +29,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'json-schema'
   spec.add_dependency 'json_pure'
-  spec.add_dependency 'openstudio-common-measures', '~> 0.2.0'
-  spec.add_dependency 'openstudio-model-articulation', '~> 0.2.0'
-  spec.add_dependency 'urbanopt-core', '~> 0.3.0'
+  spec.add_dependency 'openstudio-extension', '~> 0.2.3'
 
 end

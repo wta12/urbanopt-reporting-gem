@@ -28,69 +28,35 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
-require 'json'
+require 'urbanopt/reporting/version'
+require 'openstudio/extension'
 
 module URBANopt
   module Reporting
-    module DefaultReports
-      class Validator
-        @@schema = nil
+    class Extension < OpenStudio::Extension::Extension
+      def initialize # :nodoc:
+        @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..', '..'))
+      end
 
-        # Initialize the root directory
-        def initialize
-          super
+      ##
+      # Returns the absolute path of the measures or returns nil, in case no measures are
+      # added. It can be used while configuring OSWs.
+      def measures_dir
+        return File.absolute_path(File.join(@root_dir, 'lib/measures'))
+      end
 
-          @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
+      ##
+      # The directory containign relevant files such as weather data, design days, etc.
+      # The method returns nil if no files are present. It is used while configuring OSWs.
+      def files_dir
+        return nil
+      end
 
-          @instance_lock = Mutex.new
-          @@schema ||= schema
-        end
-
-        # Return the absolute path of the default reports files
-        def files_dir
-          File.absolute_path(File.join(@root_dir, 'lib/default_reports/'))
-        end
-
-        # return path to schema file
-        def schema_file
-          File.join(files_dir, 'schema/scenario_schema.json')
-        end
-
-        # return schema
-        def schema
-          @instance_lock.synchronize do
-            if @@schema.nil?
-              File.open(schema_file, 'r') do |f|
-                @@schema = JSON.parse(f.read, symbolize_names: true)
-              end
-            end
-          end
-
-          @@schema
-        end
-
-        ##
-        # validate data against schema
-        ##
-        # [parameters:]
-        # +schema+ - _Hash_ - A hash of the JSON scenario_schema.
-        # +data+ - _Hash_ - A hash of the data to be validated against scenario_schema.
-        ##
-        def validate(schema, data)
-          JSON::Validator.fully_validate(schema, data)
-        end
-
-        # check if the schema is valid
-        def schema_valid?
-          metaschema = JSON::Validator.validator_for_name('draft6').metaschema
-          JSON::Validator.validate(metaschema, @@schema)
-        end
-
-        # return detailed schema validation errors
-        def schema_validation_errors
-          metaschema = JSON::Validator.validator_for_name('draft6').metaschema
-          JSON::Validator.fully_validate(metaschema, @@schema)
-        end
+      # The directory containing common files like copyright and license notices which are used to update measures and other code.
+      # This method will only be applied to measures in the current repository and
+      # returns the absolute path of the +doc_templates_dir+ or nil if there is none.
+      def doc_templates_dir
+        return File.absolute_path(File.join(@root_dir, 'doc_templates'))
       end
     end
   end
