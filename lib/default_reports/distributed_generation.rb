@@ -36,7 +36,7 @@ require_relative  'storage'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Onsite distributed generation system (i.e. SolarPV, Wind, Storage, Generator) design attributes and financial metrics.
@@ -223,7 +223,7 @@ module URBANopt
           @@schema ||= @@validator.schema
 
           # initialize @@logger
-          @@logger ||= URBANopt::Scenario::DefaultReports.logger
+          @@logger ||= URBANopt::Reporting::DefaultReports.logger
         end
 
         ##

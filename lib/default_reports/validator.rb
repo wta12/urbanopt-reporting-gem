@@ -31,7 +31,7 @@
 require 'json'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       class Validator
         @@schema = nil
@@ -40,7 +40,7 @@ module URBANopt
         def initialize
           super
 
-          @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..', '..', '..'))
+          @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..'))
 
           @instance_lock = Mutex.new
           @@schema ||= schema
@@ -48,7 +48,7 @@ module URBANopt
 
         # Return the absolute path of the default reports files
         def files_dir
-          File.absolute_path(File.join(@root_dir, 'lib/urbanopt/scenario/default_reports/'))
+          File.absolute_path(File.join(@root_dir, 'lib/default_reports/'))
         end
 
         # return path to schema file

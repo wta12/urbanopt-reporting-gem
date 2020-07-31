@@ -34,7 +34,7 @@ require 'json'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # power_distributio include eletrical power distribution systems information.

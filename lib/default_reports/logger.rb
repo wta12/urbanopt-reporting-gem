@@ -31,7 +31,7 @@
 require 'logger'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       @@logger = Logger.new(STDOUT)
       ##

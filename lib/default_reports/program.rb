@@ -34,7 +34,7 @@ require 'json-schema'
 require 'json'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Program includes all building program related information.

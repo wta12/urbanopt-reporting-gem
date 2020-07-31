@@ -42,7 +42,7 @@ require 'json-schema'
 require 'pathname'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # ScenarioReport can generate two types of reports from a scenario.
@@ -103,7 +103,7 @@ module URBANopt
           @@schema ||= @@validator.schema
 
           # initialize @@logger
-          @@logger ||= URBANopt::Scenario::DefaultReports.logger
+          @@logger ||= URBANopt::Reporting::DefaultReports.logger
         end
 
         ##

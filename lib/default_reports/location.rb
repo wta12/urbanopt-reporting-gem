@@ -33,7 +33,7 @@ require 'json-schema'
 require 'json'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Location include all location information.

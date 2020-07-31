@@ -32,7 +32,7 @@ require 'json'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Onsite wind system attributes

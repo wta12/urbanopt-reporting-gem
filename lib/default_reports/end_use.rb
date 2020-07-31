@@ -32,7 +32,7 @@ require_relative  'validator'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Enduse class all enduse energy consumption results.

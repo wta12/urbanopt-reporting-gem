@@ -33,7 +33,7 @@ require 'json-schema'
 require 'json'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Date class include information of simulation run date.

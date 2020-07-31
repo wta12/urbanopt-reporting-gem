@@ -33,7 +33,7 @@ require_relative  'validator'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Enduses class inlclude results for each fuel type.

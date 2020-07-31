@@ -36,7 +36,7 @@ require 'pathname'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # TimeseriesCSV include timesries reults reported in a CSV file.
@@ -73,7 +73,7 @@ module URBANopt
           @@schema ||= @@validator.schema
 
           # initialize @@logger
-          @@logger ||= URBANopt::Scenario::DefaultReports.logger
+          @@logger ||= URBANopt::Reporting::DefaultReports.logger
         end
 
         ##

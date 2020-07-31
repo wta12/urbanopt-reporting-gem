@@ -41,7 +41,7 @@ require 'json-schema'
 require 'json'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # FeatureReport generates two types of reports in a simulation_dir.
