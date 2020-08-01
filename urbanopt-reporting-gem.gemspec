@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['rawad.elkontar@nrel.gov']
 
   spec.summary       = 'Library to report URBANopt results'
-  spec.description   = 'Library include scenario default reporting measure and scenrio defaults reports schema and classes'
+  spec.description   = 'Library include scenario default reporting measure and scenario defaults reports schema and classes'
   spec.homepage      = 'https://github.com/urbanopt'
 
   # Specify which files should be added to the gem when it is released.
