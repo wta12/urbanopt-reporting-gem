@@ -69,6 +69,23 @@ module URBANopt
           @@schema
         end
 
+        # get csv headers from csv schema
+        def csv_headers
+
+          # read scenario csv schema headers
+          scenario_csv_schema = open(File.expand_path('schema/scenario_csv_columns.txt', File.dirname(__FILE__))) # .read()
+
+          scenario_csv_schema_headers = []
+          File.readlines(scenario_csv_schema).each do |line|
+            l = line.delete("\n")
+            a = l.delete("\t")
+            scenario_csv_schema_headers << a
+          end
+          
+          return scenario_csv_schema_headers
+
+        end
+
         ##
         # validate data against schema
         ##
