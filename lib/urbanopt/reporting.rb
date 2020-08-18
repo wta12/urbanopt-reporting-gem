@@ -35,5 +35,3 @@
 require 'urbanopt/reporting/default_reports'
 require 'urbanopt/reporting/derived_extension'
 require 'urbanopt/reporting/version'
-
-

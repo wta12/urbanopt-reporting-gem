@@ -215,10 +215,10 @@ module URBANopt
           result[:distributed_generation] = @distributed_generation.to_hash if @distributed_generation
 
           result[:construction_costs] = []
-          @construction_costs.each { |cc| result[:construction_costs] << cc.to_hash } if @construction_costs
+          @construction_costs&.each { |cc| result[:construction_costs] << cc.to_hash }
 
           result[:reporting_periods] = []
-          @reporting_periods.each { |rp| result[:reporting_periods] << rp.to_hash } if @reporting_periods
+          @reporting_periods&.each { |rp| result[:reporting_periods] << rp.to_hash }
 
           # result[:feature_reports] = []
           # @feature_reports.each { |fr| result[:feature_reports] << fr.to_hash } if @feature_reports
