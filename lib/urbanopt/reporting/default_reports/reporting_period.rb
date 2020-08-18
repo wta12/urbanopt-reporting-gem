@@ -168,7 +168,7 @@ module URBANopt
           if @utility_costs.any?
             result[:utility_costs] = @utility_costs
             @utility_costs.each do |uc|
-              uc.delete_if { |k, v| v.nil? } if uc
+              uc&.delete_if { |k, v| v.nil? }
             end
           end
 
@@ -226,7 +226,7 @@ module URBANopt
 
           # merge end uses
           new_end_uses = new_period.end_uses
-          existing_period.end_uses.merge_end_uses!(new_end_uses) if existing_period.end_uses
+          existing_period.end_uses&.merge_end_uses!(new_end_uses)
 
           if existing_period.energy_production
             if existing_period.energy_production[:electricity_produced]
@@ -234,15 +234,11 @@ module URBANopt
             end
           end
 
-          if existing_period.utility_costs
-            # RK: this need to be updated
-            existing_period.utility_costs.each_with_index do |item, i|
-              existing_period.utility_costs[i][:fuel_type] = existing_period.utility_costs[i][:fuel_type]
-              existing_period.utility_costs[i][:total_cost] = add_values(existing_period.utility_costs[i][:total_cost], new_period.utility_costs[i][:total_cost])
-              existing_period.utility_costs[i][:usage_cost] = add_values(existing_period.utility_costs[i][:usage_cost], new_period.utility_costs[i][:usage_cost])
-              existing_period.utility_costs[i][:demand_cost] = add_values(existing_period.utility_costs[i][:demand_cost], new_period.utility_costs[i][:demand_cost])
-            end
-
+          existing_period.utility_costs&.each_with_index do |item, i|
+            existing_period.utility_costs[i][:fuel_type] = existing_period.utility_costs[i][:fuel_type]
+            existing_period.utility_costs[i][:total_cost] = add_values(existing_period.utility_costs[i][:total_cost], new_period.utility_costs[i][:total_cost])
+            existing_period.utility_costs[i][:usage_cost] = add_values(existing_period.utility_costs[i][:usage_cost], new_period.utility_costs[i][:usage_cost])
+            existing_period.utility_costs[i][:demand_cost] = add_values(existing_period.utility_costs[i][:demand_cost], new_period.utility_costs[i][:demand_cost])
           end
 
           if existing_period.comfort_result
@@ -255,7 +251,6 @@ module URBANopt
 
           return existing_period
         end
-        # rubocop: enable Metrics/AbcSize # :nodoc:
 
         ##
         # Merges multiple reporting periods together.

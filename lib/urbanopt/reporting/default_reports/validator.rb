@@ -40,7 +40,7 @@ module URBANopt
         def initialize
           super
 
-          @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..','..','..'))
+          @root_dir = File.absolute_path(File.join(File.dirname(__FILE__), '..', '..', '..', '..'))
 
           @instance_lock = Mutex.new
           @@schema ||= schema
@@ -71,7 +71,6 @@ module URBANopt
 
         # get csv headers from csv schema
         def csv_headers
-
           # read scenario csv schema headers
           scenario_csv_schema = open(File.expand_path('schema/scenario_csv_columns.txt', File.dirname(__FILE__))) # .read()
 
@@ -81,9 +80,8 @@ module URBANopt
             a = l.delete("\t")
             scenario_csv_schema_headers << a
           end
-          
-          return scenario_csv_schema_headers
 
+          return scenario_csv_schema_headers
         end
 
         ##
