@@ -960,7 +960,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # insert datetime header to names
     final_timeseries_names.insert(0, 'Datetime')
 
-    # rubocop: enable Metrics/BlockLength
     runner.registerInfo("new final_timeseries_names size: #{final_timeseries_names.size}")
 
     # Save the 'default_feature_reports.csv' file

@@ -42,5 +42,3 @@ require 'urbanopt/reporting/default_reports/distributed_generation'
 require 'urbanopt/reporting/default_reports/power_distribution'
 require 'urbanopt/reporting/default_reports/logger'
 require 'urbanopt/reporting/default_reports/validator'
-
-

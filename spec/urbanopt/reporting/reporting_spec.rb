@@ -28,7 +28,6 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
-
 require_relative '../../spec_helper'
 
 RSpec.describe URBANopt::Reporting do

@@ -148,7 +148,7 @@ module URBANopt
           if @building_types.any?
             result[:building_types] = @building_types
             @building_types.each do |bt|
-              bt.delete_if { |k, v| v.nil? } if bt
+              bt&.delete_if { |k, v| v.nil? }
             end
           end
 
@@ -259,7 +259,6 @@ module URBANopt
           @roof_area[:available_roof_area] = add_values(@roof_area[:available_roof_area], other.roof_area[:available_roof_area])
           @roof_area[:total_roof_area] = add_values(@roof_area[:total_roof_area], other.roof_area[:total_roof_area])
         end
-        # rubocop:enable Metrics/AbcSize
       end
     end
   end
