@@ -36,6 +36,7 @@ require_relative  'timeseries_csv'
 require_relative  'distributed_generation'
 require_relative  'power_distribution'
 require_relative  'validator'
+require_relative  'thermal_storage'
 
 require 'json-schema'
 require 'json'
