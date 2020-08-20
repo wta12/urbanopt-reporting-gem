@@ -33,7 +33,7 @@ require 'urbanopt/reporting/default_reports/validator'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Ice Thermal Storage Systems
