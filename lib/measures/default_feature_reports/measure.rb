@@ -28,7 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
-require 'urbanopt/scenario/default_reports/feature_report'
+require 'urbanopt/reporting/default_reports'
 require 'csv'
 require 'benchmark'
 require 'logger'
