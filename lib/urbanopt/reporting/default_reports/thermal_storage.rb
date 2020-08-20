@@ -29,7 +29,7 @@
 # *********************************************************************************
 
 require 'json'
-require 'urbanopt/scenario/default_reports/validator'
+require 'urbanopt/reporting/default_reports/validator'
 require 'json-schema'
 
 module URBANopt
