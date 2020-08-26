@@ -36,6 +36,7 @@ require_relative  'timeseries_csv'
 require_relative  'distributed_generation'
 require_relative  'power_distribution'
 require_relative  'validator'
+require_relative  'thermal_storage'
 
 require 'json-schema'
 require 'json'
@@ -52,7 +53,7 @@ module URBANopt
       ##
       class FeatureReport
         attr_accessor :id, :name, :directory_name, :feature_type, :timesteps_per_hour, :simulation_status,
-                      :timeseries_csv, :location, :program, :design_parameters, :construction_costs, :reporting_periods, :distributed_generation, :power_distribution # :nodoc:
+                      :timeseries_csv, :location, :program, :design_parameters, :construction_costs, :reporting_periods, :distributed_generation, :power_distribution, :thermal_storage # :nodoc:
         ##
         # Each FeatureReport object corresponds to a single Feature.
         ##
@@ -88,6 +89,8 @@ module URBANopt
 
           @power_distribution = PowerDistribution.new(hash[:power_distribution])
 
+          @thermal_storage = ThermalStorage.new(hash[:thermal_storage])
+
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
           @@schema ||= @@validator.schema
@@ -108,6 +111,7 @@ module URBANopt
           hash[:reporting_periods] = []
           hash[:distributed_generation] = {}
           hash[:power_distribution] = {}
+          hash[:thermal_storage] = {}
           return hash
         end
 
@@ -208,6 +212,8 @@ module URBANopt
           result[:distributed_generation] = @distributed_generation.to_hash if @distributed_generation
 
           result[:power_distribution] = @power_distribution.to_hash if @power_distribution
+
+          result[:thermal_storage] = @thermal_storage.to_hash if @thermal_storage
 
           # validate feature_report properties against schema
           if @@validator.validate(@@schema[:definitions][:FeatureReport][:properties], result).any?
