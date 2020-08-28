@@ -66,7 +66,7 @@ module URBANopt
           @@schema ||= @@validator.schema
 
           # initialize @@logger
-          @@logger ||= URBANopt::Scenario::DefaultReports.logger
+          @@logger ||= URBANopt::Reporting::DefaultReports.logger
         end
 
         ##
