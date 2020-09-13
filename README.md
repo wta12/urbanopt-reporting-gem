@@ -1,6 +1,6 @@
 # URBANopt Reporting Gem
 
-The URBANopt Reporting Gem defines the URABNopt reports (Scenario and Feature reports). It also includes the default reporting measure which query results from the energyplus sql database and reports it in the Feature reports.
+The URBANopt™ Reporting Gem defines the URABNopt reports (Scenario and Feature reports). It also includes the default reporting measure which query results from the energyplus sql database and reports it in the Feature reports.
 
 
 [RDoc Documentation](https://urbanopt.github.io/urbanopt-reporting-gem/)
