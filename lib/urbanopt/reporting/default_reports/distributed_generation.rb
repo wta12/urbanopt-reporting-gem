@@ -29,10 +29,10 @@
 # *********************************************************************************
 
 require 'json'
-require 'urbanopt/scenario/solar_pv'
-require 'urbanopt/scenario/wind'
-require 'urbanopt/scenario/generator'
-require 'urbanopt/scenario/storage'
+require 'urbanopt/reporting/default_reports/solar_pv'
+require 'urbanopt/reporting/default_reports/wind'
+require 'urbanopt/reporting/default_reports/generator'
+require 'urbanopt/reporting/default_reports/storage'
 require 'json-schema'
 
 module URBANopt
