@@ -36,7 +36,7 @@ require 'urbanopt/reporting/default_reports/storage'
 require 'json-schema'
 
 module URBANopt
-  module Scenario
+  module Reporting
     module DefaultReports
       ##
       # Onsite distributed generation system (i.e. SolarPV, Wind, Storage, Generator) design attributes and financial metrics.
