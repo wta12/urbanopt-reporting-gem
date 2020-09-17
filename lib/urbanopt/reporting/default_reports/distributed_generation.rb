@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2020, Alliance for Sustainable Energy, LLC, and other
+# URBANopt, Copyright (c) 2019-2020, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -29,10 +29,10 @@
 # *********************************************************************************
 
 require 'json'
-require_relative  'solar_pv'
-require_relative  'wind'
-require_relative  'generator'
-require_relative  'storage'
+require 'urbanopt/reporting/default_reports/solar_pv'
+require 'urbanopt/reporting/default_reports/wind'
+require 'urbanopt/reporting/default_reports/generator'
+require 'urbanopt/reporting/default_reports/storage'
 require 'json-schema'
 
 module URBANopt
@@ -46,6 +46,11 @@ module URBANopt
         # _Float_ - Lifecycle costs for the complete distributed generation system in US Dollars
         #
         attr_accessor :lcc_us_dollars
+
+        ##
+        # _Float_ - Lifecycle costs for the complete distributed generation system in US Dollars
+        #
+        attr_accessor :lcc_bau_us_dollars
 
         ##
         # _Float_ - Net present value of the complete distributed generation system in US Dollars
@@ -68,9 +73,39 @@ module URBANopt
         attr_accessor :year_one_bill_us_dollars
 
         ##
-        # _Float_ - Total amount paid to the utility in US Dollars over the life of the system
+        # _Float_ - Total energy costs in US Dollars over the life of the system after tax
         #
         attr_accessor :total_energy_cost_us_dollars
+
+        ##
+        # _Float_ - Total demand costs in US Dollars over the life of the system after tax
+        #
+        attr_accessor :total_demand_cost_us_dollars
+
+        ##
+        # _Float_ -  Year one energy cost in the business as usual scenario (i.e no new system) after tax, us dollars
+        #
+        attr_accessor :year_one_energy_cost_bau_us_dollars
+
+        ##
+        # _Float_ -  Year one demand cost in the business as usual scenario (i.e no new system), us dollars
+        #
+        attr_accessor :year_one_demand_cost_bau_us_dollars
+
+        ##
+        # _Float_ -  Year one demand energy bill in the business as usual scenario (i.e no new system), us dollars
+        #
+        attr_accessor :year_one_bill_bau_us_dollars
+
+        ##
+        # _Float_ -  Total lifetime demand costs in the business as usual scenario (i.e no new system) after tax, us dollars
+        #
+        attr_accessor :total_demand_cost_bau_us_dollars
+
+        ##
+        # _Float_ -  Total lifetime energy costs in the business as usual scenario (i.e no new system) after tax, us dollars
+        #
+        attr_accessor :total_energy_cost_bau_us_dollars
 
         ##
         # _Array_ - List of _SolarPV_ systems
@@ -118,6 +153,36 @@ module URBANopt
         attr_accessor :total_generator_kw
 
         ##
+        # _Float_ -  Minimum hour the system can support critical load during a grid outage
+        #
+        attr_accessor :resilience_hours_min
+
+        ##
+        # _Float_ -  Maximum hour the system can support critical load during a grid outage
+        #
+        attr_accessor :resilience_hours_max
+
+        ##
+        # _Float_ -  Average hour the system can support critical load during a grid outage
+        #
+        attr_accessor :resilience_hours_avg
+
+        ##
+        # _Float_ -  Average probability the system can sustain critical load during a grid outage
+        #
+        attr_accessor :probs_of_surviving
+
+        ##
+        # _Float_ -  Average monthly probabiliies that the system can sustain critical load during a grid outage
+        #
+        attr_accessor :probs_of_surviving_by_month
+
+        ##
+        # _Float_ -  Average hourly probabiliies that the system can sustain critical load during a grid outage
+        #
+        attr_accessor :probs_of_surviving_by_hour_of_the_day
+
+        ##
         # Initialize distributed generation system design and financial metrics.
         #
         # * Technologies include +:solar_pv+, +:wind+, +:generator+, and +:storage+.
@@ -132,12 +197,26 @@ module URBANopt
           hash.delete_if { |k, v| v.nil? }
 
           @lcc_us_dollars = hash[:lcc_us_dollars]
+          @lcc_bau_us_dollars = hash[:lcc_bau_us_dollars]
           @npv_us_dollars = hash[:npv_us_dollars]
           @year_one_energy_cost_us_dollars = hash[:year_one_energy_cost_us_dollars]
+          @year_one_energy_cost_bau_us_dollars  = hash[:year_one_energy_cost_bau_us_dollars]
           @year_one_demand_cost_us_dollars = hash[:year_one_demand_cost_us_dollars]
+          @year_one_demand_cost_bau_us_dollars = hash[:year_one_demand_cost_bau_us_dollars]
           @year_one_bill_us_dollars = hash[:year_one_bill_us_dollars]
+          @year_one_bill_bau_us_dollars = hash[:year_one_bill_bau_us_dollars]
           @total_energy_cost_us_dollars = hash[:total_energy_cost_us_dollars]
+          @total_energy_cost_bau_us_dollars = hash[:total_energy_cost_bau_us_dollars]
+          @total_demand_cost_us_dollars = hash[:total_demand_cost_us_dollars]
+          @total_demand_cost_bau_us_dollars = hash[:total_demand_cost_bau_us_dollars]
 
+          @resilience_hours_min = hash[:resilience_hours_min]
+          @resilience_hours_max = hash[:resilience_hours_max]
+          @resilience_hours_avg = hash[:resilience_hours_avg]
+          @probs_of_surviving = hash[:probs_of_surviving]
+          @probs_of_surviving_by_month = hash[:probs_of_surviving_by_month]
+          @probs_of_surviving_by_hour_of_the_day = hash[:probs_of_surviving_by_hour_of_the_day]
+          
           @total_solar_pv_kw = nil
           @total_wind_kw = nil
           @total_generator_kw = nil
@@ -276,15 +355,33 @@ module URBANopt
           result = {}
 
           result[:lcc_us_dollars] = @lcc_us_dollars if @lcc_us_dollars
+          result[:lcc_bau_us_dollars] = @lcc_bau_us_dollars if @lcc_bau_us_dollars
           result[:npv_us_dollars] = @npv_us_dollars if @npv_us_dollars
+
           result[:year_one_energy_cost_us_dollars] = @year_one_energy_cost_us_dollars if @year_one_energy_cost_us_dollars
           result[:year_one_demand_cost_us_dollars] = @year_one_demand_cost_us_dollars if @year_one_demand_cost_us_dollars
           result[:year_one_bill_us_dollars] = @year_one_bill_us_dollars if @year_one_bill_us_dollars
+          result[:total_demand_cost_us_dollars] = @total_demand_cost_us_dollars if @total_demand_cost_us_dollars
+          result[:total_energy_cost_us_dollars] = @total_energy_cost_us_dollars if @total_energy_cost_us_dollars
+          
+          result[:year_one_energy_cost_bau_us_dollars] = @year_one_energy_cost_bau_us_dollars if @year_one_energy_cost_bau_us_dollars
+          result[:year_one_demand_cost_bau_us_dollars] = @year_one_demand_cost_bau_us_dollars if @year_one_demand_cost_bau_us_dollars
+          result[:year_one_bill_bau_us_dollars] = @year_one_bill_bau_us_dollars if @year_one_bill_bau_us_dollars
+          result[:total_energy_cost_bau_us_dollars] = @total_energy_cost_bau_us_dollars if @total_energy_cost_bau_us_dollars
+          result[:total_demand_cost_bau_us_dollars] = @total_demand_cost_bau_us_dollars if @total_demand_cost_bau_us_dollars
+
           result[:total_solar_pv_kw] = @total_solar_pv_kw if @total_solar_pv_kw
           result[:total_wind_kw] = @total_wind_kw if @total_wind_kw
           result[:total_generator_kw] = @total_generator_kw if @total_generator_kw
           result[:total_storage_kw] = @total_storage_kw if @total_storage_kw
           result[:total_storage_kwh] = @total_storage_kwh if @total_storage_kwh
+
+          result[:resilience_hours_min] = @resilience_hours_min if @resilience_hours_min
+          result[:resilience_hours_max] = @resilience_hours_max if @resilience_hours_max                    
+          result[:resilience_hours_avg] = @resilience_hours_avg if @resilience_hours_avg
+          result[:probs_of_surviving] = @probs_of_surviving if @probs_of_surviving
+          result[:probs_of_surviving_by_month] = @probs_of_surviving_by_month if @probs_of_surviving_by_month
+          result[:probs_of_surviving_by_hour_of_the_day] = @probs_of_surviving_by_hour_of_the_day if @probs_of_surviving_by_hour_of_the_day
 
           result[:solar_pv] = []
           @solar_pv.each do |pv|
@@ -327,11 +424,27 @@ module URBANopt
         ##
         def self.merge_distributed_generation(existing_dgen, new_dgen)
           existing_dgen.lcc_us_dollars = add_values(existing_dgen.lcc_us_dollars, new_dgen.lcc_us_dollars)
+          existing_dgen.lcc_bau_us_dollars = add_values(existing_dgen.lcc_bau_us_dollars, new_dgen.lcc_bau_us_dollars)
           existing_dgen.npv_us_dollars = add_values(existing_dgen.npv_us_dollars, new_dgen.npv_us_dollars)
+          
           existing_dgen.year_one_energy_cost_us_dollars = add_values(existing_dgen.year_one_energy_cost_us_dollars, new_dgen.year_one_energy_cost_us_dollars)
           existing_dgen.year_one_demand_cost_us_dollars = add_values(existing_dgen.year_one_demand_cost_us_dollars, new_dgen.year_one_demand_cost_us_dollars)
           existing_dgen.year_one_bill_us_dollars = add_values(existing_dgen.year_one_bill_us_dollars, new_dgen.year_one_bill_us_dollars)
           existing_dgen.total_energy_cost_us_dollars = add_values(existing_dgen.total_energy_cost_us_dollars, new_dgen.total_energy_cost_us_dollars)
+          existing_dgen.total_demand_cost_us_dollars = add_values(existing_dgen.total_demand_cost_us_dollars, new_dgen.total_demand_cost_us_dollars)
+
+          existing_dgen.year_one_energy_cost_bau_us_dollars = add_values(existing_dgen.year_one_energy_cost_bau_us_dollars, new_dgen.year_one_energy_cost_bau_us_dollars)
+          existing_dgen.year_one_demand_cost_bau_us_dollars = add_values(existing_dgen.year_one_demand_cost_bau_us_dollars, new_dgen.year_one_demand_cost_bau_us_dollars)
+          existing_dgen.year_one_bill_bau_us_dollars = add_values(existing_dgen.year_one_bill_bau_us_dollars, new_dgen.year_one_bill_bau_us_dollars)
+          existing_dgen.total_energy_cost_bau_us_dollars = add_values(existing_dgen.total_energy_cost_bau_us_dollars, new_dgen.total_energy_cost_bau_us_dollars)
+          existing_dgen.total_demand_cost_bau_us_dollars = add_values(existing_dgen.total_demand_cost_bau_us_dollars, new_dgen.total_demand_cost_bau_us_dollars)
+          
+          existing_dgen.resilience_hours_min = add_values(existing_dgen.resilience_hours_min, new_dgen.resilience_hours_min)
+          existing_dgen.resilience_hours_max = add_values(existing_dgen.resilience_hours_max, new_dgen.resilience_hours_max)
+          existing_dgen.resilience_hours_avg = add_values(existing_dgen.resilience_hours_avg, new_dgen.resilience_hours_avg)
+          existing_dgen.probs_of_surviving = add_values(existing_dgen.probs_of_surviving, new_dgen.probs_of_surviving)
+          existing_dgen.probs_of_surviving_by_month = add_values(existing_dgen.probs_of_surviving_by_month, new_dgen.probs_of_surviving_by_month)
+          existing_dgen.probs_of_surviving_by_hour_of_the_day = add_values(existing_dgen.probs_of_surviving_by_hour_of_the_day, new_dgen.probs_of_surviving_by_hour_of_the_day)
 
           new_dgen.solar_pv.each do |pv|
             existing_dgen.solar_pv.push pv
