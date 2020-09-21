@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt, Copyright (c) 2019-2020, Alliance for Sustainable Energy, LLC, and other
+# URBANopt (tm), Copyright (c) 2019-2020, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -200,7 +200,7 @@ module URBANopt
           @lcc_bau_us_dollars = hash[:lcc_bau_us_dollars]
           @npv_us_dollars = hash[:npv_us_dollars]
           @year_one_energy_cost_us_dollars = hash[:year_one_energy_cost_us_dollars]
-          @year_one_energy_cost_bau_us_dollars  = hash[:year_one_energy_cost_bau_us_dollars]
+          @year_one_energy_cost_bau_us_dollars = hash[:year_one_energy_cost_bau_us_dollars]
           @year_one_demand_cost_us_dollars = hash[:year_one_demand_cost_us_dollars]
           @year_one_demand_cost_bau_us_dollars = hash[:year_one_demand_cost_bau_us_dollars]
           @year_one_bill_us_dollars = hash[:year_one_bill_us_dollars]
@@ -216,7 +216,7 @@ module URBANopt
           @probs_of_surviving = hash[:probs_of_surviving]
           @probs_of_surviving_by_month = hash[:probs_of_surviving_by_month]
           @probs_of_surviving_by_hour_of_the_day = hash[:probs_of_surviving_by_hour_of_the_day]
-          
+
           @total_solar_pv_kw = nil
           @total_wind_kw = nil
           @total_generator_kw = nil
@@ -363,7 +363,7 @@ module URBANopt
           result[:year_one_bill_us_dollars] = @year_one_bill_us_dollars if @year_one_bill_us_dollars
           result[:total_demand_cost_us_dollars] = @total_demand_cost_us_dollars if @total_demand_cost_us_dollars
           result[:total_energy_cost_us_dollars] = @total_energy_cost_us_dollars if @total_energy_cost_us_dollars
-          
+
           result[:year_one_energy_cost_bau_us_dollars] = @year_one_energy_cost_bau_us_dollars if @year_one_energy_cost_bau_us_dollars
           result[:year_one_demand_cost_bau_us_dollars] = @year_one_demand_cost_bau_us_dollars if @year_one_demand_cost_bau_us_dollars
           result[:year_one_bill_bau_us_dollars] = @year_one_bill_bau_us_dollars if @year_one_bill_bau_us_dollars
@@ -377,7 +377,7 @@ module URBANopt
           result[:total_storage_kwh] = @total_storage_kwh if @total_storage_kwh
 
           result[:resilience_hours_min] = @resilience_hours_min if @resilience_hours_min
-          result[:resilience_hours_max] = @resilience_hours_max if @resilience_hours_max                    
+          result[:resilience_hours_max] = @resilience_hours_max if @resilience_hours_max
           result[:resilience_hours_avg] = @resilience_hours_avg if @resilience_hours_avg
           result[:probs_of_surviving] = @probs_of_surviving if @probs_of_surviving
           result[:probs_of_surviving_by_month] = @probs_of_surviving_by_month if @probs_of_surviving_by_month
@@ -426,7 +426,7 @@ module URBANopt
           existing_dgen.lcc_us_dollars = add_values(existing_dgen.lcc_us_dollars, new_dgen.lcc_us_dollars)
           existing_dgen.lcc_bau_us_dollars = add_values(existing_dgen.lcc_bau_us_dollars, new_dgen.lcc_bau_us_dollars)
           existing_dgen.npv_us_dollars = add_values(existing_dgen.npv_us_dollars, new_dgen.npv_us_dollars)
-          
+
           existing_dgen.year_one_energy_cost_us_dollars = add_values(existing_dgen.year_one_energy_cost_us_dollars, new_dgen.year_one_energy_cost_us_dollars)
           existing_dgen.year_one_demand_cost_us_dollars = add_values(existing_dgen.year_one_demand_cost_us_dollars, new_dgen.year_one_demand_cost_us_dollars)
           existing_dgen.year_one_bill_us_dollars = add_values(existing_dgen.year_one_bill_us_dollars, new_dgen.year_one_bill_us_dollars)
@@ -438,7 +438,7 @@ module URBANopt
           existing_dgen.year_one_bill_bau_us_dollars = add_values(existing_dgen.year_one_bill_bau_us_dollars, new_dgen.year_one_bill_bau_us_dollars)
           existing_dgen.total_energy_cost_bau_us_dollars = add_values(existing_dgen.total_energy_cost_bau_us_dollars, new_dgen.total_energy_cost_bau_us_dollars)
           existing_dgen.total_demand_cost_bau_us_dollars = add_values(existing_dgen.total_demand_cost_bau_us_dollars, new_dgen.total_demand_cost_bau_us_dollars)
-          
+
           existing_dgen.resilience_hours_min = add_values(existing_dgen.resilience_hours_min, new_dgen.resilience_hours_min)
           existing_dgen.resilience_hours_max = add_values(existing_dgen.resilience_hours_max, new_dgen.resilience_hours_max)
           existing_dgen.resilience_hours_avg = add_values(existing_dgen.resilience_hours_avg, new_dgen.resilience_hours_avg)
