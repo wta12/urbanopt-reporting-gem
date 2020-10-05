@@ -263,69 +263,69 @@
 				"end_date": {
 					"$ref": "#/definitions/Date"
 				},
-				"total_site_energy": {
-					"description": "Total energy used on site, does not include generation (kBtu)",
+				"total_site_energy_kwh": {
+					"description": "Total energy used on site, does not include generation (kWh)",
 					"type": "number"
 				},
-				"total_source_energy": {
-					"description": "Total source energy used, does not include generation (kBtu)",
+				"total_source_energy_kwh": {
+					"description": "Total source energy used, does not include generation (kWh)",
 					"type": "number"
 				},
-				"net_site_energy": {
-					"description": "Net site energy (kBtu)",
+				"net_site_energy_kwh": {
+					"description": "Net site energy (kWh)",
 					"type": "number"
 				},
-				"net_source_energy": {
-					"description": "Net source energy (kBtu)",
+				"net_source_energy_kwh": {
+					"description": "Net source energy (kWh)",
 					"type": "number"
 				},
-				"total_utility_cost": {
-					"description": "Total utility cost",
+				"total_utility_cost_dollar": {
+					"description": "Total utility cost ($)",
 					"type": "number"
 				},
-				"net_utility_cost": {
-					"description": "Net utility cost for reporting period includes generation",
+				"net_utility_cost_dollar": {
+					"description": "Net utility cost for reporting period includes generation ($)",
 					"type": "number"
 				},
-				"utility_costs": {
+				"utility_costs_dollar": {
 					"type": "array",
 					"items": {
 						"$ref": "#/definitions/UtilityCost"
 					}
 				},
-				"electricity": {
+				"electricity_kwh": {
 					"description": "Sum of all electricity used, does not include electricity produced (kWh)",
 					"type": "number"
 				},
-				"natural_gas": {
-					"description": "Sum of all natural gas end uses consumption (kBtu)",
+				"natural_gas_kwh": {
+					"description": "Sum of all natural gas end uses consumption (kWh)",
 					"type": "number"
 				},
-				"additional_fuel": {
-					"description": "Sum of all additional fuel end uses consumption (kBtu)",
+				"additional_fuel_kwh": {
+					"description": "Sum of all additional fuel end uses consumption (kWh)",
 					"type": "number"
 				},
-				"district_cooling": {
-					"description": "Sum of all distric cooling end uses consumption (kBtu)",
+				"district_cooling_kwh": {
+					"description": "Sum of all distric cooling end uses consumption (kWh)",
 					"type": "number"
 				},
-				"district_heating": {
-					"description": "Sum of all distric heating end uses consumption (kBtu)",
+				"district_heating_kwh": {
+					"description": "Sum of all distric heating end uses consumption (kWh)",
 					"type": "number"
 				},
-				"water": {
+				"water_qbft": {
 					"description": "Sum of all water end uses consumption (ft^3)",
 					"type": "number"
 				},
-				"electricity_produced": {
+				"electricity_produced_kwh": {
 					"description": "Sum of all electricity produced (kWh)",
 					"type": "number"
 				},
 				"end_uses": {
 					"$ref": "#/definitions/EndUses"
 				},
-				"energy_production": {
-					"description": "Energy produced for reporting period.  Electricity reported in kWh, water in m^3, all others in kBtu.",
+				"energy_production_kwh": {
+					"description": "Energy produced for reporting period.  Water reported in m^3, all others in kWh.",
 					"type": "object",
 					"properties": {
 						"electricity_produced": {
@@ -362,7 +362,7 @@
 			"additionalProperties": false
 		},
 		"EndUses": {
-			"description": "End uses for reporting period.  Does not include energy produced. Electricity reported in kWh, water in m^3, all others in kBtu.",
+			"description": "End uses for reporting period.  Does not include energy produced. Water reported in m^3, all others in kWh.",
 			"type": "object",
 			"properties": {
 				"electricity": {

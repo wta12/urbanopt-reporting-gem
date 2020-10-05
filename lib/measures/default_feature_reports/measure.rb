@@ -350,18 +350,18 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # floor_area
     floor_area = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Building Area' AND RowName='Total Building Area' AND ColumnName='Area'")
-    feature_report.program.floor_area = convert_units(floor_area, 'm^2', 'ft^2')
+    feature_report.program.floor_area_sqft = convert_units(floor_area, 'm^2', 'ft^2')
 
     # conditioned_area
     conditioned_area = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Building Area' AND RowName='Net Conditioned Building Area' AND ColumnName='Area'")
-    feature_report.program.conditioned_area = convert_units(conditioned_area, 'm^2', 'ft^2')
+    feature_report.program.conditioned_area_sqft = convert_units(conditioned_area, 'm^2', 'ft^2')
 
     # unconditioned_area
     unconditioned_area = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Building Area' AND RowName='Unconditioned Building Area' AND ColumnName='Area'")
-    feature_report.program.unconditioned_area = convert_units(unconditioned_area, 'm^2', 'ft^2')
+    feature_report.program.unconditioned_area_sqft = convert_units(unconditioned_area, 'm^2', 'ft^2')
 
     # footprint_area
-    feature_report.program.footprint_area = convert_units(floor_area, 'm^2', 'ft^2')
+    feature_report.program.footprint_area_sqft = convert_units(floor_area, 'm^2', 'ft^2')
 
     # maximum_number_of_stories
     number_of_stories = building.standardsNumberOfStories.get if building.standardsNumberOfStories.is_initialized
@@ -371,7 +371,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # maximum_roof_height
     floor_to_floor_height = building.nominalFloortoFloorHeight.to_f
     maximum_roof_height = number_of_stories * floor_to_floor_height
-    feature_report.program.maximum_roof_height = maximum_roof_height
+    feature_report.program.maximum_roof_height_ft = maximum_roof_height
 
     # maximum_number_of_stories_above_ground
     number_of_stories_above_ground = building.standardsNumberOfAboveGroundStories.get if building.standardsNumberOfAboveGroundStories.is_initialized
@@ -432,36 +432,36 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ## window_area
     # north_window_area
     north_window_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Window Opening Area' AND ColumnName='North (315 to 45 deg)'").to_f
-    feature_report.program.window_area[:north_window_area] = convert_units(north_window_area, 'm^2', 'ft^2')
+    feature_report.program.window_area_sqft[:north_window_area_sqft] = convert_units(north_window_area, 'm^2', 'ft^2')
     # south_window_area
     south_window_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Window Opening Area' AND ColumnName='South (135 to 225 deg)'").to_f
-    feature_report.program.window_area[:south_window_area] = convert_units(south_window_area, 'm^2', 'ft^2')
+    feature_report.program.window_area_sqft[:south_window_area_sqft] = convert_units(south_window_area, 'm^2', 'ft^2')
     # east_window_area
     east_window_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Window Opening Area' AND ColumnName='East (45 to 135 deg)'").to_f
-    feature_report.program.window_area[:east_window_area] = convert_units(east_window_area, 'm^2', 'ft^2')
+    feature_report.program.window_area_sqft[:east_window_area_sqft] = convert_units(east_window_area, 'm^2', 'ft^2')
     # west_window_area
     west_window_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Window Opening Area' AND ColumnName='West (225 to 315 deg)'").to_f
-    feature_report.program.window_area[:west_window_area] = convert_units(west_window_area, 'm^2', 'ft^2')
+    feature_report.program.window_area_sqft[:west_window_area_sqft] = convert_units(west_window_area, 'm^2', 'ft^2')
     # total_window_area
     total_window_area = north_window_area + south_window_area + east_window_area + west_window_area
-    feature_report.program.window_area[:total_window_area] = convert_units(total_window_area, 'm^2', 'ft^2')
+    feature_report.program.window_area_sqft[:total_window_area_sqft] = convert_units(total_window_area, 'm^2', 'ft^2')
 
     ## wall_area
     # north_wall_area
     north_wall_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Gross Wall Area' AND ColumnName='North (315 to 45 deg)'").to_f
-    feature_report.program.wall_area[:north_wall_area] = convert_units(north_wall_area, 'm^2', 'ft^2')
+    feature_report.program.wall_area_sqft[:north_wall_area_sqft] = convert_units(north_wall_area, 'm^2', 'ft^2')
     # south_wall_area
     south_wall_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Gross Wall Area' AND ColumnName='South (135 to 225 deg)'").to_f
-    feature_report.program.wall_area[:south_wall_area] = convert_units(south_wall_area, 'm^2', 'ft^2')
+    feature_report.program.wall_area_sqft[:south_wall_area_sqft] = convert_units(south_wall_area, 'm^2', 'ft^2')
     # east_wall_area
     east_wall_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Gross Wall Area' AND ColumnName='East (45 to 135 deg)'").to_f
-    feature_report.program.wall_area[:east_wall_area] = convert_units(east_wall_area, 'm^2', 'ft^2')
+    feature_report.program.wall_area_sqft[:east_wall_area_sqft] = convert_units(east_wall_area, 'm^2', 'ft^2')
     # west_wall_area
     west_wall_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Gross Wall Area' AND ColumnName='West (225 to 315 deg)'").to_f
-    feature_report.program.wall_area[:west_wall_area] = convert_units(west_wall_area, 'm^2', 'ft^2')
+    feature_report.program.wall_area_sqft[:west_wall_area_sqft] = convert_units(west_wall_area, 'm^2', 'ft^2')
     # total_wall_area
     total_wall_area = north_wall_area + south_wall_area + east_wall_area + west_wall_area
-    feature_report.program.wall_area[:total_wall_area] = convert_units(total_wall_area, 'm^2', 'ft^2')
+    feature_report.program.wall_area_sqft[:total_wall_area_sqft] = convert_units(total_wall_area, 'm^2', 'ft^2')
 
     # total_roof_area
     total_roof_area = 0.0
@@ -470,12 +470,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         total_roof_area += surface.netArea
       end
     end
-    feature_report.program.roof_area[:total_roof_area] = convert_units(total_roof_area, 'm^2', 'ft^2')
+    feature_report.program.roof_area_sqft[:total_roof_area_sqft] = convert_units(total_roof_area, 'm^2', 'ft^2')
 
     # orientation
     # RK: a more robust method should be implemented to find orientation(finding main axis of the building using aspect ratio)
     building_rotation = model.getBuilding.northAxis
-    feature_report.program.orientation = building_rotation
+    feature_report.program.orientation_deg = building_rotation
 
     # aspect_ratio
     north_wall_area = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='Window-Wall Ratio' AND RowName='Gross Wall Area' AND ColumnName='North (315 to 45 deg)'")
@@ -486,7 +486,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # total_construction_cost
     total_construction_cost = sql_query(runner, sql_file, 'Life-Cycle Cost Report', "TableName='Present Value for Recurring, Nonrecurring and Energy Costs (Before Tax)' AND RowName='LCC_MAT - BUILDING - LIFE CYCLE COSTS' AND ColumnName='Cost'")
-    feature_report.program.total_construction_cost = total_construction_cost
+    feature_report.program.total_construction_cost_dollar = total_construction_cost
 
     # packaged thermal storage capacities by cooling coil
     ptes_keys = sql_file.availableKeyValues('RUN Period 1', 'Zone Timestep', 'Cooling Coil Ice Thermal Storage End Fraction')
@@ -504,7 +504,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         runner.registerWarning('Query ptes_size.get failed')
       end
     end
-    feature_report.thermal_storage.ptes_size = ptes_size
+    feature_report.thermal_storage.ptes_size_kwh = ptes_size
 
     # get the central tank thermal storage capacity
     its_size = nil
@@ -519,7 +519,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         runner.registerWarning('Query its_size.get failed')
       end
     end
-    feature_report.thermal_storage.its_size = its_size
+    feature_report.thermal_storage.its_size_kwh = its_size
 
     ############################################################################
     ##
@@ -550,48 +550,48 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # total_site_energy
     total_site_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Total Site Energy' AND ColumnName='Total Energy'")
-    feature_report.reporting_periods[0].total_site_energy = convert_units(total_site_energy, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].total_site_energy_kwh = convert_units(total_site_energy, 'GJ', 'kWh')
 
     # total_source_energy
     total_source_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Total Source Energy' AND ColumnName='Total Energy'")
-    feature_report.reporting_periods[0].total_source_energy = convert_units(total_source_energy, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].total_source_energy_kwh = convert_units(total_source_energy, 'GJ', 'kWh')
 
     # net_site_energy
     net_site_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Net Site Energy' AND ColumnName='Total Energy'")
-    feature_report.reporting_periods[0].net_site_energy = convert_units(net_site_energy, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].net_site_energy_kwh = convert_units(net_site_energy, 'GJ', 'kWh')
 
     # net_source_energy
     net_source_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Net Source Energy' AND ColumnName='Total Energy'")
-    feature_report.reporting_periods[0].net_source_energy = convert_units(net_source_energy, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].net_source_energy_kwh = convert_units(net_source_energy, 'GJ', 'kWh')
 
     # electricity
     electricity = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Electricity'")
-    feature_report.reporting_periods[0].electricity = convert_units(electricity, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].electricity_kwh = convert_units(electricity, 'GJ', 'kWh')
 
     # natural_gas
     natural_gas = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Natural Gas'")
-    feature_report.reporting_periods[0].natural_gas = convert_units(natural_gas, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].natural_gas_kwh = convert_units(natural_gas, 'GJ', 'kWh')
 
     # additional_fuel
     additional_fuel = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Additional Fuel'")
-    feature_report.reporting_periods[0].additional_fuel = convert_units(additional_fuel, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].additional_fuel_kwh = convert_units(additional_fuel, 'GJ', 'kWh')
 
     # district_cooling
     district_cooling = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Cooling'")
-    feature_report.reporting_periods[0].district_cooling = convert_units(district_cooling, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].district_cooling_kwh = convert_units(district_cooling, 'GJ', 'kWh')
 
     # district_heating
     district_heating = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Heating'")
-    feature_report.reporting_periods[0].district_heating = convert_units(district_heating, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].district_heating_kwh = convert_units(district_heating, 'GJ', 'kWh')
 
     # water
     water = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Water'")
     # feature_report.reporting_periods[0].water = convert_units(water, 'm3', 'ft3')
-    feature_report.reporting_periods[0].water = water
+    feature_report.reporting_periods[0].water_qbft = water
 
     # electricity_produced
     electricity_produced = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Electric Loads Satisfied' AND RowName='Total On-Site and Utility Electric Sources' AND ColumnName='Electricity'")
-    feature_report.reporting_periods[0].electricity_produced = convert_units(electricity_produced, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].electricity_produced_kwh = convert_units(electricity_produced, 'GJ', 'kWh')
 
     ## end_uses
 
@@ -618,9 +618,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
         if eu.include? ' '
           y = eu.tr(' ', '_').downcase
-          m.send("#{y}=", convert_units(sql_r, 'GJ', 'kBtu'))
+          m.send("#{y}=", convert_units(sql_r, 'GJ', 'kWh'))
         else
-          m.send("#{eu.downcase}=", convert_units(sql_r, 'GJ', 'kBtu'))
+          m.send("#{eu.downcase}=", convert_units(sql_r, 'GJ', 'kWh'))
         end
       end
     end
@@ -629,20 +629,20 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ## electricity_produced
     # photovoltaic
     photovoltaic_power = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Electric Loads Satisfied' AND RowName='Photovoltaic Power' AND ColumnName='Electricity'")
-    feature_report.reporting_periods[0].energy_production[:electricity_produced][:photovoltaic] = convert_units(photovoltaic_power, 'GJ', 'kBtu')
+    feature_report.reporting_periods[0].energy_production_kwh[:electricity_produced][:photovoltaic] = convert_units(photovoltaic_power, 'GJ', 'kWh')
 
     ## Total utility cost
     total_utility_cost = sql_query(runner, sql_file, 'Economics Results Summary Report', "TableName='Annual Cost' AND RowName='Cost' AND ColumnName='Total'")
-    feature_report.reporting_periods[0].total_utility_cost = total_utility_cost
+    feature_report.reporting_periods[0].total_utility_cost_dollar = total_utility_cost
 
     ## Utility Costs
     # electricity utility cost
     elec_utility_cost = sql_query(runner, sql_file, 'Economics Results Summary Report', "TableName='Annual Cost' AND RowName='Cost' AND ColumnName='Electric'")
-    feature_report.reporting_periods[0].utility_costs[0][:fuel_type] = 'Electricity'
-    feature_report.reporting_periods[0].utility_costs[0][:total_cost] = elec_utility_cost
+    feature_report.reporting_periods[0].utility_costs_dollar[0][:fuel_type] = 'Electricity'
+    feature_report.reporting_periods[0].utility_costs_dollar[0][:total_cost] = elec_utility_cost
     # gas utility cost
     gas_utility_cost = sql_query(runner, sql_file, 'Economics Results Summary Report', "TableName='Annual Cost' AND RowName='Cost' AND ColumnName='Gas'")
-    feature_report.reporting_periods[0].utility_costs << { fuel_type: 'Natural Gas', total_cost: gas_utility_cost }
+    feature_report.reporting_periods[0].utility_costs_dollar << { fuel_type: 'Natural Gas', total_cost: gas_utility_cost }
 
     ## comfort_result
     # time_setpoint_not_met_during_occupied_cooling
