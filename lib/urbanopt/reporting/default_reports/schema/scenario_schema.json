@@ -546,15 +546,15 @@
 		"Location": {
 			"type": "object",
 			"properties": {
-				"latitude": {
+				"latitude_deg": {
 					"description": "latitude for the centroid of the feature (deg)",
 					"type": "number"
 				},
-				"longitude": {
+				"longitude_deg": {
 					"description": "longitude for the centroid of the feature (deg)",
 					"type": "number"
 				},
-				"surface_elevation": {
+				"surface_elevation_ft": {
 					"description": "The surface elevation (above NAVD88 datum) (ft).",
 					"type": "number"
 				},
@@ -573,27 +573,27 @@
 		"Program": {
 			"type": "object",
 			"properties": {
-				"site_area": {
+				"site_area_sqft": {
 					"description": "Area of the entire site or lot (ft^2)",
 					"type": "number"
 				},
-				"floor_area": {
+				"floor_area_sqft": {
 					"description": "Building gross floor area (ft^2)",
 					"type": "number"
 				},
-				"conditioned_area": {
+				"conditioned_area_sqft": {
 					"description": "Building conditioned floor area (ft^2)",
 					"type": "number"
 				},
-				"unconditioned_area": {
+				"unconditioned_area_sqft": {
 					"description": "Building unconditioned floor area (ft^2)",
 					"type": "number"
 				},
-				"footprint_area": {
+				"footprint_area_sqft": {
 					"description": "Building floorprint area (ft^2)",
 					"type": "number"
 				},
-				"maximum_roof_height": {
+				"maximum_roof_height_ft": {
 					"description": "Maximum height of the roof relative to surface elevation (ft)",
 					"type": "number"
 				},
@@ -605,7 +605,7 @@
 					"description": "The maximum number of building stories above ground",
 					"type": "number"
 				},
-				"parking_area": {
+				"parking_area_sqft": {
 					"description": "Parking gross area (ft^2)",
 					"type": "number"
 				},
@@ -617,11 +617,11 @@
 					"description": "Number of parking spaces with electric vehicle charging",
 					"type": "number"
 				},
-				"parking_footprint_area": {
+				"parking_footprint_area_sqft": {
 					"description": "Parking floorprint area (ft^2)",
 					"type": "number"
 				},
-				"maximum_parking_height": {
+				"maximum_parking_height_ft": {
 					"description": "Maximum height of the parking structure relative to surface elevation (ft)",
 					"type": "number"
 				},
@@ -643,84 +643,84 @@
 						"$ref": "#/definitions/BuildingType"
 					}
 				},
-				"window_area": {
+				"window_area_sqft": {
 					"description": "Exterior windows gross area (ft^2)",
 					"type": "object",
 					"properties": {
-						"north_window_area": {
+						"north_window_area_sqft": {
 							"type": "number"
 						},
-						"south_window_area": {
+						"south_window_area_sqft": {
 							"type": "number"
 						},
-						"east_window_area": {
+						"east_window_area_sqft": {
 							"type": "number"
 						},
-						"west_window_area": {
+						"west_window_area_sqft": {
 							"type": "number"
 						},
-						"total_window_area": {
+						"total_window_area_sqft": {
 							"type": "number"
 						}
 					},
 					"required": [
-						"total_window_area"
+						"total_window_area_sqft"
 					],
 					"additionalProperties": false
 				},
-				"wall_area": {
+				"wall_area_sqft": {
 					"description": "exterior walls gross area (ft^2)",
 					"type": "object",
 					"properties": {
-						"north_wall_area": {
+						"north_wall_area_sqft": {
 							"type": "number"
 						},
-						"south_wall_area": {
+						"south_wall_area_sqft": {
 							"type": "number"
 						},
-						"east_wall_area": {
+						"east_wall_area_sqft": {
 							"type": "number"
 						},
-						"west_wall_area": {
+						"west_wall_area_sqft": {
 							"type": "number"
 						},
-						"total_wall_area": {
+						"total_wall_area_sqft": {
 							"type": "number"
 						}
 					},
 					"required": [
-						"north_wall_area",
-						"south_wall_area",
-						"east_wall_area",
-						"west_wall_area",
-						"total_wall_area"
+						"north_wall_area_sqft",
+						"south_wall_area_sqft",
+						"east_wall_area_sqft",
+						"west_wall_area_sqft",
+						"total_wall_area_sqft"
 					],
 					"additionalProperties": false
 				},
-				"roof_area": {
+				"roof_area_sqft": {
 					"type": "object",
 					"properties": {
-						"equipment_roof_area": {
+						"equipment_roof_area_sqft": {
 							"type": "number"
 						},
-						"photovoltaic_roof_area": {
+						"photovoltaic_roof_area_sqft": {
 							"type": "number"
 						},
-						"available_roof_area": {
+						"available_roof_area_sqft": {
 							"description": "gross roof area (ft^2)",
 							"type": "number"
 						},
-						"total_roof_area": {
+						"total_roof_area_sqft": {
 							"description": "Exterior roofs gross area (ft^2)",
 							"type": "number"
 						}
 					},
 					"required": [
-						"total_roof_area"
+						"total_roof_area_sqft"
 					],
 					"additionalProperties": false
 				},
-				"orientation": {
+				"orientation_deg": {
 					"description": "Rotation of longest axis from East-West,about up axis (deg)",
 					"type": "number"
 				},
@@ -728,22 +728,22 @@
 					"description": "Ratio of longest to shortest axis",
 					"type": "number"
 				},
-				"total_construction_cost": {
+				"total_construction_cost_dollar": {
 					"description": "total construction cost calculated from the defined cost per floor area ($)",
 					"type": "number"
 				}
 			},
 			"required": [
-				"floor_area",
-				"conditioned_area",
-				"unconditioned_area",
-				"footprint_area",
-				"maximum_roof_height",
+				"floor_area_sqft",
+				"conditioned_area_sqft",
+				"unconditioned_area_sqft",
+				"footprint_area_sqft",
+				"maximum_roof_height_ft",
 				"number_of_residential_units",
 				"building_types",
-				"window_area",
-				"wall_area",
-				"roof_area"
+				"window_area_sqft",
+				"wall_area_sqft",
+				"roof_area_sqft"
 			],
 			"additionalProperties": false
 		},

@@ -333,14 +333,14 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       # get longitude from feature_location
       longitude = (feature_location.split(',')[1].delete! '[]').to_f
       # latitude
-      feature_report.location.latitude = latitude
+      feature_report.location.latitude_deg = latitude
       # longitude
-      feature_report.location.longitude = longitude
+      feature_report.location.longitude_deg = longitude
     end
 
     # surface_elevation
     elev = sql_query(runner, sql_file, 'InputVerificationandResultsSummary', "TableName='General' AND RowName='Elevation' AND ColumnName='Value'")
-    feature_report.location.surface_elevation = elev
+    feature_report.location.surface_elevation_ft = elev
 
     ##########################################################################
     ##
