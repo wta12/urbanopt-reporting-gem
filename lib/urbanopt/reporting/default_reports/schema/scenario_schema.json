@@ -365,22 +365,22 @@
 			"description": "End uses for reporting period.  Does not include energy produced. Water reported in m^3, all others in kWh.",
 			"type": "object",
 			"properties": {
-				"electricity": {
+				"electricity_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
-				"natural_gas": {
+				"natural_gas_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
-				"additional_fuel": {
+				"additional_fuel_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
-				"district_cooling": {
+				"district_cooling_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
-				"district_heating": {
+				"district_heating_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
-				"water": {
+				"water_qbft": {
 					"$ref": "#/definitions/EndUse"
 				}
 			},
