@@ -610,9 +610,23 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         # report each query in its corresponding feature report obeject
         if ft.include? ' '
           x = ft.tr(' ', '_').downcase
-          m = feature_report.reporting_periods[0].end_uses.send(x)
+          puts "************** x  = #{x}"
+          if x.include? 'water'
+            x_u = x + '_qbft'
+          else
+            x_u = x + '_kwh'
+          end
+          puts " *********** x_u = #{x_u}"
+          m = feature_report.reporting_periods[0].end_uses.send(x_u)
         else
-          m = feature_report.reporting_periods[0].end_uses.send(ft.downcase)
+          puts "**********************  ft = #{ft}"
+          if ft.downcase.include? 'water'
+            ft_u = ft + '_qbft'
+          else
+            ft_u = ft + '_kwh'
+          end
+          puts " *********** ft_u = #{ft_u}"
+          m = feature_report.reporting_periods[0].end_uses.send(ft_u.downcase)
 
         end
 

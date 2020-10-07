@@ -39,10 +39,10 @@ module URBANopt
       # Enduses class inlclude results for each fuel type.
       ##
       class EndUses
-        attr_accessor :electricity, :natural_gas, :additional_fuel, :district_cooling, :district_heating, :water # :nodoc:
+        attr_accessor :electricity_kwh, :natural_gas_kwh, :additional_fuel_kwh, :district_cooling_kwh, :district_heating_kwh, :water_qbft # :nodoc:
         ##
-        # EndUses class intialize end_uses(fuel type) attributes: +:electricity+ , +:natural_gas+ , +:additional_fuel+ ,
-        # +:district_cooling+ , +:district_heating+ , +:water+
+        # EndUses class intialize end_uses(fuel type) attributes: +:electricity_kwh+ , +:natural_gas_kwh+ , +:additional_fuel_kwh+ ,
+        # +:district_cooling_kwh+ , +:district_heating_kwh+ , +:water_qbft+
         ##
         # [parameters:]
         # +hash+ - _Hash_ - A hash which may contain a deserialized end_uses.
@@ -51,12 +51,12 @@ module URBANopt
           hash.delete_if { |k, v| v.nil? }
           hash = defaults.merge(hash)
 
-          @electricity = EndUse.new(hash[:electricity])
-          @natural_gas = EndUse.new(hash[:natural_gas])
-          @additional_fuel = EndUse.new(hash[:additional_fuel])
-          @district_cooling = EndUse.new(hash[:district_cooling])
-          @district_heating = EndUse.new(hash[:district_heating])
-          @water = EndUse.new(hash[:water])
+          @electricity_kwh = EndUse.new(hash[:electricity_kwh])
+          @natural_gas_kwh = EndUse.new(hash[:natural_gas_kwh])
+          @additional_fuel_kwh = EndUse.new(hash[:additional_fuel_kwh])
+          @district_cooling_kwh = EndUse.new(hash[:district_cooling_kwh])
+          @district_heating_kwh = EndUse.new(hash[:district_heating_kwh])
+          @water_qbft = EndUse.new(hash[:water_qbft])
 
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -72,29 +72,29 @@ module URBANopt
         def to_hash
           result = {}
 
-          electricity_hash = @electricity.to_hash if @electricity.to_hash
-          electricity_hash.delete_if { |k, v| v.nil? }
-          result[:electricity] = electricity_hash if @electricity
+          electricity_kwh_hash = @electricity_kwh.to_hash if @electricity_kwh.to_hash
+          electricity_kwh_hash.delete_if { |k, v| v.nil? }
+          result[:electricity_kwh] = electricity_kwh_hash if @electricity_kwh
 
-          natural_gas_hash = @natural_gas.to_hash if @natural_gas
-          natural_gas_hash.delete_if { |k, v| v.nil? }
-          result[:natural_gas] = natural_gas_hash if @natural_gas
+          natural_gas_kwh_hash = @natural_gas_kwh.to_hash if @natural_gas_kwh
+          natural_gas_kwh_hash.delete_if { |k, v| v.nil? }
+          result[:natural_gas_kwh] = natural_gas_kwh_hash if @natural_gas_kwh
 
-          additional_fuel_hash = @additional_fuel.to_hash if @additional_fuel
-          additional_fuel_hash.delete_if { |k, v| v.nil? }
-          result[:additional_fuel] = additional_fuel_hash if @additional_fuel
+          additional_fuel_kwh_hash = @additional_fuel_kwh.to_hash if @additional_fuel_kwh
+          additional_fuel_kwh_hash.delete_if { |k, v| v.nil? }
+          result[:additional_fuel_kwh] = additional_fuel_kwh_hash if @additional_fuel_kwh
 
-          district_cooling_hash = @district_cooling.to_hash if @district_cooling
-          district_cooling_hash.delete_if { |k, v| v.nil? }
-          result[:district_cooling] = district_cooling_hash if @district_cooling
+          district_cooling_kwh_hash = @district_cooling_kwh.to_hash if @district_cooling_kwh
+          district_cooling_kwh_hash.delete_if { |k, v| v.nil? }
+          result[:district_cooling_kwh] = district_cooling_kwh_hash if @district_cooling_kwh
 
-          district_heating_hash = @district_heating.to_hash if @district_heating
-          district_heating_hash.delete_if { |k, v| v.nil? }
-          result[:district_heating] = district_heating_hash if @district_heating
+          district_heating_kwh_hash = @district_heating_kwh.to_hash if @district_heating_kwh
+          district_heating_kwh_hash.delete_if { |k, v| v.nil? }
+          result[:district_heating_kwh] = district_heating_kwh_hash if @district_heating_kwh
 
-          water_hash = @water.to_hash if @water
-          water_hash.delete_if { |k, v| v.nil? }
-          result[:water] = water_hash if @water
+          water_qbft_hash = @water_qbft.to_hash if @water_qbft
+          water_qbft_hash.delete_if { |k, v| v.nil? }
+          result[:water_qbft] = water_qbft_hash if @water_qbft
 
           # validate end_uses properties against schema
           if @@validator.validate(@@schema[:definitions][:EndUses][:properties], result).any?
@@ -109,12 +109,12 @@ module URBANopt
         ##
         def defaults
           hash = {}
-          hash[:electricity] = EndUse.new.to_hash
-          hash[:natural_gas] = EndUse.new.to_hash
-          hash[:additional_fuel] = EndUse.new.to_hash
-          hash[:district_cooling] = EndUse.new.to_hash
-          hash[:district_heating] = EndUse.new.to_hash
-          hash[:water] = EndUse.new.to_hash
+          hash[:electricity_kwh] = EndUse.new.to_hash
+          hash[:natural_gas_kwh] = EndUse.new.to_hash
+          hash[:additional_fuel_kwh] = EndUse.new.to_hash
+          hash[:district_cooling_kwh] = EndUse.new.to_hash
+          hash[:district_heating_kwh] = EndUse.new.to_hash
+          hash[:water_qbft] = EndUse.new.to_hash
 
           return hash
         end
@@ -127,11 +127,11 @@ module URBANopt
         ##
         def merge_end_uses!(new_end_uses)
           # modify the existing_period by summing up the results ; # sum results only if they exist
-          @electricity.merge_end_use!(new_end_uses.electricity)
-          @natural_gas.merge_end_use!(new_end_uses.natural_gas)
-          @additional_fuel.merge_end_use!(new_end_uses.additional_fuel)
-          @district_cooling.merge_end_use!(new_end_uses.district_cooling)
-          @district_heating.merge_end_use!(new_end_uses.district_heating)
+          @electricity_kwh.merge_end_use!(new_end_uses.electricity_kwh)
+          @natural_gas_kwh.merge_end_use!(new_end_uses.natural_gas_kwh)
+          @additional_fuel_kwh.merge_end_use!(new_end_uses.additional_fuel_kwh)
+          @district_cooling_kwh.merge_end_use!(new_end_uses.district_cooling_kwh)
+          @district_heating_kwh.merge_end_use!(new_end_uses.district_heating_kwh)
           return self
         end
       end
