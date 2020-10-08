@@ -39,9 +39,9 @@ module URBANopt
       # Location include all location information.
       ##
       class Location
-        attr_accessor :latitude, :longitude, :surface_elevation, :weather_filename #:nodoc:
+        attr_accessor :latitude_deg, :longitude_deg, :surface_elevation_ft, :weather_filename #:nodoc:
         ##
-        # Location class initialize location attributes: +:latitude+ , +:longitude+ , +:surface_elevation+ , +:weather_filename+
+        # Location class initialize location attributes: +:latitude_deg+ , +:longitude_deg+ , +:surface_elevation_ft+ , +:weather_filename+
         ##
         # [parameters:]
         # +hash+ - _Hash_ - A hash which may contain a deserialized location.
@@ -50,9 +50,9 @@ module URBANopt
           hash.delete_if { |k, v| v.nil? }
           hash = defaults.merge(hash)
 
-          @latitude = hash[:latitude]
-          @longitude = hash[:longitude]
-          @surface_elevation = hash[:surface_elevation]
+          @latitude_deg = hash[:latitude_deg]
+          @longitude_deg = hash[:longitude_deg]
+          @surface_elevation_ft = hash[:surface_elevation_ft]
           @weather_filename = hash[:weather_filename]
 
           # initialize class variables @@validator and @@schema
@@ -68,9 +68,9 @@ module URBANopt
         ##
         def to_hash
           result = {}
-          result[:latitude] = @latitude if @latitude
-          result[:longitude] = @longitude if @longitude
-          result[:surface_elevation] = @surface_elevation if @surface_elevation
+          result[:latitude_deg] = @latitude_deg if @latitude_deg
+          result[:longitude_deg] = @longitude_deg if @longitude_deg
+          result[:surface_elevation_ft] = @surface_elevation_ft if @surface_elevation_ft
           result[:weather_filename] = @weather_filename if @weather_filename
 
           # validate location properties against schema
@@ -86,9 +86,9 @@ module URBANopt
         ##
         def defaults
           hash = {}
-          hash[:latitude] = nil
-          hash[:longitude] = nil
-          hash[:surface_elevation] = nil
+          hash[:latitude_deg] = nil
+          hash[:longitude_deg] = nil
+          hash[:surface_elevation_ft] = nil
           hash[:weather_filename] = nil
 
           return hash
