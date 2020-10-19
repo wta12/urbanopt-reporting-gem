@@ -25,6 +25,10 @@ main h1 {
 #home-section, #search-section, #fileindex-section {
     display: none !important;
 }
+
+nav {
+    width: 450px;
+}
 .nav-section h3 {
     color: #999;
     font-size: 1.1em;
