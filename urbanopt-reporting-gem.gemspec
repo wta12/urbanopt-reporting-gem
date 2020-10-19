@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Library to report URBANopt results'
   spec.description   = 'Library include scenario default reporting measure and scenario defaults reports schema and classes'
   spec.homepage      = 'https://github.com/urbanopt'
+  spec.licenses      = 'Nonstandard'
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -26,8 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 2.1'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.7'
-
-  spec.add_dependency 'json-schema'
-  spec.add_dependency 'json_pure'
-  spec.add_dependency 'openstudio-extension', '~> 0.2.3'
+  spec.add_runtime_dependency 'json-schema', '~> 2.8'
+  spec.add_runtime_dependency 'json_pure', '~> 2.3'
+  spec.add_runtime_dependency 'openstudio-extension', '~> 0.2.5'
 end

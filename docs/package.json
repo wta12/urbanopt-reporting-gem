@@ -1,0 +1,30 @@
+{
+  "name": "urbanopt-reporting-gem-docs",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vuepress dev",
+    "build": "vuepress build",
+    "deploy": "gh-pages -d .vuepress/dist"
+  },
+  "author": "NREL",
+  "dependencies": {
+    "highlight.js": "^10.3.1",
+    "json-schema-ref-parser": "^9.0.6",
+    "json-schema-view-js": "git+https://git@github.com/bgschiller/json-schema-view-js.git",
+    "vuepress": "^1.7.1",
+    "webpack-dev-middleware": "^3.6.0"
+  },
+  "devDependencies": {
+    "braces": "^3.0.2",
+    "dot-prop": "^5.3.0",
+    "gh-pages": "^3.1.0",
+    "js-yaml": "^3.14.0",
+    "minimist": ">=1.2.3",
+    "node-forge": ">=0.10.0",
+    "serialize-javascript": "^5.0.1",
+    "set-value": "^3.0.2",
+    "yargs-parser": "^20.2.3"
+  }
+}
