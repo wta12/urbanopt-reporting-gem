@@ -59,9 +59,6 @@
   <ul class="link-list" role="directory">
     <li><a href="#label-URBANopt+Reporting+Gem">URBANopt Reporting Gem</a>
     <li><a href="#label-back+to+main+docs"><a href="../">back to main docs</a></a>
-    <li><a href="#label-Installation">Installation</a>
-    <li><a href="#label-Testing">Testing</a>
-    <li><a href="#label-Releasing">Releasing</a>
   </ul>
 </div>
 
@@ -94,48 +91,19 @@
 
 <h3 id="label-back+to+main+docs"><a href="../">back to main docs</a><span><a href="#label-back+to+main+docs">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
-<p>The URBANopt™ Reporting Gem defines the URABNopt reports (Scenario and
-Feature reports). It also includes the default reporting measure which
-query results from the energyplus sql database and reports it in the
+<p>The URBANopt™ Reporting Gem defines the <a
+href="URBANopt.html">URBANopt</a> Scenario report and Feature reports. It
+also includes the default reporting measure which queries the simulation
+results from the energyplus sql database and inserts them into the Feature
+reports.</p>
+
+<p>The <a
+href="https://urbanopt.github.io/urbanopt-reporting-gem/schemas/scenario-schema.html">schema</a>
+link contains more information about the JSON schema for Scenario and
 Feature reports.</p>
 
 <p><a href="https://urbanopt.github.io/urbanopt-reporting-gem/">RDoc
 Documentation</a></p>
-
-<h2 id="label-Installation">Installation<span><a href="#label-Installation">&para;</a> <a href="#top">&uarr;</a></span></h2>
-
-<p>Add this line to your application&#39;s Gemfile:</p>
-
-<pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;urbanopt-reporting&#39;</span>
-</pre>
-
-<p>And then execute:</p>
-
-<pre>$ bundle install
-$ bundle update</pre>
-
-<p>Or install it yourself as:</p>
-
-<pre>$ gem install &#39;urbanopt-reporting&#39;</pre>
-
-<h2 id="label-Testing">Testing<span><a href="#label-Testing">&para;</a> <a href="#top">&uarr;</a></span></h2>
-
-<p>Check out the repository and then execute:</p>
-
-<pre>$ bundle install
-$ bundle update
-$ bundle exec rake</pre>
-
-<h2 id="label-Releasing">Releasing<span><a href="#label-Releasing">&para;</a> <a href="#top">&uarr;</a></span></h2>
-<ul><li>
-<p>Update change log</p>
-</li><li>
-<p>Update version in <code>/lib/urbanopt/reporting/version.rb</code></p>
-</li><li>
-<p>Merge down to master</p>
-</li><li>
-<p>run <code>rake release</code> from master</p>
-</li></ul>
 </main>
 
 
