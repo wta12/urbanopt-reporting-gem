@@ -29,5 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.7'
   spec.add_runtime_dependency 'json-schema', '~> 2.8'
   spec.add_runtime_dependency 'json_pure', '~> 2.3'
-  spec.add_runtime_dependency 'openstudio-extension', '~> 0.2.5'
+  spec.add_runtime_dependency 'openstudio-extension', '~> 0.3.1'
 end
