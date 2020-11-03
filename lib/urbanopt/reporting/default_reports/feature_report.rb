@@ -224,30 +224,24 @@ module URBANopt
         end
 
         ##
-        # Saves the 'default_feature_report.json' and 'default_feature_report.csv' files
+        # Saves the 'default_feature_report.json' file to the results directory
         ##
         # [parameters]:
-        # +file_name+ - _String_ - Assign a name to the saved feature report results file without an extension
-        def save_feature_report(file_name = 'default_feature_report')
+        # +file_name+ - _String_ - Assign a name to the saved feature report file without an extension
+        def save_json_report(file_name = 'default_feature_report')
           # reassign the initialize local variable @file_name to the file name input.
           @file_name = file_name
 
+          # define the results_dir_path
+          results_dir_path = File.join(@directory_name, 'feature_reports')
           # create feature reports directory
-          Dir.mkdir(File.join(@directory_name, 'feature_reports')) unless Dir.exist?(File.join(@directory_name, 'feature_reports'))
+          Dir.mkdir(results_dir_path) unless Dir.exist?(File.join(@directory_name, 'feature_reports'))
 
-          # save the csv data
-          old_timeseries_path = nil
-          if !@timeseries_csv.path.nil?
-            old_timeseries_path = @timeseries_csv.path
-          end
-
-          @timeseries_csv.path = File.join(@directory_name, 'feature_reports', file_name + '.csv')
-          @timeseries_csv.save_data
-
+          ## save json rport
           # feature_hash
           feature_hash = to_hash
 
-          json_name_path = File.join(@directory_name, 'feature_reports', file_name + '.json')
+          json_name_path = File.join(results_dir_path, file_name + '.json')
 
           File.open(json_name_path, 'w') do |f|
             f.puts JSON.pretty_generate(feature_hash)
@@ -259,13 +253,35 @@ module URBANopt
             end
           end
 
-          if !old_timeseries_path.nil?
-            @timeseries_csv.path = old_timeseries_path
-          else
-            @timeseries_csv.path = File.join(@directory_name, 'feature_reports', file_name + '.csv')
-          end
-          return true
         end
+
+        ##
+        # Saves the 'default_feature_report.csv' file to the results directory
+        ##
+        # [parameters]:
+        # +file_name+ - _String_ - Assign a name to the saved feature report file without an extension
+        def save_csv_report(file_name = 'default_feature_report')
+          # reassign the initialize local variable @file_name to the file name input.
+          @file_name = file_name
+
+          # define the results_dir_path
+          results_dir_path = File.join(@directory_name, 'feature_reports')
+          # create feature reports directory
+          Dir.mkdir(results_dir_path) unless Dir.exist?(File.join(@directory_name, 'feature_reports'))
+
+          ## copy CSV report to the new feature_reports folder
+          # get all folder names in the feature diectory
+          directory_folders = Dir.glob "#{@directory_name}/*/"
+          # copy the CSV report to the new feature_reports folder
+          directory_folders.each do |f|
+            if f.include? '_default_feature_reports'
+              FileUtils.cp(File.join(f, 'default_feature_reports.csv'), File.join(results_dir_path, @file_name +'.csv'))
+            end
+          end
+        end
+
+
+
       end
     end
   end
