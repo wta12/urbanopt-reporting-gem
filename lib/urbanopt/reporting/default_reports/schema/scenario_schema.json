@@ -301,6 +301,10 @@
 					"description": "Sum of all natural gas end uses consumption (kWh)",
 					"type": "number"
 				},
+        "propane_kwh": {
+					"description": "Sum of all propane end uses consumption (kWh)",
+					"type": "number"
+        },
 				"additional_fuel_kwh": {
 					"description": "Sum of all additional fuel end uses consumption (kWh)",
 					"type": "number"
@@ -371,6 +375,9 @@
 				"natural_gas_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
+        "propane_kwh": {
+          "$ref": "#/definitions/EndUse"
+        },
 				"additional_fuel_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
@@ -522,6 +529,7 @@
 					"enum": [
 						"Electricity",
 						"Natural Gas",
+            "Propane",
 						"District Cooling",
 						"District Heating",
 						"Additional Fuel",

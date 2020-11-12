@@ -39,9 +39,9 @@ module URBANopt
       # Enduses class inlclude results for each fuel type.
       ##
       class EndUses
-        attr_accessor :electricity_kwh, :natural_gas_kwh, :additional_fuel_kwh, :district_cooling_kwh, :district_heating_kwh, :water_qbft # :nodoc:
+        attr_accessor :electricity_kwh, :natural_gas_kwh, :propane_kwh, :additional_fuel_kwh, :district_cooling_kwh, :district_heating_kwh, :water_qbft # :nodoc:
         ##
-        # EndUses class intialize end_uses(fuel type) attributes: +:electricity_kwh+ , +:natural_gas_kwh+ , +:additional_fuel_kwh+ ,
+        # EndUses class intialize end_uses(fuel type) attributes: +:electricity_kwh+ , +:natural_gas_kwh+ , +:propane_kwh+ , +:additional_fuel_kwh+ ,
         # +:district_cooling_kwh+ , +:district_heating_kwh+ , +:water_qbft+
         ##
         # [parameters:]
@@ -53,6 +53,7 @@ module URBANopt
 
           @electricity_kwh = EndUse.new(hash[:electricity_kwh])
           @natural_gas_kwh = EndUse.new(hash[:natural_gas_kwh])
+          @propane_kwh = EndUse.new(hash[:propane_kwh])
           @additional_fuel_kwh = EndUse.new(hash[:additional_fuel_kwh])
           @district_cooling_kwh = EndUse.new(hash[:district_cooling_kwh])
           @district_heating_kwh = EndUse.new(hash[:district_heating_kwh])
@@ -72,13 +73,17 @@ module URBANopt
         def to_hash
           result = {}
 
-          electricity_kwh_hash = @electricity_kwh.to_hash if @electricity_kwh.to_hash
+          electricity_kwh_hash = @electricity_kwh.to_hash if @electricity_kwh
           electricity_kwh_hash.delete_if { |k, v| v.nil? }
           result[:electricity_kwh] = electricity_kwh_hash if @electricity_kwh
 
           natural_gas_kwh_hash = @natural_gas_kwh.to_hash if @natural_gas_kwh
           natural_gas_kwh_hash.delete_if { |k, v| v.nil? }
           result[:natural_gas_kwh] = natural_gas_kwh_hash if @natural_gas_kwh
+
+          propane_kwh_hash = @propane_kwh.to_hash if @propane_kwh
+          propane_kwh_hash.delete_if { |k, v| v.nil? }
+          result[:propane_kwh] = propane_kwh_hash if @propane_kwh
 
           additional_fuel_kwh_hash = @additional_fuel_kwh.to_hash if @additional_fuel_kwh
           additional_fuel_kwh_hash.delete_if { |k, v| v.nil? }
@@ -111,6 +116,7 @@ module URBANopt
           hash = {}
           hash[:electricity_kwh] = EndUse.new.to_hash
           hash[:natural_gas_kwh] = EndUse.new.to_hash
+          hash[:propane_kwh] = EndUse.new.to_hash
           hash[:additional_fuel_kwh] = EndUse.new.to_hash
           hash[:district_cooling_kwh] = EndUse.new.to_hash
           hash[:district_heating_kwh] = EndUse.new.to_hash
@@ -129,6 +135,7 @@ module URBANopt
           # modify the existing_period by summing up the results ; # sum results only if they exist
           @electricity_kwh.merge_end_use!(new_end_uses.electricity_kwh)
           @natural_gas_kwh.merge_end_use!(new_end_uses.natural_gas_kwh)
+          @propane_kwh.merge_end_use!(new_end_uses.propane_kwh)
           @additional_fuel_kwh.merge_end_use!(new_end_uses.additional_fuel_kwh)
           @district_cooling_kwh.merge_end_use!(new_end_uses.district_cooling_kwh)
           @district_heating_kwh.merge_end_use!(new_end_uses.district_heating_kwh)

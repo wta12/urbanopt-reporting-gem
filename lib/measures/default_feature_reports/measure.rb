@@ -99,37 +99,39 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
   # define fuel types
   def fuel_types
-    fuel_types = [
-      'Electricity',
-      'Gas',
-      'AdditionalFuel',
-      'DistrictCooling',
-      'DistrictHeating',
-      'Water'
-    ]
+    fuel_types = {
+      'Electricity' => 'Electricity',
+      'Gas' => 'Natural Gas',
+      'Propane' => 'Propane',
+      # 'FuelOil2' => 'Fuel Oil 2',
+      'AdditionalFuel' => 'Additional Fuel',
+      'DistrictCooling' => 'District Cooling',
+      'DistrictHeating' => 'District Heating',
+      'Water' => 'Water'
+    }
 
     return fuel_types
   end
 
   # define enduses
   def end_uses
-    end_uses = [
-      'Heating',
-      'Cooling',
-      'InteriorLights',
-      'ExteriorLights',
-      'InteriorEquipment',
-      'ExteriorEquipment',
-      'Fans',
-      'Pumps',
-      'HeatRejection',
-      'Humidifier',
-      'HeatRecovery',
-      'WaterSystems',
-      'Refrigeration',
-      'Generators',
-      'Facility'
-    ]
+    end_uses = {
+      'Heating' => 'Heating',
+      'Cooling' => 'Cooling',
+      'InteriorLights' => 'Interior Lighting',
+      'ExteriorLights' => 'Exterior Lighting',
+      'InteriorEquipment' => 'Interior Equipment',
+      'ExteriorEquipment' => 'Exterior Equipment',
+      'Fans' => 'Fans',
+      'Pumps' => 'Pumps',
+      'HeatRejection' => 'Heat Rejection',
+      'Humidifier' => 'Humidification',
+      'HeatRecovery' => 'Heat Recovery',
+      'WaterSystems' => 'Water Systems',
+      'Refrigeration' => 'Refrigeration',
+      'Generators' => 'Generators',
+      'Facility' => 'Facility'
+    }
 
     return end_uses
   end
@@ -163,7 +165,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # Request the output for each end use/fuel type combination
     end_uses.each do |end_use|
+      end_use, _ = end_use
       fuel_types.each do |fuel_type|
+        fuel_type, _ = fuel_type
         variable_name = if end_use == 'Facility'
                           "#{fuel_type}:#{end_use}"
                         else
@@ -572,6 +576,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     natural_gas = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Natural Gas'")
     feature_report.reporting_periods[0].natural_gas_kwh = convert_units(natural_gas, 'GJ', 'kWh')
 
+    # propane
+    propane = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='Propane:Facility' AND ColumnName='Annual Value'")
+    feature_report.reporting_periods[0].propane_kwh = convert_units(propane, 'GJ', 'kWh')
+
     # additional_fuel
     additional_fuel = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Additional Fuel'")
     feature_report.reporting_periods[0].additional_fuel_kwh = convert_units(additional_fuel, 'GJ', 'kWh')
@@ -596,11 +604,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ## end_uses
 
     # get fuel type as listed in the sql file
-    fuel_type = ['Electricity', 'Natural Gas', 'Additional Fuel', 'District Cooling', 'District Heating', 'Water']
+    fuel_type = fuel_types.values
 
     # get enduses as listed in the sql file
-    enduses = ['Heating', 'Cooling', 'Interior Lighting', 'Exterior Lighting', 'Interior Equipment', 'Exterior Equipment', 'Fans', 'Pumps',
-               'Heat Rejection', 'Humidification', 'Heat Recovery', 'Water Systems', 'Refrigeration', 'Generators']
+    enduses = end_uses.values
+    enduses.delete('Facility')
 
     # loop through fuel types and enduses to fill in sql_query method
     fuel_type.each do |ft|
