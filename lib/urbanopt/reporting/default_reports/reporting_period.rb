@@ -44,13 +44,13 @@ module URBANopt
       ##
       class ReportingPeriod
         attr_accessor :id, :name, :multiplier, :start_date, :end_date, :month, :day_of_month, :year, :total_site_energy_kwh, :total_source_energy_kwh,
-                      :net_site_energy_kwh, :net_source_energy_kwh, :total_utility_cost_dollar, :net_utility_cost_dollar, :utility_costs_dollar, :electricity_kwh, :natural_gas_kwh, :propane_kwh, :additional_fuel_kwh, :district_cooling_kwh,
+                      :net_site_energy_kwh, :net_source_energy_kwh, :total_utility_cost_dollar, :net_utility_cost_dollar, :utility_costs_dollar, :electricity_kwh, :natural_gas_kwh, :propane_kwh, :fuel_oil_kwh, :other_fuels_kwh, :district_cooling_kwh,
                       :district_heating_kwh, :water_qbft, :electricity_produced_kwh, :end_uses, :energy_production_kwh, :photovoltaic,
                       :fuel_type, :total_cost_dollar, :usage_cost_dollar, :demand_cost_dollar, :comfort_result, :time_setpoint_not_met_during_occupied_cooling,
                       :time_setpoint_not_met_during_occupied_heating, :time_setpoint_not_met_during_occupied_hours, :hours_out_of_comfort_bounds_PMV, :hours_out_of_comfort_bounds_PPD #:nodoc:
         # ReportingPeriod class initializes the reporting period attributes:
         # +:id+ , +:name+ , +:multiplier+ , +:start_date+ , +:end_date+ , +:month+ , +:day_of_month+ , +:year+ , +:total_site_energy_kwh+ , +:total_source_energy_kwh+ ,
-        # +:net_site_energy_kwh+ , +:net_source_energy_kwh+ , +:total_utility_cost_dollar , +:net_utility_cost_dollar+ , +:utility_costs_dollar+ , +:electricity_kwh+ , +:natural_gas_kwh+ , +:propane_kwh+ , +:additional_fuel_kwh+ , +:district_cooling_kwh+ ,
+        # +:net_site_energy_kwh+ , +:net_source_energy_kwh+ , +:total_utility_cost_dollar , +:net_utility_cost_dollar+ , +:utility_costs_dollar+ , +:electricity_kwh+ , +:natural_gas_kwh+ , +:propane_kwh+ , +:fuel_oil_kwh+ , +:other_fuels_kwh+ , +:district_cooling_kwh+ ,
         # +:district_heating_kwh+ , +:water_qbft+ , +:electricity_produced_kwh+ , +:end_uses+ , +:energy_production_kwh+ , +:photovoltaic_kwh+ ,
         # +:fuel_type+ , +:total_cost_dollar+ , +:usage_cost_dollar+ , +:demand_cost_dollar+ , +:comfort_result+ , +:time_setpoint_not_met_during_occupied_cooling+ ,
         # +:time_setpoint_not_met_during_occupied_heating+ , +:time_setpoint_not_met_during_occupied_hours+
@@ -70,15 +70,16 @@ module URBANopt
 
           @total_site_energy_kwh = hash[:total_site_energy_kwh]
           @total_source_energy_kwh = hash[:total_source_energy_kwh]
-          @net_site_energy_kwh = hash [:net_site_energy_kwh]
-          @net_source_energy_kwh = hash [:net_source_energy_kwh]
-          @net_utility_cost_dollar = hash [:net_utility_cost_dollar]
-          @total_utility_cost_dollar = hash [:total_utility_cost_dollar]
-          @electricity_kwh = hash [:electricity_kwh]
-          @natural_gas_kwh = hash [:natural_gas_kwh]
-          @propane_kwh = hash [:propane_kwh]
-          @additional_fuel_kwh = hash [:additional_fuel_kwh]
-          @district_cooling_kwh = hash [:district_cooling_kwh]
+          @net_site_energy_kwh = hash[:net_site_energy_kwh]
+          @net_source_energy_kwh = hash[:net_source_energy_kwh]
+          @net_utility_cost_dollar = hash[:net_utility_cost_dollar]
+          @total_utility_cost_dollar = hash[:total_utility_cost_dollar]
+          @electricity_kwh = hash[:electricity_kwh]
+          @natural_gas_kwh = hash[:natural_gas_kwh]
+          @propane_kwh = hash[:propane_kwh]
+          @fuel_oil_kwh = hash[:fuel_oil_kwh]
+          @other_fuels_kwh = hash[:other_fuels_kwh]
+          @district_cooling_kwh = hash[:district_cooling_kwh]
           @district_heating_kwh = hash[:district_heating_kwh]
           @water_qbft = hash[:water_qbft]
           @electricity_produced_kwh = hash[:electricity_produced_kwh]
@@ -116,7 +117,8 @@ module URBANopt
           hash[:electricity_kwh] = nil
           hash[:natural_gas_kwh] = nil
           hash[:propane_kwh] = nil
-          hash[:additional_fuel_kwh] = nil
+          hash[:fuel_oil_kwh] = nil
+          hash[:other_fuels_kwh] = nil
           hash[:district_cooling_kwh] = nil
           hash[:district_heating_kwh] = nil
 
@@ -153,7 +155,8 @@ module URBANopt
           result[:electricity_kwh] = @electricity_kwh if @electricity_kwh
           result[:natural_gas_kwh] = @natural_gas_kwh if @natural_gas_kwh
           result[:propane_kwh] = @propane_kwh if @propane_kwh
-          result[:additional_fuel_kwh] = @additional_fuel_kwh if @additional_fuel_kwh
+          result[:fuel_oil_kwh] = @fuel_oil_kwh if @fuel_oil_kwh
+          result[:other_fuels_kwh] = @other_fuels_kwh if @other_fuels_kwh
           result[:district_cooling_kwh] = @district_cooling_kwh if @district_cooling_kwh
           result[:district_heating_kwh] = @district_heating_kwh if @district_heating_kwh
           result[:water_qbft] = @water_qbft if @water_qbft
@@ -222,7 +225,8 @@ module URBANopt
           existing_period.electricity_kwh = add_values(existing_period.electricity_kwh, new_period.electricity_kwh)
           existing_period.natural_gas_kwh = add_values(existing_period.natural_gas_kwh, new_period.natural_gas_kwh)
           existing_period.propane_kwh = add_values(existing_period.propane_kwh, new_period.propane_kwh)
-          existing_period.additional_fuel_kwh = add_values(existing_period.additional_fuel_kwh, new_period.additional_fuel_kwh)
+          existing_period.fuel_oil_kwh = add_values(existing_period.fuel_oil_kwh, new_period.fuel_oil_kwh)
+          existing_period.other_fuels_kwh = add_values(existing_period.other_fuels_kwh, new_period.other_fuels_kwh)
           existing_period.district_cooling_kwh = add_values(existing_period.district_cooling_kwh, new_period.district_cooling_kwh)
           existing_period.district_heating_kwh = add_values(existing_period.district_heating_kwh, new_period.district_heating_kwh)
           existing_period.water_qbft = add_values(existing_period.water_qbft, new_period.water_qbft)

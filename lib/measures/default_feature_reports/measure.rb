@@ -232,7 +232,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       end
     end
 
-    val
+    return val
   end
 
   # unit conversion method
@@ -577,12 +577,20 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.reporting_periods[0].natural_gas_kwh = convert_units(natural_gas, 'GJ', 'kWh')
 
     # propane
+    propane = 0.0
     propane = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='Propane:Facility' AND ColumnName='Annual Value'")
-    feature_report.reporting_periods[0].propane_kwh = convert_units(propane, 'GJ', 'kWh')
+    feature_report.reporting_periods[0].propane_kwh = convert_units(propane, 'GJ', 'kWh') unless propane.nil?
 
-    # additional_fuel
+    # fuel_oil
+    fuel_oil = 0.0
+    fuel_oil = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='FuelOil#2:Facility' AND ColumnName='Annual Value'")
+    feature_report.reporting_periods[0].fuel_oil_kwh = convert_units(fuel_oil, 'GJ', 'kWh') unless fuel_oil.nil?
+
+    # other_fuels
     additional_fuel = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Additional Fuel'")
-    feature_report.reporting_periods[0].additional_fuel_kwh = convert_units(additional_fuel, 'GJ', 'kWh')
+    feature_report.reporting_periods[0].other_fuels_kwh = convert_units(additional_fuel, 'GJ', 'kWh')
+    feature_report.reporting_periods[0].other_fuels_kwh -= feature_report.reporting_periods[0].propane_kwh
+    feature_report.reporting_periods[0].other_fuels_kwh -= feature_report.reporting_periods[0].fuel_oil_kwh
 
     # district_cooling
     district_cooling = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Cooling'")
