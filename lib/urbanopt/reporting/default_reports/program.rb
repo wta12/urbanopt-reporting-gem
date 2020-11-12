@@ -40,18 +40,18 @@ module URBANopt
       # Program includes all building program related information.
       ##
       class Program
-        attr_accessor :site_area, :floor_area, :conditioned_area, :unconditioned_area, :footprint_area, :maximum_roof_height,
-                      :maximum_number_of_stories, :maximum_number_of_stories_above_ground, :parking_area, :number_of_parking_spaces,
-                      :number_of_parking_spaces_charging, :parking_footprint_area, :maximum_parking_height, :maximum_number_of_parking_stories,
+        attr_accessor :site_area_sqft, :floor_area_sqft, :conditioned_area_sqft, :unconditioned_area_sqft, :footprint_area_sqft, :maximum_roof_height_ft,
+                      :maximum_number_of_stories, :maximum_number_of_stories_above_ground, :parking_area_sqft, :number_of_parking_spaces,
+                      :number_of_parking_spaces_charging, :parking_footprint_area_sqft, :maximum_parking_height_ft, :maximum_number_of_parking_stories,
                       :maximum_number_of_parking_stories_above_ground, :number_of_residential_units, :building_types, :building_type, :maximum_occupancy,
-                      :area, :window_area, :north_window_area, :south_window_area, :east_window_area, :west_window_area, :wall_area, :roof_area, :equipment_roof_area,
-                      :photovoltaic_roof_area, :available_roof_area, :total_roof_area, :orientation, :aspect_ratio, :total_construction_cost # :nodoc:
-        # Program class initialize building program attributes: +:site_area+ , +:floor_area+ , +:conditioned_area+ , +:unconditioned_area+ ,
-        # +:footprint_area+ , +:maximum_roof_height, +:maximum_number_of_stories+ , +:maximum_number_of_stories_above_ground+ , +:parking_area+ ,
-        # +:number_of_parking_spaces+ , +:number_of_parking_spaces_charging+ , +:parking_footprint_area+ , +:maximum_parking_height+ , +:maximum_number_of_parking_stories+ ,
+                      :area_sqft, :window_area_sqft, :north_window_area_sqft, :south_window_area_sqft, :east_window_area_sqft, :west_window_area_sqft, :wall_area_sqft, :roof_area_sqft, :equipment_roof_area_sqft,
+                      :photovoltaic_roof_area_sqft, :available_roof_area_sqft, :total_roof_area_sqft, :orientation_deg, :aspect_ratio, :total_construction_cost_dollar # :nodoc:
+        # Program class initialize building program attributes: +:site_area_sqft+ , +:floor_area_sqft+ , +:conditioned_area_sqft+ , +:unconditioned_area_sqft+ ,
+        # +:footprint_area_sqft+ , +:maximum_roof_height_ft, +:maximum_number_of_stories+ , +:maximum_number_of_stories_above_ground+ , +:parking_area_sqft+ ,
+        # +:number_of_parking_spaces+ , +:number_of_parking_spaces_charging+ , +:parking_footprint_area_sqft+ , +:maximum_parking_height_ft+ , +:maximum_number_of_parking_stories+ ,
         # +:maximum_number_of_parking_stories_above_ground+ , +:number_of_residential_units+ , +:building_types+ , +:building_type+ , +:maximum_occupancy+ ,
-        # +:area+ , +:window_area+ , +:north_window_area+ , +:south_window_area+ , +:east_window_area+ , +:west_window_area+ , +:wall_area+ , +:roof_area+ ,
-        # +:equipment_roof_area+ , +:photovoltaic_roof_area+ , +:available_roof_area+ , +:total_roof_area+ , +:orientation+ , +:aspect_ratio+
+        # +:area_sqft+ , +:window_area_sqft+ , +:north_window_area_sqft+ , +:south_window_area_sqft+ , +:east_window_area_sqft+ , +:west_window_area_sqft+ , +:wall_area_sqft+ , +:roof_area_sqft+ ,
+        # +:equipment_roof_area_sqft+ , +:photovoltaic_roof_area_sqft+ , +:available_roof_area_sqft+ , +:total_roof_area_sqft+ , +:orientation_deg+ , +:aspect_ratio+
         ##
         # [parameters:]
         # +hash+ - _Hash_ - A hash which may contain a deserialized program.
@@ -60,29 +60,29 @@ module URBANopt
           hash.delete_if { |k, v| v.nil? }
           hash = defaults.merge(hash)
 
-          @site_area = hash[:site_area]
-          @floor_area = hash[:floor_area]
-          @conditioned_area = hash[:conditioned_area]
-          @unconditioned_area = hash[:unconditioned_area]
-          @footprint_area = hash[:footprint_area]
-          @maximum_roof_height = hash[:maximum_roof_height]
+          @site_area_sqft = hash[:site_area_sqft]
+          @floor_area_sqft = hash[:floor_area_sqft]
+          @conditioned_area_sqft = hash[:conditioned_area_sqft]
+          @unconditioned_area_sqft = hash[:unconditioned_area_sqft]
+          @footprint_area_sqft = hash[:footprint_area_sqft]
+          @maximum_roof_height_ft = hash[:maximum_roof_height_ft]
           @maximum_number_of_stories = hash[:maximum_number_of_stories]
           @maximum_number_of_stories_above_ground = hash[:maximum_number_of_stories_above_ground]
-          @parking_area = hash[:parking_area]
+          @parking_area_sqft = hash[:parking_area_sqft]
           @number_of_parking_spaces = hash[:number_of_parking_spaces]
           @number_of_parking_spaces_charging = hash[:number_of_parking_spaces_charging]
-          @parking_footprint_area = hash[:parking_footprint_area]
-          @maximum_parking_height = hash[:maximum_parking_height]
+          @parking_footprint_area_sqft = hash[:parking_footprint_area_sqft]
+          @maximum_parking_height_ft = hash[:maximum_parking_height_ft]
           @maximum_number_of_parking_stories = hash[:maximum_number_of_parking_stories]
           @maximum_number_of_parking_stories_above_ground = hash[:maximum_number_of_parking_stories_above_ground]
           @number_of_residential_units = hash[:number_of_residential_units]
           @building_types = hash[:building_types]
-          @window_area = hash[:window_area]
-          @wall_area = hash[:wall_area]
-          @roof_area = hash[:roof_area]
-          @orientation = hash[:orientation]
+          @window_area_sqft = hash[:window_area_sqft]
+          @wall_area_sqft = hash[:wall_area_sqft]
+          @roof_area_sqft = hash[:roof_area_sqft]
+          @orientation_deg = hash[:orientation_deg]
           @aspect_ratio = hash[:aspect_ratio]
-          @total_construction_cost = hash[:total_construction_cost]
+          @total_construction_cost_dollar = hash[:total_construction_cost_dollar]
 
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -94,29 +94,29 @@ module URBANopt
         ##
         def defaults
           hash = {}
-          hash[:site_area] = nil
-          hash[:floor_area] = nil
-          hash[:conditioned_area] = nil
-          hash[:unconditioned_area] = nil
-          hash[:footprint_area] = nil
-          hash[:maximum_roof_height] = nil
+          hash[:site_area_sqft] = nil
+          hash[:floor_area_sqft] = nil
+          hash[:conditioned_area_sqft] = nil
+          hash[:unconditioned_area_sqft] = nil
+          hash[:footprint_area_sqft] = nil
+          hash[:maximum_roof_height_ft] = nil
           hash[:maximum_number_of_stories] = nil
           hash[:maximum_number_of_stories_above_ground] = nil
-          hash[:parking_area] = nil
+          hash[:parking_area_sqft] = nil
           hash[:number_of_parking_spaces] = nil
           hash[:number_of_parking_spaces_charging] = nil
-          hash[:parking_footprint_area] = nil
-          hash[:maximum_parking_height] = nil
+          hash[:parking_footprint_area_sqft] = nil
+          hash[:maximum_parking_height_ft] = nil
           hash[:maximum_number_of_parking_stories] = nil
           hash[:maximum_number_of_parking_stories_above_ground] = nil
           hash[:number_of_residential_units] = nil
-          hash[:building_types] = [{ building_type: nil, maximum_occupancy: nil, floor_area: nil }]
-          hash[:window_area] = { north_window_area: nil, south_window_area: nil, east_window_area: nil, west_window_area: nil, total_window_area: nil }
-          hash[:wall_area] = { north_wall_area: nil, south_wall_area: nil, east_wall_area: nil, west_wall_area: nil, total_wall_area: nil }
-          hash[:roof_area] = { equipment_roof_area: nil, photovoltaic_roof_area: nil, available_roof_area: nil, total_roof_area: nil }
-          hash[:orientation] = nil
+          hash[:building_types] = [{ building_type: nil, maximum_occupancy: nil, floor_area_sqft: nil }]
+          hash[:window_area_sqft] = { north_window_area_sqft: nil, south_window_area_sqft: nil, east_window_area_sqft: nil, west_window_area_sqft: nil, total_window_area_sqft: nil }
+          hash[:wall_area_sqft] = { north_wall_area_sqft: nil, south_wall_area_sqft: nil, east_wall_area_sqft: nil, west_wall_area_sqft: nil, total_wall_area_sqft: nil }
+          hash[:roof_area_sqft] = { equipment_roof_area_sqft: nil, photovoltaic_roof_area_sqft: nil, available_roof_area_sqft: nil, total_roof_area_sqft: nil }
+          hash[:orientation_deg] = nil
           hash[:aspect_ratio] = nil
-          hash[:total_construction_cost] = nil
+          hash[:total_construction_cost_dollar] = nil
           return hash
         end
 
@@ -128,19 +128,19 @@ module URBANopt
         ##
         def to_hash
           result = {}
-          result[:site_area] = @site_area if @site_area
-          result[:floor_area] = @floor_area if @floor_area
-          result[:conditioned_area] = @conditioned_area if @conditioned_area
-          result[:unconditioned_area] = @unconditioned_area if @unconditioned_area
-          result[:footprint_area] = @footprint_area if @footprint_area
-          result[:maximum_roof_height] = @maximum_roof_height if @maximum_roof_height
+          result[:site_area_sqft] = @site_area_sqft if @site_area_sqft
+          result[:floor_area_sqft] = @floor_area_sqft if @floor_area_sqft
+          result[:conditioned_area_sqft] = @conditioned_area_sqft if @conditioned_area_sqft
+          result[:unconditioned_area_sqft] = @unconditioned_area_sqft if @unconditioned_area_sqft
+          result[:footprint_area_sqft] = @footprint_area_sqft if @footprint_area_sqft
+          result[:maximum_roof_height_ft] = @maximum_roof_height_ft if @maximum_roof_height_ft
           result[:maximum_number_of_stories] = @maximum_number_of_stories if @maximum_number_of_stories
           result[:maximum_number_of_stories_above_ground] = @maximum_number_of_stories_above_ground if @maximum_number_of_parking_stories_above_ground
-          result[:parking_area] = @parking_area if @parking_area
+          result[:parking_area_sqft] = @parking_area_sqft if @parking_area_sqft
           result[:number_of_parking_spaces] = @number_of_parking_spaces if @number_of_parking_spaces
           result[:number_of_parking_spaces_charging] = @number_of_parking_spaces_charging if @number_of_parking_spaces_charging
-          result[:parking_footprint_area] = @parking_footprint_area if @parking_footprint_area
-          result[:maximum_parking_height] = @maximum_parking_height if @maximum_parking_height
+          result[:parking_footprint_area_sqft] = @parking_footprint_area_sqft if @parking_footprint_area_sqft
+          result[:maximum_parking_height_ft] = @maximum_parking_height_ft if @maximum_parking_height_ft
           result[:maximum_number_of_parking_stories] = @maximum_number_of_parking_stories if @maximum_number_of_parking_stories
           result[:maximum_number_of_parking_stories_above_ground] = @maximum_number_of_parking_stories_above_ground if @maximum_number_of_parking_stories_above_ground
           result[:number_of_residential_units] = @number_of_residential_units if @number_of_residential_units
@@ -152,25 +152,25 @@ module URBANopt
             end
           end
 
-          # result[:window_area] = @window_area if @window_area
-          window_area_hash = @window_area if @window_area
-          window_area_hash.delete_if { |k, v| v.nil? }
-          result[:window_area] = window_area_hash if @window_area
+          # result[:window_area_sqft] = @window_area_sqft if @window_area_sqft
+          window_area_sqft_hash = @window_area_sqft if @window_area_sqft
+          window_area_sqft_hash.delete_if { |k, v| v.nil? }
+          result[:window_area_sqft] = window_area_sqft_hash if @window_area_sqft
 
-          # result[:wall_area] = @wall_area if @wall_area
-          wall_area_hash = @wall_area if @wall_area
-          wall_area_hash.delete_if { |k, v| v.nil? }
-          result[:wall_area] = wall_area_hash if @wall_area
+          # result[:wall_area_sqft] = @wall_area_sqft if @wall_area_sqft
+          wall_area_sqft_hash = @wall_area_sqft if @wall_area_sqft
+          wall_area_sqft_hash.delete_if { |k, v| v.nil? }
+          result[:wall_area_sqft] = wall_area_sqft_hash if @wall_area_sqft
 
-          # result[:roof_area] = @roof_area if @roof_area
-          roof_area_hash = @roof_area if @roof_area
-          roof_area_hash.delete_if { |k, v| v.nil? }
-          result[:roof_area] = roof_area_hash if @roof_area
+          # result[:roof_area_sqft] = @roof_area_sqft if @roof_area_sqft
+          roof_area_sqft_hash = @roof_area_sqft if @roof_area_sqft
+          roof_area_sqft_hash.delete_if { |k, v| v.nil? }
+          result[:roof_area_sqft] = roof_area_sqft_hash if @roof_area_sqft
 
-          result[:orientation] = @orientation if @orientation
+          result[:orientation_deg] = @orientation_deg if @orientation_deg
           result[:aspect_ratio] = @aspect_ratio if @aspect_ratio
 
-          result[:total_construction_cost] = @total_construction_cost if @total_construction_cost
+          result[:total_construction_cost_dollar] = @total_construction_cost_dollar if @total_construction_cost_dollar
 
           # validate program properties against schema
           if @@validator.validate(@@schema[:definitions][:Program][:properties], result).any?
@@ -221,43 +221,43 @@ module URBANopt
         # +other+ - _Program_ - An object of Program class.
         ##
         def add_program(other)
-          @site_area = add_values(@site_area, other.site_area)
+          @site_area_sqft = add_values(@site_area_sqft, other.site_area_sqft)
 
-          @floor_area = add_values(@floor_area, other.floor_area)
-          @conditioned_area = add_values(@conditioned_area, other.conditioned_area)
-          @unconditioned_area = add_values(@unconditioned_area, other.unconditioned_area)
-          @footprint_area = add_values(@footprint_area, other.footprint_area)
-          @maximum_roof_height = max_value(@maximum_roof_height, other.maximum_roof_height)
+          @floor_area_sqft = add_values(@floor_area_sqft, other.floor_area_sqft)
+          @conditioned_area_sqft = add_values(@conditioned_area_sqft, other.conditioned_area_sqft)
+          @unconditioned_area_sqft = add_values(@unconditioned_area_sqft, other.unconditioned_area_sqft)
+          @footprint_area_sqft = add_values(@footprint_area_sqft, other.footprint_area_sqft)
+          @maximum_roof_height_ft = max_value(@maximum_roof_height_ft, other.maximum_roof_height_ft)
           @maximum_number_of_stories = max_value(@maximum_number_of_stories, other.maximum_number_of_stories)
           @maximum_number_of_stories_above_ground = max_value(@maximum_number_of_stories_above_ground, other.maximum_number_of_stories_above_ground)
-          @parking_area = add_values(@parking_area, other.parking_area)
+          @parking_area_sqft = add_values(@parking_area_sqft, other.parking_area_sqft)
           @number_of_parking_spaces = add_values(@number_of_parking_spaces, other.number_of_parking_spaces)
           @number_of_parking_spaces_charging = add_values(@number_of_parking_spaces_charging, other.number_of_parking_spaces_charging)
-          @parking_footprint_area = add_values(@parkig_footprint_area, other.parking_footprint_area)
-          @maximum_parking_height = max_value(@maximum_parking_height, other.maximum_parking_height)
+          @parking_footprint_area_sqft = add_values(@parkig_footprint_area_sqft, other.parking_footprint_area_sqft)
+          @maximum_parking_height_ft = max_value(@maximum_parking_height_ft, other.maximum_parking_height_ft)
           @maximum_number_of_parking_stories = max_value(@maximum_number_of_parking_stories, other.maximum_number_of_parking_stories)
           @maximum_number_of_parking_stories_above_ground = max_value(maximum_number_of_parking_stories_above_ground, other.maximum_number_of_parking_stories_above_ground)
           @number_of_residential_units = add_values(@number_of_residential_units, other.number_of_residential_units)
-          @total_construction_cost = add_values(@total_construction_cost, other.total_construction_cost)
+          @total_construction_cost_dollar = add_values(@total_construction_cost_dollar, other.total_construction_cost_dollar)
 
           @building_types = other.building_types
 
-          @window_area[:north_window_area] = add_values(@window_area[:north_window_area], other.window_area[:north_window_area])
-          @window_area[:south_window_area] = add_values(@window_area[:south_window_area], other.window_area[:south_window_area])
-          @window_area[:east_window_area] = add_values(@window_area[:east_window_area], other.window_area[:east_window_area])
-          @window_area[:west_window_area] = add_values(@window_area[:west_window_area], other.window_area[:west_window_area])
-          @window_area[:total_window_area] =  add_values(@window_area[:total_window_area], other.window_area[:total_window_area])
+          @window_area_sqft[:north_window_area_sqft] = add_values(@window_area_sqft[:north_window_area_sqft], other.window_area_sqft[:north_window_area_sqft])
+          @window_area_sqft[:south_window_area_sqft] = add_values(@window_area_sqft[:south_window_area_sqft], other.window_area_sqft[:south_window_area_sqft])
+          @window_area_sqft[:east_window_area_sqft] = add_values(@window_area_sqft[:east_window_area_sqft], other.window_area_sqft[:east_window_area_sqft])
+          @window_area_sqft[:west_window_area_sqft] = add_values(@window_area_sqft[:west_window_area_sqft], other.window_area_sqft[:west_window_area_sqft])
+          @window_area_sqft[:total_window_area_sqft] =  add_values(@window_area_sqft[:total_window_area_sqft], other.window_area_sqft[:total_window_area_sqft])
 
-          @wall_area[:north_wall_area] = add_values(@wall_area[:north_wall_area], other.wall_area[:north_wall_area])
-          @wall_area[:south_wall_area] = add_values(@wall_area[:south_wall_area], other.wall_area[:south_wall_area])
-          @wall_area[:east_wall_area] = add_values(@wall_area[:east_wall_area], other.wall_area[:east_wall_area])
-          @wall_area[:west_wall_area] = add_values(@wall_area[:west_wall_area], other.wall_area[:west_wall_area])
-          @wall_area[:total_wall_area] = add_values(@wall_area[:total_wall_area], other.wall_area[:total_wall_area])
+          @wall_area_sqft[:north_wall_area_sqft] = add_values(@wall_area_sqft[:north_wall_area_sqft], other.wall_area_sqft[:north_wall_area_sqft])
+          @wall_area_sqft[:south_wall_area_sqft] = add_values(@wall_area_sqft[:south_wall_area_sqft], other.wall_area_sqft[:south_wall_area_sqft])
+          @wall_area_sqft[:east_wall_area_sqft] = add_values(@wall_area_sqft[:east_wall_area_sqft], other.wall_area_sqft[:east_wall_area_sqft])
+          @wall_area_sqft[:west_wall_area_sqft] = add_values(@wall_area_sqft[:west_wall_area_sqft], other.wall_area_sqft[:west_wall_area_sqft])
+          @wall_area_sqft[:total_wall_area_sqft] = add_values(@wall_area_sqft[:total_wall_area_sqft], other.wall_area_sqft[:total_wall_area_sqft])
 
-          @roof_area[:equipment_roof_area] = add_values(@roof_area[:equipment_roof_area], other.roof_area[:equipment_roof_area])
-          @roof_area[:photovoltaic_roof_area] = add_values(@roof_area[:photovoltaic_roof_area], other.roof_area[:photovoltaic_roof_area])
-          @roof_area[:available_roof_area] = add_values(@roof_area[:available_roof_area], other.roof_area[:available_roof_area])
-          @roof_area[:total_roof_area] = add_values(@roof_area[:total_roof_area], other.roof_area[:total_roof_area])
+          @roof_area_sqft[:equipment_roof_area_sqft] = add_values(@roof_area_sqft[:equipment_roof_area_sqft], other.roof_area_sqft[:equipment_roof_area_sqft])
+          @roof_area_sqft[:photovoltaic_roof_area_sqft] = add_values(@roof_area_sqft[:photovoltaic_roof_area_sqft], other.roof_area_sqft[:photovoltaic_roof_area_sqft])
+          @roof_area_sqft[:available_roof_area_sqft] = add_values(@roof_area_sqft[:available_roof_area_sqft], other.roof_area_sqft[:available_roof_area_sqft])
+          @roof_area_sqft[:total_roof_area_sqft] = add_values(@roof_area_sqft[:total_roof_area_sqft], other.roof_area_sqft[:total_roof_area_sqft])
         end
       end
     end

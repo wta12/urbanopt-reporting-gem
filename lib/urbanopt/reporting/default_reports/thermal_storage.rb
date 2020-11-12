@@ -42,17 +42,17 @@ module URBANopt
         ##
         # _Float_ - Total ice storage capacity on central plant loop in kWh
         #
-        attr_accessor :its_size
+        attr_accessor :its_size_kwh
 
         # _Float_ - Total ice storage capacity distributed to packaged systems in kWh
         #
-        attr_accessor :ptes_size
+        attr_accessor :ptes_size_kwh
 
         def initialize(hash = {})
           hash.delete_if { |k, v| v.nil? }
 
-          @its_size = hash[:its_size]
-          @ptes_size = hash[:ptes_size]
+          @its_size = hash[:its_size_kwh]
+          @ptes_size = hash[:ptes_size_kwh]
 
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -67,8 +67,8 @@ module URBANopt
         ##
         def defaults
           hash = {}
-          hash[:its_size] = nil
-          hash[:ptes_size] = nil
+          hash[:its_size_kwh] = nil
+          hash[:ptes_size_kwh] = nil
 
           return hash
         end
@@ -78,8 +78,8 @@ module URBANopt
         ##
         def to_hash
           result = {}
-          result[:its_size] = @its_size if @its_size
-          result[:ptes_size] = @ptes_size if @ptes_size
+          result[:its_size_kwh] = @its_size_kwh if @its_size_kwh
+          result[:ptes_size_kwh] = @ptes_size_kwh if @ptes_size_kwh
 
           return result
         end
@@ -100,8 +100,8 @@ module URBANopt
         # Merge thermal storage
         ##
         def self.merge_thermal_storage(existing_tes, new_tes)
-          existing_tes.its_size = add_values(existing_tes.its_size, new_tes.its_size)
-          existing_tes.ptes_size = add_values(existing_tes.ptes_size, new_tes.ptes_size)
+          existing_tes.its_size_kwh = add_values(existing_tes.its_size_kwh, new_tes.its_size_kwh)
+          existing_tes.ptes_size_kwh = add_values(existing_tes.ptes_size_kwh, new_tes.ptes_size_kwh)
 
           return existing_tes
         end
