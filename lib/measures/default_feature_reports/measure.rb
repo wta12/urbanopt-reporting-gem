@@ -102,6 +102,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     fuel_types = {
       'Electricity' => 'Electricity',
       'Gas' => 'Natural Gas',
+      'FuelOil#2' => 'Fuel Oil #2',
+      'Propane' => 'Propane',
       'AdditionalFuel' => 'Additional Fuel',
       'DistrictCooling' => 'District Cooling',
       'DistrictHeating' => 'District Heating',
@@ -617,6 +619,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # get fuel type as listed in the sql file
     fueltypes = fuel_types.values
+    fueltypes.delete('Propane')
+    fueltypes.delete('Fuel Oil #2')
 
     # get enduses as listed in the sql file
     enduses = end_uses.values
@@ -728,6 +732,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Electricity:Facility',
       'ElectricityProduced:Facility',
       'Gas:Facility',
+      'Propane:Facility',
+      'FuelOil#2:Facility',
       'Cooling:Electricity',
       'Heating:Electricity',
       'InteriorLights:Electricity',
@@ -741,6 +747,14 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Heating:Gas',
       'WaterSystems:Gas',
       'InteriorEquipment:Gas',
+      'HeatRejection:Propane',
+      'Heating:Propane',
+      'WaterSystems:Propane',
+      'InteriorEquipment:Propane',
+      'HeatRejection:FuelOil#2',
+      'Heating:FuelOil#2',
+      'WaterSystems:FuelOil#2',
+      'InteriorEquipment:FuelOil#2',
       'DistrictCooling:Facility',
       'DistrictHeating:Facility',
       'District Cooling Chilled Water Rate',
@@ -867,7 +881,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         # unit conversion
         old_unit = ts.get.units if ts.is_initialized
 
-        if timeseries_name.include? 'Gas'
+        if timeseries_name.include?('Gas') || timeseries_name.include?('Propane') || timeseries_name.include?('FuelOil#2')
           new_unit = 'kBtu'
         else
           new_unit = case old_unit.to_s
