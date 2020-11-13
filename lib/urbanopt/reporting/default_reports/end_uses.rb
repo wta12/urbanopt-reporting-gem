@@ -54,7 +54,7 @@ module URBANopt
           @electricity_kwh = EndUse.new(hash[:electricity_kwh])
           @natural_gas_kwh = EndUse.new(hash[:natural_gas_kwh])
           @propane_kwh = EndUse.new(hash[:propane_kwh])
-          @fuel_oil_kwh = EndUse.new(has[:fuel_oil_kwh])
+          @fuel_oil_kwh = EndUse.new(hash[:fuel_oil_kwh])
           @other_fuels_kwh = EndUse.new(hash[:other_fuels_kwh])
           @district_cooling_kwh = EndUse.new(hash[:district_cooling_kwh])
           @district_heating_kwh = EndUse.new(hash[:district_heating_kwh])
