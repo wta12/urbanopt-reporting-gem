@@ -310,7 +310,7 @@
 					"type": "number"
         },
 				"other_fuels_kwh": {
-					"description": "Sum of all other fuel end uses consumption (kWh)",
+					"description": "Sum of all other (fuel oil #1, diesel, gasoline, coal, steam) fuel end uses consumption (kWh)",
 					"type": "number"
 				},
 				"district_cooling_kwh": {

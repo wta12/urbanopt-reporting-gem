@@ -177,6 +177,24 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       end
     end
 
+    # OtherFuels
+    other_fuels = ["FuelOil#1", "Diesel", "Gasoline", "Coal", "Steam"]
+    other_fuel_uses = ["HeatRejection", "Heating", "WaterSystems", "InteriorEquipment"]
+    custom_meter_facility = "Meter:Custom,OtherFuels:Facility,OtherFuel1"
+    other_fuel_uses.each do |end_use|
+      custom_meter = "Meter:Custom,#{end_use}:OtherFuels,OtherFuel1"
+      other_fuels.each do |other_fuel|  
+        result << OpenStudio::IdfObject.load("Output:Meter,#{end_use}:#{other_fuel},#{reporting_frequency};").get
+        custom_meter_facility += ",,#{end_use}:#{other_fuel}"
+        custom_meter += ",,#{end_use}:#{other_fuel}"
+      end
+      custom_meter += ";"
+      result << OpenStudio::IdfObject.load(custom_meter).get
+      result << OpenStudio::IdfObject.load("Output:Meter,#{end_use}:OtherFuels,#{reporting_frequency};").get
+    end
+    result << OpenStudio::IdfObject.load("#{custom_meter_facility};").get
+    result << OpenStudio::IdfObject.load("Output:Meter,OtherFuels:Facility,#{reporting_frequency};").get
+
     # Request the output for each end use/fuel type combination
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Electricity:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,ElectricityProduced:Facility,#{reporting_frequency};").get
@@ -734,6 +752,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Gas:Facility',
       'Propane:Facility',
       'FuelOil#2:Facility',
+      'OtherFuels:Facility',
       'Cooling:Electricity',
       'Heating:Electricity',
       'InteriorLights:Electricity',
@@ -755,6 +774,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Heating:FuelOil#2',
       'WaterSystems:FuelOil#2',
       'InteriorEquipment:FuelOil#2',
+      'HeatRejection:OtherFuels',
+      'Heating:OtherFuels',
+      'WaterSystems:OtherFuels',
+      'InteriorEquipment:OtherFuels',
       'DistrictCooling:Facility',
       'DistrictHeating:Facility',
       'District Cooling Chilled Water Rate',
@@ -818,8 +841,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       puts " *********timeseries_name = #{timeseries_name}******************"
       runner.registerInfo("TIMESERIES: #{timeseries_name}")
 
-      # get all the key values that this timeseries can be reported for (e.g. if PMV is requested for each zone)
-      key_values = sql_file.availableKeyValues('RUN PERIOD 1', 'Zone Timestep', timeseries_name)
+      # get all the key values that this timeseries can be reported for (e.g. if PMV is requested for each zone)      
+      if timeseries_name.include?('OtherFuels')
+        key_values = sql_file.availableKeyValues('RUN PERIOD 1', 'Zone Timestep', timeseries_name.upcase)
+      else
+        key_values = sql_file.availableKeyValues('RUN PERIOD 1', 'Zone Timestep', timeseries_name)
+      end
       runner.registerInfo("KEY VALUES: #{key_values}")
       if key_values.empty?
         key_values = ['']
@@ -863,7 +890,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         # final_timeseries_names << new_timeseries_name
 
         # get the actual timeseries
-        ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, timeseries_name, key_value)
+        if timeseries_name.include?('OtherFuels')
+          ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, timeseries_name.upcase, key_value)
+        else
+          ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, timeseries_name, key_value)
+        end
 
         if n.nil?
           # first timeseries should always be set
@@ -878,10 +909,15 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
           values[key_cnt] = Array.new(n, 0)
         end
 
+        # residential considerations
+        building_types.each do |i|
+          values[key_cnt] = Array.new(n, 0) if ['DistrictCooling:Facility', 'DistrictHeating:Facility'].include?(timeseries_name) && i[:building_type].include?('Single-Family Detached')
+        end
+
         # unit conversion
         old_unit = ts.get.units if ts.is_initialized
 
-        if timeseries_name.include?('Gas') || timeseries_name.include?('Propane') || timeseries_name.include?('FuelOil#2')
+        if timeseries_name.include?('Gas') || timeseries_name.include?('Propane') || timeseries_name.include?('FuelOil#2') || timeseries_name.include?('OtherFuels')
           new_unit = 'kBtu'
         else
           new_unit = case old_unit.to_s

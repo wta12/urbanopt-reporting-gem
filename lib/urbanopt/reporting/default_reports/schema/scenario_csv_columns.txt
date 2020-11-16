@@ -3,7 +3,8 @@ Electricity:Facility
 ElectricityProduced:Facility
 Gas:Facility
 Propane:Facility
-FuelOil:Facility
+FuelOil#2:Facility
+OtherFuels:Facility
 Cooling:Electricity
 Heating:Electricity
 InteriorLights:Electricity
@@ -25,6 +26,10 @@ HeatRejection:FuelOil
 Heating:FuelOil
 WaterSystems:FuelOil
 InteriorEquipment:FuelOil
+HeatRejection:OtherFuels
+Heating:OtherFuels
+WaterSystems:OtherFuels
+InteriorEquipment:OtherFuels
 DistrictCooling:Facility
 DistrictHeating:Facility
 District Cooling Chilled Water Rate
