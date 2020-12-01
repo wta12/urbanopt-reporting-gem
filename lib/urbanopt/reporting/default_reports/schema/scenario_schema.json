@@ -301,8 +301,16 @@
 					"description": "Sum of all natural gas end uses consumption (kWh)",
 					"type": "number"
 				},
-				"additional_fuel_kwh": {
-					"description": "Sum of all additional fuel end uses consumption (kWh)",
+        "propane_kwh": {
+					"description": "Sum of all propane end uses consumption (kWh)",
+					"type": "number"
+        },
+        "fuel_oil_kwh": {
+					"description": "Sum of all fuel oil #2 end uses consumption (kWh)",
+					"type": "number"
+        },
+				"other_fuels_kwh": {
+					"description": "Sum of all other (fuel oil #1, diesel, gasoline, coal, steam) fuel end uses consumption (kWh)",
 					"type": "number"
 				},
 				"district_cooling_kwh": {
@@ -371,7 +379,13 @@
 				"natural_gas_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
-				"additional_fuel_kwh": {
+        "propane_kwh": {
+          "$ref": "#/definitions/EndUse"
+        },
+        "fuel_oil_kwh": {
+          "$ref": "#/definitions/EndUse"
+        },
+				"other_fuels_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
 				"district_cooling_kwh": {
@@ -522,9 +536,11 @@
 					"enum": [
 						"Electricity",
 						"Natural Gas",
+            "Propane",
+            "Fuel Oil",
 						"District Cooling",
 						"District Heating",
-						"Additional Fuel",
+						"Other Fuels",
 						"Water"
 					]
 				},
