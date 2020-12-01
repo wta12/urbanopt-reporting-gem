@@ -22,10 +22,10 @@ HeatRejection:Propane
 Heating:Propane
 WaterSystems:Propane
 InteriorEquipment:Propane
-HeatRejection:FuelOil
-Heating:FuelOil
-WaterSystems:FuelOil
-InteriorEquipment:FuelOil
+HeatRejection:FuelOil#2
+Heating:FuelOil#2
+WaterSystems:FuelOil#2
+InteriorEquipment:FuelOil#2
 HeatRejection:OtherFuels
 Heating:OtherFuels
 WaterSystems:OtherFuels
