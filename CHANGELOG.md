@@ -1,5 +1,11 @@
 # URBANopt Reporting Gem
 
+## Version 0.3.0
+
+Date Range: 11/12/2020 - 11/25/2020
+ 
+- Updating dependencies to support OpenStudio 3.1.0
+
 ## Version 0.2.1
 
 Date Range: 09/22/2020 - 11/12/2020

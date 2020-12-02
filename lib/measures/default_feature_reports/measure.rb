@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2020, Alliance for Sustainable Energy, LLC, and other
+# URBANopt (tm), Copyright (c) 2019-2020, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,
@@ -99,37 +99,39 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
   # define fuel types
   def fuel_types
-    fuel_types = [
-      'Electricity',
-      'Gas',
-      'AdditionalFuel',
-      'DistrictCooling',
-      'DistrictHeating',
-      'Water'
-    ]
+    fuel_types = {
+      'Electricity' => 'Electricity',
+      'Gas' => 'Natural Gas',
+      'FuelOil#2' => 'Fuel Oil #2',
+      'Propane' => 'Propane',
+      'AdditionalFuel' => 'Additional Fuel',
+      'DistrictCooling' => 'District Cooling',
+      'DistrictHeating' => 'District Heating',
+      'Water' => 'Water'
+    }
 
     return fuel_types
   end
 
   # define enduses
   def end_uses
-    end_uses = [
-      'Heating',
-      'Cooling',
-      'InteriorLights',
-      'ExteriorLights',
-      'InteriorEquipment',
-      'ExteriorEquipment',
-      'Fans',
-      'Pumps',
-      'HeatRejection',
-      'Humidifier',
-      'HeatRecovery',
-      'WaterSystems',
-      'Refrigeration',
-      'Generators',
-      'Facility'
-    ]
+    end_uses = {
+      'Heating' => 'Heating',
+      'Cooling' => 'Cooling',
+      'InteriorLights' => 'Interior Lighting',
+      'ExteriorLights' => 'Exterior Lighting',
+      'InteriorEquipment' => 'Interior Equipment',
+      'ExteriorEquipment' => 'Exterior Equipment',
+      'Fans' => 'Fans',
+      'Pumps' => 'Pumps',
+      'HeatRejection' => 'Heat Rejection',
+      'Humidifier' => 'Humidification',
+      'HeatRecovery' => 'Heat Recovery',
+      'WaterSystems' => 'Water Systems',
+      'Refrigeration' => 'Refrigeration',
+      'Generators' => 'Generators',
+      'Facility' => 'Facility'
+    }
 
     return end_uses
   end
@@ -163,7 +165,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # Request the output for each end use/fuel type combination
     end_uses.each do |end_use|
+      end_use, _ = end_use
       fuel_types.each do |fuel_type|
+        fuel_type, _ = fuel_type
         variable_name = if end_use == 'Facility'
                           "#{fuel_type}:#{end_use}"
                         else
@@ -172,6 +176,24 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         result << OpenStudio::IdfObject.load("Output:Meter,#{variable_name},#{reporting_frequency};").get
       end
     end
+
+    # OtherFuels
+    other_fuels = ["FuelOil#1", "Diesel", "Gasoline", "Coal", "Steam"]
+    other_fuel_uses = ["HeatRejection", "Heating", "WaterSystems", "InteriorEquipment"]
+    custom_meter_facility = "Meter:Custom,OtherFuels:Facility,OtherFuel1"
+    other_fuel_uses.each do |end_use|
+      custom_meter = "Meter:Custom,#{end_use}:OtherFuels,OtherFuel1"
+      other_fuels.each do |other_fuel|  
+        result << OpenStudio::IdfObject.load("Output:Meter,#{end_use}:#{other_fuel},#{reporting_frequency};").get
+        custom_meter_facility += ",,#{end_use}:#{other_fuel}"
+        custom_meter += ",,#{end_use}:#{other_fuel}"
+      end
+      custom_meter += ";"
+      result << OpenStudio::IdfObject.load(custom_meter).get
+      result << OpenStudio::IdfObject.load("Output:Meter,#{end_use}:OtherFuels,#{reporting_frequency};").get
+    end
+    result << OpenStudio::IdfObject.load("#{custom_meter_facility};").get
+    result << OpenStudio::IdfObject.load("Output:Meter,OtherFuels:Facility,#{reporting_frequency};").get
 
     # Request the output for each end use/fuel type combination
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Electricity:Facility,#{reporting_frequency};").get
@@ -228,11 +250,14 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       end
     end
 
-    val
+    return val
   end
 
   # unit conversion method
   def convert_units(value, from_units, to_units)
+    if value.nil?
+      return nil
+    end
     # apply unit conversion
     value_converted = OpenStudio.convert(value, from_units, to_units)
     if value_converted.is_initialized
@@ -572,17 +597,35 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     natural_gas = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Natural Gas'")
     feature_report.reporting_periods[0].natural_gas_kwh = convert_units(natural_gas, 'GJ', 'kWh')
 
-    # additional_fuel
+    # propane
+    propane = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='Propane:Facility' AND ColumnName='Annual Value'")
+    feature_report.reporting_periods[0].propane_kwh = 0.0
+    feature_report.reporting_periods[0].propane_kwh = convert_units(propane, 'GJ', 'kWh') unless propane.nil?
+
+    # fuel_oil
+    fuel_oil = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='FuelOil#2:Facility' AND ColumnName='Annual Value'")
+    feature_report.reporting_periods[0].fuel_oil_kwh = 0.0
+    feature_report.reporting_periods[0].fuel_oil_kwh = convert_units(fuel_oil, 'GJ', 'kWh') unless fuel_oil.nil?
+
+    # other_fuels
     additional_fuel = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Additional Fuel'")
-    feature_report.reporting_periods[0].additional_fuel_kwh = convert_units(additional_fuel, 'GJ', 'kWh')
+    feature_report.reporting_periods[0].other_fuels_kwh = convert_units(additional_fuel, 'GJ', 'kWh')
+    feature_report.reporting_periods[0].other_fuels_kwh -= feature_report.reporting_periods[0].propane_kwh
+    feature_report.reporting_periods[0].other_fuels_kwh -= feature_report.reporting_periods[0].fuel_oil_kwh
 
     # district_cooling
     district_cooling = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Cooling'")
     feature_report.reporting_periods[0].district_cooling_kwh = convert_units(district_cooling, 'GJ', 'kWh')
+    building_types.each do |i|
+      feature_report.reporting_periods[0].district_cooling_kwh = 0.0 if i[:building_type].include?('Single-Family Detached')
+    end
 
     # district_heating
     district_heating = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Heating'")
     feature_report.reporting_periods[0].district_heating_kwh = convert_units(district_heating, 'GJ', 'kWh')
+    building_types.each do |i|
+      feature_report.reporting_periods[0].district_heating_kwh = 0.0 if i[:building_type].include?('Single-Family Detached')
+    end
 
     # water
     water = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Water'")
@@ -596,41 +639,62 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ## end_uses
 
     # get fuel type as listed in the sql file
-    fuel_type = ['Electricity', 'Natural Gas', 'Additional Fuel', 'District Cooling', 'District Heating', 'Water']
+    fueltypes = fuel_types.values
+    fueltypes.delete('Propane')
+    fueltypes.delete('Fuel Oil #2')
 
     # get enduses as listed in the sql file
-    enduses = ['Heating', 'Cooling', 'Interior Lighting', 'Exterior Lighting', 'Interior Equipment', 'Exterior Equipment', 'Fans', 'Pumps',
-               'Heat Rejection', 'Humidification', 'Heat Recovery', 'Water Systems', 'Refrigeration', 'Generators']
+    enduses = end_uses.values
+    enduses.delete('Facility')
+
+    # propane / fuel_oil
+    ['Propane', 'Fuel Oil #2'].each do |ft|
+      end_uses.keys.each do |eu|
+        next if eu == 'Facility'
+
+        sql_r = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='#{eu}:#{ft.tr(' ', '')}' AND ColumnName='Annual Value'")
+
+        # report each query in its corresponding feature report obeject
+        x = ft.tr(' ', '_').downcase
+        x = x.gsub('_#2', '')
+        x_u = x + '_kwh'
+        m = feature_report.reporting_periods[0].end_uses.send(x_u)
+
+        y = end_uses[eu].tr(' ', '_').downcase
+        if sql_r.nil?
+          sql_r = 0.0
+        end
+        m.send("#{y}=", convert_units(sql_r, 'GJ', 'kWh'))
+      end
+    end
 
     # loop through fuel types and enduses to fill in sql_query method
-    fuel_type.each do |ft|
+    fueltypes.each do |ft|
       enduses.each do |eu|
         sql_r = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='#{eu}' AND ColumnName='#{ft}'")
 
         # report each query in its corresponding feature report obeject
-        if ft.include? ' '
-          x = ft.tr(' ', '_').downcase
-          if x.include? 'water'
-            x_u = x + '_qbft'
-          else
-            x_u = x + '_kwh'
-          end
-          m = feature_report.reporting_periods[0].end_uses.send(x_u)
+        x = ft.tr(' ', '_').downcase
+        if x.include? 'water'
+          x_u = x + '_qbft'
         else
-          if ft.downcase.include? 'water'
-            ft_u = ft + '_qbft'
-          else
-            ft_u = ft + '_kwh'
-          end
-          m = feature_report.reporting_periods[0].end_uses.send(ft_u.downcase)
+          x_u = x + '_kwh'
         end
+        if x_u == 'additional_fuel_kwh'
+          x_u = 'other_fuels_kwh'
+        end
+        m = feature_report.reporting_periods[0].end_uses.send(x_u)
 
-        if eu.include? ' '
-          y = eu.tr(' ', '_').downcase
-          m.send("#{y}=", convert_units(sql_r, 'GJ', 'kWh'))
-        else
-          m.send("#{eu.downcase}=", convert_units(sql_r, 'GJ', 'kWh'))
+        y = eu.tr(' ', '_').downcase
+        sql_r = convert_units(sql_r, 'GJ', 'kWh')
+        if x_u == 'other_fuels_kwh'
+          sql_r -= feature_report.reporting_periods[0].end_uses.propane_kwh.send(y)
+          sql_r -= feature_report.reporting_periods[0].end_uses.fuel_oil_kwh.send(y)
         end
+        building_types.each do |i|
+          sql_r = 0.0 if (i[:building_type].include?('Single-Family Detached') && x_u.include?('district'))
+        end
+        m.send("#{y}=", sql_r)
       end
     end
 
@@ -689,6 +753,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Electricity:Facility',
       'ElectricityProduced:Facility',
       'Gas:Facility',
+      'Propane:Facility',
+      'FuelOil#2:Facility',
+      'OtherFuels:Facility',
       'Cooling:Electricity',
       'Heating:Electricity',
       'InteriorLights:Electricity',
@@ -702,6 +769,18 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Heating:Gas',
       'WaterSystems:Gas',
       'InteriorEquipment:Gas',
+      'HeatRejection:Propane',
+      'Heating:Propane',
+      'WaterSystems:Propane',
+      'InteriorEquipment:Propane',
+      'HeatRejection:FuelOil#2',
+      'Heating:FuelOil#2',
+      'WaterSystems:FuelOil#2',
+      'InteriorEquipment:FuelOil#2',
+      'HeatRejection:OtherFuels',
+      'Heating:OtherFuels',
+      'WaterSystems:OtherFuels',
+      'InteriorEquipment:OtherFuels',
       'DistrictCooling:Facility',
       'DistrictHeating:Facility',
       'District Cooling Chilled Water Rate',
@@ -765,8 +844,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       puts " *********timeseries_name = #{timeseries_name}******************"
       runner.registerInfo("TIMESERIES: #{timeseries_name}")
 
-      # get all the key values that this timeseries can be reported for (e.g. if PMV is requested for each zone)
-      key_values = sql_file.availableKeyValues('RUN PERIOD 1', 'Zone Timestep', timeseries_name)
+      # get all the key values that this timeseries can be reported for (e.g. if PMV is requested for each zone)      
+      if timeseries_name.include?('OtherFuels')
+        key_values = sql_file.availableKeyValues('RUN PERIOD 1', 'Zone Timestep', timeseries_name.upcase)
+      else
+        key_values = sql_file.availableKeyValues('RUN PERIOD 1', 'Zone Timestep', timeseries_name)
+      end
       runner.registerInfo("KEY VALUES: #{key_values}")
       if key_values.empty?
         key_values = ['']
@@ -810,7 +893,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         # final_timeseries_names << new_timeseries_name
 
         # get the actual timeseries
-        ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, timeseries_name, key_value)
+        if timeseries_name.include?('OtherFuels')
+          ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, timeseries_name.upcase, key_value)
+        else
+          ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, timeseries_name, key_value)
+        end
 
         if n.nil?
           # first timeseries should always be set
@@ -825,10 +912,15 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
           values[key_cnt] = Array.new(n, 0)
         end
 
+        # residential considerations
+        building_types.each do |i|
+          values[key_cnt] = Array.new(n, 0) if ['DistrictCooling:Facility', 'DistrictHeating:Facility'].include?(timeseries_name) && i[:building_type].include?('Single-Family Detached')
+        end
+
         # unit conversion
         old_unit = ts.get.units if ts.is_initialized
 
-        if timeseries_name.include? 'Gas'
+        if timeseries_name.include?('Gas') || timeseries_name.include?('Propane') || timeseries_name.include?('FuelOil#2') || timeseries_name.include?('OtherFuels')
           new_unit = 'kBtu'
         else
           new_unit = case old_unit.to_s

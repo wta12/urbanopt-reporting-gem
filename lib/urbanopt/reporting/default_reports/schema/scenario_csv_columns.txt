@@ -2,6 +2,9 @@ Datetime
 Electricity:Facility
 ElectricityProduced:Facility
 Gas:Facility
+Propane:Facility
+FuelOil#2:Facility
+OtherFuels:Facility
 Cooling:Electricity
 Heating:Electricity
 InteriorLights:Electricity
@@ -15,6 +18,18 @@ HeatRejection:Gas
 Heating:Gas
 WaterSystems:Gas
 InteriorEquipment:Gas
+HeatRejection:Propane
+Heating:Propane
+WaterSystems:Propane
+InteriorEquipment:Propane
+HeatRejection:FuelOil#2
+Heating:FuelOil#2
+WaterSystems:FuelOil#2
+InteriorEquipment:FuelOil#2
+HeatRejection:OtherFuels
+Heating:OtherFuels
+WaterSystems:OtherFuels
+InteriorEquipment:OtherFuels
 DistrictCooling:Facility
 DistrictHeating:Facility
 District Cooling Chilled Water Rate
