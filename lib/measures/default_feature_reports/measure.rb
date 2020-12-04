@@ -608,8 +608,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.reporting_periods[0].fuel_oil_kwh = convert_units(fuel_oil, 'GJ', 'kWh') unless fuel_oil.nil?
 
     # other_fuels
-    runner.registerWarning("PROPANE KWH: #{feature_report.reporting_periods[0].propane_kwh}")
-    runner.registerWarning("FUEL OIL KWH: #{feature_report.reporting_periods[0].fuel_oil_kwh}")
     additional_fuel = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Additional Fuel'")
     # ensure additional fuel is not nil
     feature_report.reporting_periods[0].other_fuels_kwh = 0.0
