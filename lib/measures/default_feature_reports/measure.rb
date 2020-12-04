@@ -28,7 +28,7 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
-require '~/Downloads/uoTestExtGem/measures/urbanopt/reporting/default_reports'
+require 'urbanopt/reporting/default_reports'
 require 'csv'
 require 'benchmark'
 require 'logger'
