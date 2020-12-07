@@ -223,6 +223,17 @@ module URBANopt
           return result
         end
 
+        ## 
+        # Calls the individual functions to save 'default_feature_report.json' and 'default_feature_report.csv'
+        # For backward compatibility and ease of use
+        ##
+        # [parameters]:
+        # +file_name+ - _String_ - Assign a name to the saved feature report file without an extension
+        def save_feature_report(file_name = 'default_feature_report')
+          save_json_report(file_name)
+          save_csv_report(file_name)
+        end
+
         ##
         # Saves the 'default_feature_report.json' file to the results directory
         ##
@@ -279,9 +290,7 @@ module URBANopt
             end
           end
         end
-
-
-
+        
       end
     end
   end
