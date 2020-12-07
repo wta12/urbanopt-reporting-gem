@@ -609,7 +609,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # other_fuels
     additional_fuel = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Additional Fuel'")
-    feature_report.reporting_periods[0].other_fuels_kwh = convert_units(additional_fuel, 'GJ', 'kWh')
+    # ensure additional fuel is not nil
+    feature_report.reporting_periods[0].other_fuels_kwh = 0.0
+    feature_report.reporting_periods[0].other_fuels_kwh = convert_units(additional_fuel, 'GJ', 'kWh') unless additional_fuel.nil?
     feature_report.reporting_periods[0].other_fuels_kwh -= feature_report.reporting_periods[0].propane_kwh
     feature_report.reporting_periods[0].other_fuels_kwh -= feature_report.reporting_periods[0].fuel_oil_kwh
 
@@ -686,6 +688,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         m = feature_report.reporting_periods[0].end_uses.send(x_u)
 
         y = eu.tr(' ', '_').downcase
+        # ensure not nil so the equations below don't error out
+        if sql_r.nil?
+          sql_r = 0.0
+        end
         sql_r = convert_units(sql_r, 'GJ', 'kWh')
         if x_u == 'other_fuels_kwh'
           sql_r -= feature_report.reporting_periods[0].end_uses.propane_kwh.send(y)
