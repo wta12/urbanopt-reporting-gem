@@ -1,5 +1,13 @@
 # URBANopt Reporting Gem
 
+## Version 0.3.1
+
+Date Range: 11/26/2020 - 12/07/2020
+
+- Fixed [#19]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/19 ), check for nil values to avoid crashing unit conversion
+- Fixed [#24]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/24 ), Support reporting of other fuels
+- Fixed [#28]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/28 ), fix for other_fuels being nil and restore save_feature_report function
+
 ## Version 0.3.0
 
 Date Range: 11/12/2020 - 11/25/2020
