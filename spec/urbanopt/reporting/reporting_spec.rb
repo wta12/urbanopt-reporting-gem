@@ -116,14 +116,14 @@ RSpec.describe URBANopt::Reporting do
     new_costs = []
 
     new_costs << URBANopt::Reporting::DefaultReports::ConstructionCost.new(category: 'Construction', item_name: 'wall', unit_cost: 1,
-                                                                          cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
+                                                                           cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
     new_costs << URBANopt::Reporting::DefaultReports::ConstructionCost.new(category: 'Construction', item_name: 'roof', unit_cost: 1,
-                                                                          cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
+                                                                           cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
 
     existing_costs << URBANopt::Reporting::DefaultReports::ConstructionCost.new(category: 'Construction', item_name: 'wall', unit_cost: 1,
-                                                                               cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
+                                                                                cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
     existing_costs << URBANopt::Reporting::DefaultReports::ConstructionCost.new(category: 'HVACComponent', item_name: 'hvac', unit_cost: 1,
-                                                                               cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
+                                                                                cost_units: 'CostPerEach', item_quantity: 1, total_cost: 1)
 
     # puts "existing_costs = #{existing_costs}"
     # puts "new_costs = #{new_costs}"
@@ -190,8 +190,8 @@ RSpec.describe URBANopt::Reporting do
       end_uses: { electricity_kwh: { heating: 1, cooling: 1, fans: 1, pumps: 1 } }, utility_costs_dollar: [{ fuel_type: 'Electricity', total_cost: 1, usage_cost: 1, demand_cost: 1 }]
     )
     new_periods << URBANopt::Reporting::DefaultReports::ReportingPeriod.new(id: 6, name: 'January', multiplier: 1, start_date: { month: 1, day_of_month: 1, year: 2019 },
-                                                                           end_date: { month: 1, day_of_month: 31, year: 2019 }, total_site_energy_kwh: 1, total_source_energy_kwh: 1,
-                                                                           end_uses: { electricity_kwh: { heating: 1, cooling: 1, fans: 1, pumps: 1 } }, utility_costs_dollar: [{ fuel_type: 'Electricity', total_cost: 1, usage_cost: 1, demand_cost: 1 }])
+                                                                            end_date: { month: 1, day_of_month: 31, year: 2019 }, total_site_energy_kwh: 1, total_source_energy_kwh: 1,
+                                                                            end_uses: { electricity_kwh: { heating: 1, cooling: 1, fans: 1, pumps: 1 } }, utility_costs_dollar: [{ fuel_type: 'Electricity', total_cost: 1, usage_cost: 1, demand_cost: 1 }])
 
     # puts "\nexisting periods: #{existing_periods}"
     # puts "\nnew periods: #{new_periods}"
@@ -232,5 +232,4 @@ RSpec.describe URBANopt::Reporting do
 
     # puts "\nfinal periods: #{existing_periods}"
   end
-
 end

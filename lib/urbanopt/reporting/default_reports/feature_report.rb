@@ -223,7 +223,7 @@ module URBANopt
           return result
         end
 
-        ## 
+        ##
         # Calls the individual functions to save 'default_feature_report.json' and 'default_feature_report.csv'
         # For backward compatibility and ease of use
         ##
@@ -263,7 +263,6 @@ module URBANopt
               f.flush
             end
           end
-
         end
 
         ##
@@ -286,11 +285,10 @@ module URBANopt
           # copy the CSV report to the new feature_reports folder
           directory_folders.each do |f|
             if f.include? '_default_feature_reports'
-              FileUtils.cp(File.join(f, 'default_feature_reports.csv'), File.join(results_dir_path, @file_name +'.csv'))
+              FileUtils.cp(File.join(f, 'default_feature_reports.csv'), File.join(results_dir_path, @file_name + '.csv'))
             end
           end
         end
-        
       end
     end
   end
