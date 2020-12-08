@@ -11,8 +11,11 @@
   var index_rel_prefix = "../../../";
 </script>
 
-<script src="../../../js/jquery.js"></script>
-<script src="../../../js/darkfish.js"></script>
+<script src="../../../js/navigation.js" defer></script>
+<script src="../../../js/search.js" defer></script>
+<script src="../../../js/search_index.js" defer></script>
+<script src="../../../js/searcher.js" defer></script>
+<script src="../../../js/darkfish.js" defer></script>
 
 <link href="../../../css/fonts.css" rel="stylesheet">
 <link href="../../../css/rdoc.css" rel="stylesheet">
@@ -126,8 +129,8 @@
         <div class="method-description">
           
           <p><a href="Location.html">Location</a> class initialize location attributes:
-<code>:latitude</code> , <code>:longitude</code> ,
-<code>:surface_elevation</code> , <code>:weather_filename</code></p>
+<code>:latitude_deg</code> , <code>:longitude_deg</code> ,
+<code>:surface_elevation_ft</code> , <code>:weather_filename</code></p>
 <dl class="rdoc-list label-list"><dt>parameters:
 <dd>
 <p><code>hash</code> - <em>Hash</em> - A hash which may contain a deserialized
@@ -143,9 +146,9 @@ location.</p>
   <span class="ruby-identifier">hash</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">nil?</span> }
   <span class="ruby-identifier">hash</span> = <span class="ruby-identifier">defaults</span>.<span class="ruby-identifier">merge</span>(<span class="ruby-identifier">hash</span>)
 
-  <span class="ruby-ivar">@latitude</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:latitude</span>]
-  <span class="ruby-ivar">@longitude</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:longitude</span>]
-  <span class="ruby-ivar">@surface_elevation</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:surface_elevation</span>]
+  <span class="ruby-ivar">@latitude_deg</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:latitude_deg</span>]
+  <span class="ruby-ivar">@longitude_deg</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:longitude_deg</span>]
+  <span class="ruby-ivar">@surface_elevation_ft</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:surface_elevation_ft</span>]
   <span class="ruby-ivar">@weather_filename</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:weather_filename</span>]
 
   <span class="ruby-comment"># initialize class variables @@validator and @@schema</span>
@@ -192,9 +195,9 @@ location.</p>
             <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/location.rb, line 87</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">defaults</span>
   <span class="ruby-identifier">hash</span> = {}
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:latitude</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:longitude</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:surface_elevation</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:latitude_deg</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:longitude_deg</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:surface_elevation_ft</span>] = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">hash</span>[<span class="ruby-value">:weather_filename</span>] = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">hash</span>
@@ -236,9 +239,9 @@ location.</p>
             <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/location.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_hash</span>
   <span class="ruby-identifier">result</span> = {}
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:latitude</span>] = <span class="ruby-ivar">@latitude</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@latitude</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:longitude</span>] = <span class="ruby-ivar">@longitude</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@longitude</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:surface_elevation</span>] = <span class="ruby-ivar">@surface_elevation</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@surface_elevation</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:latitude_deg</span>] = <span class="ruby-ivar">@latitude_deg</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@latitude_deg</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:longitude_deg</span>] = <span class="ruby-ivar">@longitude_deg</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@longitude_deg</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:surface_elevation_ft</span>] = <span class="ruby-ivar">@surface_elevation_ft</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@surface_elevation_ft</span>
   <span class="ruby-identifier">result</span>[<span class="ruby-value">:weather_filename</span>] = <span class="ruby-ivar">@weather_filename</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@weather_filename</span>
 
   <span class="ruby-comment"># validate location properties against schema</span>
@@ -266,7 +269,7 @@ location.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

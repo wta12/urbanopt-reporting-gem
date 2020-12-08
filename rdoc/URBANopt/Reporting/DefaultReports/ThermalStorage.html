@@ -11,8 +11,11 @@
   var index_rel_prefix = "../../../";
 </script>
 
-<script src="../../../js/jquery.js"></script>
-<script src="../../../js/darkfish.js"></script>
+<script src="../../../js/navigation.js" defer></script>
+<script src="../../../js/search.js" defer></script>
+<script src="../../../js/search_index.js" defer></script>
+<script src="../../../js/searcher.js" defer></script>
+<script src="../../../js/darkfish.js" defer></script>
 
 <link href="../../../css/fonts.css" rel="stylesheet">
 <link href="../../../css/rdoc.css" rel="stylesheet">
@@ -112,9 +115,9 @@
       </header>
 
       
-      <div id="attribute-i-its_size" class="method-detail">
+      <div id="attribute-i-its_size_kwh" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">its_size</span><span
+          <span class="method-name">its_size_kwh</span><span
             class="attribute-access-type">[RW]</span>
         </div>
 
@@ -125,9 +128,9 @@
         </div>
       </div>
       
-      <div id="attribute-i-ptes_size" class="method-detail">
+      <div id="attribute-i-ptes_size_kwh" class="method-detail">
         <div class="method-heading attribute-method-heading">
-          <span class="method-name">ptes_size</span><span
+          <span class="method-name">ptes_size_kwh</span><span
             class="attribute-access-type">[RW]</span>
         </div>
 
@@ -170,8 +173,8 @@ in kWh</p>
           <div class="method-source-code" id="merge_thermal_storage-source">
             <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/thermal_storage.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">merge_thermal_storage</span>(<span class="ruby-identifier">existing_tes</span>, <span class="ruby-identifier">new_tes</span>)
-  <span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">its_size</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">its_size</span>, <span class="ruby-identifier">new_tes</span>.<span class="ruby-identifier">its_size</span>)
-  <span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">ptes_size</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">ptes_size</span>, <span class="ruby-identifier">new_tes</span>.<span class="ruby-identifier">ptes_size</span>)
+  <span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">its_size_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">its_size_kwh</span>, <span class="ruby-identifier">new_tes</span>.<span class="ruby-identifier">its_size_kwh</span>)
+  <span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">ptes_size_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_tes</span>.<span class="ruby-identifier">ptes_size_kwh</span>, <span class="ruby-identifier">new_tes</span>.<span class="ruby-identifier">ptes_size_kwh</span>)
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">existing_tes</span>
 <span class="ruby-keyword">end</span></pre>
@@ -208,8 +211,8 @@ in kWh</p>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">hash</span> = {})
   <span class="ruby-identifier">hash</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">nil?</span> }
 
-  <span class="ruby-ivar">@its_size</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:its_size</span>]
-  <span class="ruby-ivar">@ptes_size</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:ptes_size</span>]
+  <span class="ruby-ivar">@its_size</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:its_size_kwh</span>]
+  <span class="ruby-ivar">@ptes_size</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:ptes_size_kwh</span>]
 
   <span class="ruby-comment"># initialize class variables @@validator and @@schema</span>
   <span class="ruby-identifier">@@validator</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Validator</span>.<span class="ruby-identifier">new</span>
@@ -258,8 +261,8 @@ in kWh</p>
             <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/thermal_storage.rb, line 68</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">defaults</span>
   <span class="ruby-identifier">hash</span> = {}
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:its_size</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:ptes_size</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:its_size_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:ptes_size_kwh</span>] = <span class="ruby-keyword">nil</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">hash</span>
 <span class="ruby-keyword">end</span></pre>
@@ -295,8 +298,8 @@ in kWh</p>
             <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/thermal_storage.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_hash</span>
   <span class="ruby-identifier">result</span> = {}
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:its_size</span>] = <span class="ruby-ivar">@its_size</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@its_size</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:ptes_size</span>] = <span class="ruby-ivar">@ptes_size</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ptes_size</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:its_size_kwh</span>] = <span class="ruby-ivar">@its_size_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@its_size_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:ptes_size_kwh</span>] = <span class="ruby-ivar">@ptes_size_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@ptes_size_kwh</span>
 
   <span class="ruby-keyword">return</span> <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
@@ -318,7 +321,7 @@ in kWh</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

@@ -11,8 +11,11 @@
   var index_rel_prefix = "../../../../../";
 </script>
 
-<script src="../../../../../js/jquery.js"></script>
-<script src="../../../../../js/darkfish.js"></script>
+<script src="../../../../../js/navigation.js" defer></script>
+<script src="../../../../../js/search.js" defer></script>
+<script src="../../../../../js/search_index.js" defer></script>
+<script src="../../../../../js/searcher.js" defer></script>
+<script src="../../../../../js/darkfish.js" defer></script>
 
 <link href="../../../../../css/fonts.css" rel="stylesheet">
 <link href="../../../../../css/rdoc.css" rel="stylesheet">
@@ -344,69 +347,77 @@
                         &quot;end_date&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/Date&quot;
                         },
-                        &quot;total_site_energy&quot;: {
-                                &quot;description&quot;: &quot;Total energy used on site, does not include generation (kBtu)&quot;,
+                        &quot;total_site_energy_kwh&quot;: {
+                                &quot;description&quot;: &quot;Total energy used on site, does not include generation (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;total_source_energy&quot;: {
-                                &quot;description&quot;: &quot;Total source energy used, does not include generation (kBtu)&quot;,
+                        &quot;total_source_energy_kwh&quot;: {
+                                &quot;description&quot;: &quot;Total source energy used, does not include generation (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;net_site_energy&quot;: {
-                                &quot;description&quot;: &quot;Net site energy (kBtu)&quot;,
+                        &quot;net_site_energy_kwh&quot;: {
+                                &quot;description&quot;: &quot;Net site energy (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;net_source_energy&quot;: {
-                                &quot;description&quot;: &quot;Net source energy (kBtu)&quot;,
+                        &quot;net_source_energy_kwh&quot;: {
+                                &quot;description&quot;: &quot;Net source energy (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;total_utility_cost&quot;: {
-                                &quot;description&quot;: &quot;Total utility cost&quot;,
+                        &quot;total_utility_cost_dollar&quot;: {
+                                &quot;description&quot;: &quot;Total utility cost ($)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;net_utility_cost&quot;: {
-                                &quot;description&quot;: &quot;Net utility cost for reporting period includes generation&quot;,
+                        &quot;net_utility_cost_dollar&quot;: {
+                                &quot;description&quot;: &quot;Net utility cost for reporting period includes generation ($)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;utility_costs&quot;: {
+                        &quot;utility_costs_dollar&quot;: {
                                 &quot;type&quot;: &quot;array&quot;,
                                 &quot;items&quot;: {
                                         &quot;$ref&quot;: &quot;#/definitions/UtilityCost&quot;
                                 }
                         },
-                        &quot;electricity&quot;: {
+                        &quot;electricity_kwh&quot;: {
                                 &quot;description&quot;: &quot;Sum of all electricity used, does not include electricity produced (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;natural_gas&quot;: {
-                                &quot;description&quot;: &quot;Sum of all natural gas end uses consumption (kBtu)&quot;,
+                        &quot;natural_gas_kwh&quot;: {
+                                &quot;description&quot;: &quot;Sum of all natural gas end uses consumption (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;additional_fuel&quot;: {
-                                &quot;description&quot;: &quot;Sum of all additional fuel end uses consumption (kBtu)&quot;,
+&quot;propane_kwh&quot;: {
+                                &quot;description&quot;: &quot;Sum of all propane end uses consumption (kWh)&quot;,
+                                &quot;type&quot;: &quot;number&quot;
+},
+&quot;fuel_oil_kwh&quot;: {
+                                &quot;description&quot;: &quot;Sum of all fuel oil #2 end uses consumption (kWh)&quot;,
+                                &quot;type&quot;: &quot;number&quot;
+},
+                        &quot;other_fuels_kwh&quot;: {
+                                &quot;description&quot;: &quot;Sum of all other (fuel oil #1, diesel, gasoline, coal, steam) fuel end uses consumption (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;district_cooling&quot;: {
-                                &quot;description&quot;: &quot;Sum of all distric cooling end uses consumption (kBtu)&quot;,
+                        &quot;district_cooling_kwh&quot;: {
+                                &quot;description&quot;: &quot;Sum of all distric cooling end uses consumption (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;district_heating&quot;: {
-                                &quot;description&quot;: &quot;Sum of all distric heating end uses consumption (kBtu)&quot;,
+                        &quot;district_heating_kwh&quot;: {
+                                &quot;description&quot;: &quot;Sum of all distric heating end uses consumption (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;water&quot;: {
+                        &quot;water_qbft&quot;: {
                                 &quot;description&quot;: &quot;Sum of all water end uses consumption (ft^3)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;electricity_produced&quot;: {
+                        &quot;electricity_produced_kwh&quot;: {
                                 &quot;description&quot;: &quot;Sum of all electricity produced (kWh)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
                         &quot;end_uses&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/EndUses&quot;
                         },
-                        &quot;energy_production&quot;: {
-                                &quot;description&quot;: &quot;Energy produced for reporting period.  Electricity reported in kWh, water in m^3, all others in kBtu.&quot;,
+                        &quot;energy_production_kwh&quot;: {
+                                &quot;description&quot;: &quot;Energy produced for reporting period.  Water reported in m^3, all others in kWh.&quot;,
                                 &quot;type&quot;: &quot;object&quot;,
                                 &quot;properties&quot;: {
                                         &quot;electricity_produced&quot;: {
@@ -443,25 +454,31 @@
                 &quot;additionalProperties&quot;: false
         },
         &quot;EndUses&quot;: {
-                &quot;description&quot;: &quot;End uses for reporting period.  Does not include energy produced. Electricity reported in kWh, water in m^3, all others in kBtu.&quot;,
+                &quot;description&quot;: &quot;End uses for reporting period.  Does not include energy produced. Water reported in m^3, all others in kWh.&quot;,
                 &quot;type&quot;: &quot;object&quot;,
                 &quot;properties&quot;: {
-                        &quot;electricity&quot;: {
+                        &quot;electricity_kwh&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
                         },
-                        &quot;natural_gas&quot;: {
+                        &quot;natural_gas_kwh&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
                         },
-                        &quot;additional_fuel&quot;: {
+&quot;propane_kwh&quot;: {
+  &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
+},
+&quot;fuel_oil_kwh&quot;: {
+  &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
+},
+                        &quot;other_fuels_kwh&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
                         },
-                        &quot;district_cooling&quot;: {
+                        &quot;district_cooling_kwh&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
                         },
-                        &quot;district_heating&quot;: {
+                        &quot;district_heating_kwh&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
                         },
-                        &quot;water&quot;: {
+                        &quot;water_qbft&quot;: {
                                 &quot;$ref&quot;: &quot;#/definitions/EndUse&quot;
                         }
                 },
@@ -603,9 +620,11 @@
                                 &quot;enum&quot;: [
                                         &quot;Electricity&quot;,
                                         &quot;Natural Gas&quot;,
+    &quot;Propane&quot;,
+    &quot;Fuel Oil&quot;,
                                         &quot;District Cooling&quot;,
                                         &quot;District Heating&quot;,
-                                        &quot;Additional Fuel&quot;,
+                                        &quot;Other Fuels&quot;,
                                         &quot;Water&quot;
                                 ]
                         },
@@ -627,15 +646,15 @@
         &quot;Location&quot;: {
                 &quot;type&quot;: &quot;object&quot;,
                 &quot;properties&quot;: {
-                        &quot;latitude&quot;: {
+                        &quot;latitude_deg&quot;: {
                                 &quot;description&quot;: &quot;latitude for the centroid of the feature (deg)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;longitude&quot;: {
+                        &quot;longitude_deg&quot;: {
                                 &quot;description&quot;: &quot;longitude for the centroid of the feature (deg)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;surface_elevation&quot;: {
+                        &quot;surface_elevation_ft&quot;: {
                                 &quot;description&quot;: &quot;The surface elevation (above NAVD88 datum) (ft).&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
@@ -654,27 +673,27 @@
         &quot;Program&quot;: {
                 &quot;type&quot;: &quot;object&quot;,
                 &quot;properties&quot;: {
-                        &quot;site_area&quot;: {
+                        &quot;site_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Area of the entire site or lot (ft^2)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;floor_area&quot;: {
+                        &quot;floor_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Building gross floor area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;conditioned_area&quot;: {
+                        &quot;conditioned_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Building conditioned floor area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;unconditioned_area&quot;: {
+                        &quot;unconditioned_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Building unconditioned floor area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;footprint_area&quot;: {
+                        &quot;footprint_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Building floorprint area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;maximum_roof_height&quot;: {
+                        &quot;maximum_roof_height_ft&quot;: {
                                 &quot;description&quot;: &quot;Maximum height of the roof relative to surface elevation (ft)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
@@ -686,7 +705,7 @@
                                 &quot;description&quot;: &quot;The maximum number of building stories above ground&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;parking_area&quot;: {
+                        &quot;parking_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Parking gross area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
@@ -698,11 +717,11 @@
                                 &quot;description&quot;: &quot;Number of parking spaces with electric vehicle charging&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;parking_footprint_area&quot;: {
+                        &quot;parking_footprint_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Parking floorprint area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;maximum_parking_height&quot;: {
+                        &quot;maximum_parking_height_ft&quot;: {
                                 &quot;description&quot;: &quot;Maximum height of the parking structure relative to surface elevation (ft)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
@@ -724,84 +743,84 @@
                                         &quot;$ref&quot;: &quot;#/definitions/BuildingType&quot;
                                 }
                         },
-                        &quot;window_area&quot;: {
+                        &quot;window_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;Exterior windows gross area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;object&quot;,
                                 &quot;properties&quot;: {
-                                        &quot;north_window_area&quot;: {
+                                        &quot;north_window_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;south_window_area&quot;: {
+                                        &quot;south_window_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;east_window_area&quot;: {
+                                        &quot;east_window_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;west_window_area&quot;: {
+                                        &quot;west_window_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;total_window_area&quot;: {
+                                        &quot;total_window_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         }
                                 },
                                 &quot;required&quot;: [
-                                        &quot;total_window_area&quot;
+                                        &quot;total_window_area_sqft&quot;
                                 ],
                                 &quot;additionalProperties&quot;: false
                         },
-                        &quot;wall_area&quot;: {
+                        &quot;wall_area_sqft&quot;: {
                                 &quot;description&quot;: &quot;exterior walls gross area (ft^2)&quot;,
                                 &quot;type&quot;: &quot;object&quot;,
                                 &quot;properties&quot;: {
-                                        &quot;north_wall_area&quot;: {
+                                        &quot;north_wall_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;south_wall_area&quot;: {
+                                        &quot;south_wall_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;east_wall_area&quot;: {
+                                        &quot;east_wall_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;west_wall_area&quot;: {
+                                        &quot;west_wall_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;total_wall_area&quot;: {
+                                        &quot;total_wall_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         }
                                 },
                                 &quot;required&quot;: [
-                                        &quot;north_wall_area&quot;,
-                                        &quot;south_wall_area&quot;,
-                                        &quot;east_wall_area&quot;,
-                                        &quot;west_wall_area&quot;,
-                                        &quot;total_wall_area&quot;
+                                        &quot;north_wall_area_sqft&quot;,
+                                        &quot;south_wall_area_sqft&quot;,
+                                        &quot;east_wall_area_sqft&quot;,
+                                        &quot;west_wall_area_sqft&quot;,
+                                        &quot;total_wall_area_sqft&quot;
                                 ],
                                 &quot;additionalProperties&quot;: false
                         },
-                        &quot;roof_area&quot;: {
+                        &quot;roof_area_sqft&quot;: {
                                 &quot;type&quot;: &quot;object&quot;,
                                 &quot;properties&quot;: {
-                                        &quot;equipment_roof_area&quot;: {
+                                        &quot;equipment_roof_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;photovoltaic_roof_area&quot;: {
+                                        &quot;photovoltaic_roof_area_sqft&quot;: {
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;available_roof_area&quot;: {
+                                        &quot;available_roof_area_sqft&quot;: {
                                                 &quot;description&quot;: &quot;gross roof area (ft^2)&quot;,
                                                 &quot;type&quot;: &quot;number&quot;
                                         },
-                                        &quot;total_roof_area&quot;: {
+                                        &quot;total_roof_area_sqft&quot;: {
                                                 &quot;description&quot;: &quot;Exterior roofs gross area (ft^2)&quot;,
                                                 &quot;type&quot;: &quot;number&quot;
                                         }
                                 },
                                 &quot;required&quot;: [
-                                        &quot;total_roof_area&quot;
+                                        &quot;total_roof_area_sqft&quot;
                                 ],
                                 &quot;additionalProperties&quot;: false
                         },
-                        &quot;orientation&quot;: {
+                        &quot;orientation_deg&quot;: {
                                 &quot;description&quot;: &quot;Rotation of longest axis from East-West,about up axis (deg)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
@@ -809,22 +828,22 @@
                                 &quot;description&quot;: &quot;Ratio of longest to shortest axis&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         },
-                        &quot;total_construction_cost&quot;: {
+                        &quot;total_construction_cost_dollar&quot;: {
                                 &quot;description&quot;: &quot;total construction cost calculated from the defined cost per floor area ($)&quot;,
                                 &quot;type&quot;: &quot;number&quot;
                         }
                 },
                 &quot;required&quot;: [
-                        &quot;floor_area&quot;,
-                        &quot;conditioned_area&quot;,
-                        &quot;unconditioned_area&quot;,
-                        &quot;footprint_area&quot;,
-                        &quot;maximum_roof_height&quot;,
+                        &quot;floor_area_sqft&quot;,
+                        &quot;conditioned_area_sqft&quot;,
+                        &quot;unconditioned_area_sqft&quot;,
+                        &quot;footprint_area_sqft&quot;,
+                        &quot;maximum_roof_height_ft&quot;,
                         &quot;number_of_residential_units&quot;,
                         &quot;building_types&quot;,
-                        &quot;window_area&quot;,
-                        &quot;wall_area&quot;,
-                        &quot;roof_area&quot;
+                        &quot;window_area_sqft&quot;,
+                        &quot;wall_area_sqft&quot;,
+                        &quot;roof_area_sqft&quot;
                 ],
                 &quot;additionalProperties&quot;: false
         },
@@ -962,7 +981,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

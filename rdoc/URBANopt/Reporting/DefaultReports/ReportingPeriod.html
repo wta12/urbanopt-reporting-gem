@@ -11,8 +11,11 @@
   var index_rel_prefix = "../../../";
 </script>
 
-<script src="../../../js/jquery.js"></script>
-<script src="../../../js/darkfish.js"></script>
+<script src="../../../js/navigation.js" defer></script>
+<script src="../../../js/search.js" defer></script>
+<script src="../../../js/search_index.js" defer></script>
+<script src="../../../js/searcher.js" defer></script>
+<script src="../../../js/darkfish.js" defer></script>
 
 <link href="../../../css/fonts.css" rel="stylesheet">
 <link href="../../../css/rdoc.css" rel="stylesheet">
@@ -147,7 +150,7 @@ href="ReportingPeriod.html">ReportingPeriod</a> attribute.</p>
 
           
           <div class="method-source-code" id="add_values-source">
-            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 195</span>
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 201</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">add_values</span>(<span class="ruby-identifier">existing_value</span>, <span class="ruby-identifier">new_value</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_value</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">new_value</span>
     <span class="ruby-identifier">existing_value</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">new_value</span>
@@ -194,37 +197,39 @@ href="ReportingPeriod.html">ReportingPeriod</a> class.</p>
 
           
           <div class="method-source-code" id="merge_reporting_period-source">
-            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 212</span>
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 218</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">merge_reporting_period</span>(<span class="ruby-identifier">existing_period</span>, <span class="ruby-identifier">new_period</span>)
   <span class="ruby-comment"># modify the existing_period by summing up the results</span>
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_site_energy</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_site_energy</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">total_site_energy</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_source_energy</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_source_energy</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">total_source_energy</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_source_energy</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_source_energy</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">net_source_energy</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_utility_cost</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_utility_cost</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">net_utility_cost</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_utility_cost</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_utility_cost</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">total_utility_cost</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">electricity</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">natural_gas</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">natural_gas</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">natural_gas</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">additional_fuel</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">additional_fuel</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">additional_fuel</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_cooling</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_cooling</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">district_cooling</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_heating</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_heating</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">district_heating</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">water</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">water</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">water</span>)
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity_produced</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity_produced</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">electricity_produced</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_site_energy_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_site_energy_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">total_site_energy_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_source_energy_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_source_energy_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">total_source_energy_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_source_energy_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_source_energy_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">net_source_energy_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_utility_cost_dollar</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">net_utility_cost_dollar</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">net_utility_cost_dollar</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_utility_cost_dollar</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">total_utility_cost_dollar</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">total_utility_cost_dollar</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">electricity_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">natural_gas_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">natural_gas_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">natural_gas_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">propane_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">propane_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">propane_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">fuel_oil_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">fuel_oil_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">fuel_oil_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">other_fuels_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">other_fuels_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">other_fuels_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_cooling_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_cooling_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">district_cooling_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_heating_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">district_heating_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">district_heating_kwh</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">water_qbft</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">water_qbft</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">water_qbft</span>)
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity_produced_kwh</span> = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">electricity_produced_kwh</span>, <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">electricity_produced_kwh</span>)
 
   <span class="ruby-comment"># merge end uses</span>
   <span class="ruby-identifier">new_end_uses</span> = <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">end_uses</span>
   <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">end_uses</span>&amp;.<span class="ruby-identifier">merge_end_uses!</span>(<span class="ruby-identifier">new_end_uses</span>)
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production</span>[<span class="ruby-value">:electricity_produced</span>]
-      <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production</span>[<span class="ruby-value">:electricity_produced</span>][<span class="ruby-value">:photovoltaic</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production</span>[<span class="ruby-value">:electricity_produced</span>][<span class="ruby-value">:photovoltaic</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">energy_production</span>[<span class="ruby-value">:electricity_produced</span>][<span class="ruby-value">:photovoltaic</span>])
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production_kwh</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production_kwh</span>[<span class="ruby-value">:electricity_produced_kwh</span>]
+      <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production_kwh</span>[<span class="ruby-value">:electricity_produced_kwh</span>][<span class="ruby-value">:photovoltaic_kwh</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">energy_production_kwh</span>[<span class="ruby-value">:electricity_produced</span>][<span class="ruby-value">:photovoltaic</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">energy_production_kwh</span>[<span class="ruby-value">:electricity_produced_kwh</span>][<span class="ruby-value">:photovoltaic_kwh</span>])
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>&amp;.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:fuel_type</span>] = <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:fuel_type</span>]
-    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:total_cost</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:total_cost</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:total_cost</span>])
-    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:usage_cost</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:usage_cost</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:usage_cost</span>])
-    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:demand_cost</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:demand_cost</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">utility_costs</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:demand_cost</span>])
+  <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>&amp;.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:fuel_type</span>] = <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:fuel_type</span>]
+    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:total_cost</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:total_cost</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:total_cost</span>])
+    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:usage_cost</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:usage_cost</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:usage_cost</span>])
+    <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:demand_cost</span>] = <span class="ruby-identifier">add_values</span>(<span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:demand_cost</span>], <span class="ruby-identifier">new_period</span>.<span class="ruby-identifier">utility_costs_dollar</span>[<span class="ruby-identifier">i</span>][<span class="ruby-value">:demand_cost</span>])
   <span class="ruby-keyword">end</span>
 
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_period</span>.<span class="ruby-identifier">comfort_result</span>
@@ -286,7 +291,7 @@ href="ReportingPeriod.html">ReportingPeriod</a> objects.</p>
 
           
           <div class="method-source-code" id="merge_reporting_periods-source">
-            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 268</span>
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 276</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">merge_reporting_periods</span>(<span class="ruby-identifier">existing_periods</span>, <span class="ruby-identifier">new_periods</span>)
   <span class="ruby-identifier">id_list_existing</span> = []
   <span class="ruby-identifier">id_list_new</span> = []
@@ -343,17 +348,18 @@ href="ReportingPeriod.html">ReportingPeriod</a> objects.</p>
 reporting period attributes: <code>:id</code> , <code>:name</code> ,
 <code>:multiplier</code> , <code>:start_date</code> ,
 <code>:end_date</code> , <code>:month</code> , <code>:day_of_month</code> ,
-<code>:year</code> , <code>:total_site_energy</code> ,
-<code>:total_source_energy</code> , <code>:net_site_energy</code> ,
-<code>:net_source_energy</code> , +:total_utility_cost ,
-<code>:net_utility_cost</code> , <code>:utility_costs</code> ,
-<code>:electricity</code> , <code>:natural_gas</code> ,
-<code>:additional_fuel</code> , <code>:district_cooling</code> ,
-<code>:district_heating</code> , <code>:water</code> ,
-<code>:electricity_produced</code> , <code>:end_uses</code> ,
-<code>:energy_production</code> , <code>:photovoltaic</code> ,
-<code>:fuel_type</code> , <code>:total_cost</code> ,
-<code>:usage_cost</code> , <code>:demand_cost</code> ,
+<code>:year</code> , <code>:total_site_energy_kwh</code> ,
+<code>:total_source_energy_kwh</code> , <code>:net_site_energy_kwh</code> ,
+<code>:net_source_energy_kwh</code> , +:total_utility_cost_dollar ,
+<code>:net_utility_cost_dollar</code> , <code>:utility_costs_dollar</code>
+, <code>:electricity_kwh</code> , <code>:natural_gas_kwh</code> ,
+<code>:propane_kwh</code> , <code>:fuel_oil_kwh</code> ,
+<code>:other_fuels_kwh</code> , <code>:district_cooling_kwh</code> ,
+<code>:district_heating_kwh</code> , <code>:water_qbft</code> ,
+<code>:electricity_produced_kwh</code> , <code>:end_uses</code> ,
+<code>:energy_production_kwh</code> , <code>:photovoltaic_kwh</code> ,
+<code>:fuel_type</code> , <code>:total_cost_dollar</code> ,
+<code>:usage_cost_dollar</code> , <code>:demand_cost_dollar</code> ,
 <code>:comfort_result</code> ,
 <code>:time_setpoint_not_met_during_occupied_cooling</code> ,
 <code>:time_setpoint_not_met_during_occupied_heating</code> ,
@@ -379,24 +385,26 @@ reporting_period.</p>
   <span class="ruby-ivar">@start_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">hash</span>[<span class="ruby-value">:start_date</span>])
   <span class="ruby-ivar">@end_date</span> = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">hash</span>[<span class="ruby-value">:end_date</span>])
 
-  <span class="ruby-ivar">@total_site_energy</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_site_energy</span>]
-  <span class="ruby-ivar">@total_source_energy</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_source_energy</span>]
-  <span class="ruby-ivar">@net_site_energy</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:net_site_energy</span>]
-  <span class="ruby-ivar">@net_source_energy</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:net_source_energy</span>]
-  <span class="ruby-ivar">@net_utility_cost</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:net_utility_cost</span>]
-  <span class="ruby-ivar">@total_utility_cost</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:total_utility_cost</span>]
-  <span class="ruby-ivar">@electricity</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:electricity</span>]
-  <span class="ruby-ivar">@natural_gas</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:natural_gas</span>]
-  <span class="ruby-ivar">@additional_fuel</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:additional_fuel</span>]
-  <span class="ruby-ivar">@district_cooling</span> = <span class="ruby-identifier">hash</span> [<span class="ruby-value">:district_cooling</span>]
-  <span class="ruby-ivar">@district_heating</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:district_heating</span>]
-  <span class="ruby-ivar">@water</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:water</span>]
-  <span class="ruby-ivar">@electricity_produced</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:electricity_produced</span>]
+  <span class="ruby-ivar">@total_site_energy_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_site_energy_kwh</span>]
+  <span class="ruby-ivar">@total_source_energy_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_source_energy_kwh</span>]
+  <span class="ruby-ivar">@net_site_energy_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:net_site_energy_kwh</span>]
+  <span class="ruby-ivar">@net_source_energy_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:net_source_energy_kwh</span>]
+  <span class="ruby-ivar">@net_utility_cost_dollar</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:net_utility_cost_dollar</span>]
+  <span class="ruby-ivar">@total_utility_cost_dollar</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_utility_cost_dollar</span>]
+  <span class="ruby-ivar">@electricity_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:electricity_kwh</span>]
+  <span class="ruby-ivar">@natural_gas_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:natural_gas_kwh</span>]
+  <span class="ruby-ivar">@propane_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:propane_kwh</span>]
+  <span class="ruby-ivar">@fuel_oil_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:fuel_oil_kwh</span>]
+  <span class="ruby-ivar">@other_fuels_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:other_fuels_kwh</span>]
+  <span class="ruby-ivar">@district_cooling_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:district_cooling_kwh</span>]
+  <span class="ruby-ivar">@district_heating_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:district_heating_kwh</span>]
+  <span class="ruby-ivar">@water_qbft</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:water_qbft</span>]
+  <span class="ruby-ivar">@electricity_produced_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:electricity_produced_kwh</span>]
   <span class="ruby-ivar">@end_uses</span> = <span class="ruby-constant">EndUses</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">hash</span>[<span class="ruby-value">:end_uses</span>])
 
-  <span class="ruby-ivar">@energy_production</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:energy_production</span>]
+  <span class="ruby-ivar">@energy_production_kwh</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:energy_production_kwh</span>]
 
-  <span class="ruby-ivar">@utility_costs</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:utility_costs</span>]
+  <span class="ruby-ivar">@utility_costs_dollar</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:utility_costs_dollar</span>]
 
   <span class="ruby-ivar">@comfort_result</span> = <span class="ruby-identifier">hash</span>[<span class="ruby-value">:comfort_result</span>]
 
@@ -441,7 +449,7 @@ reporting_period.</p>
 
           
           <div class="method-source-code" id="defaults-source">
-            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 100</span>
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 102</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">defaults</span>
   <span class="ruby-identifier">hash</span> = {}
 
@@ -451,22 +459,24 @@ reporting_period.</p>
   <span class="ruby-identifier">hash</span>[<span class="ruby-value">:start_date</span>] = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">to_hash</span>
   <span class="ruby-identifier">hash</span>[<span class="ruby-value">:end_date</span>] = <span class="ruby-constant">Date</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">to_hash</span>
 
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_site_energy</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_source_energy</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:net_site_energy</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:net_source_energy</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:net_utility_cost</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:total_utility_cost</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:electricity</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:natural_gas</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:additional_fuel</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span> [<span class="ruby-value">:district_cooling</span>] = <span class="ruby-keyword">nil</span>
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:district_heating</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_site_energy_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_source_energy_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:net_site_energy_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:net_source_energy_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:net_utility_cost_dollar</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:total_utility_cost_dollar</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:electricity_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:natural_gas_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:propane_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:fuel_oil_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:other_fuels_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:district_cooling_kwh</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:district_heating_kwh</span>] = <span class="ruby-keyword">nil</span>
 
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:electricity_produced</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:electricity_produced_kwh</span>] = <span class="ruby-keyword">nil</span>
   <span class="ruby-identifier">hash</span>[<span class="ruby-value">:end_uses</span>] = <span class="ruby-constant">EndUses</span>.<span class="ruby-identifier">new</span>.<span class="ruby-identifier">to_hash</span>
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:energy_production</span>] = { <span class="ruby-value">electricity_produced:</span> { <span class="ruby-value">photovoltaic:</span> <span class="ruby-keyword">nil</span> } }
-  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:utility_costs</span>] = [{ <span class="ruby-value">fuel_type:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">total_cost:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">usage_cost:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">demand_cost:</span> <span class="ruby-keyword">nil</span> }]
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:energy_production_kwh</span>] = { <span class="ruby-value">electricity_produced:</span> { <span class="ruby-value">photovoltaic:</span> <span class="ruby-keyword">nil</span> } }
+  <span class="ruby-identifier">hash</span>[<span class="ruby-value">:utility_costs_dollar</span>] = [{ <span class="ruby-value">fuel_type:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">total_cost_dollar:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">usage_cost_dollar:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">demand_cost_dollar:</span> <span class="ruby-keyword">nil</span> }]
   <span class="ruby-identifier">hash</span>[<span class="ruby-value">:comfort_result</span>] = { <span class="ruby-value">time_setpoint_not_met_during_occupied_cooling:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">time_setpoint_not_met_during_occupied_heating:</span> <span class="ruby-keyword">nil</span>,
                             <span class="ruby-value">time_setpoint_not_met_during_occupied_hours:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">hours_out_of_comfort_bounds_PMV:</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">hours_out_of_comfort_bounds_PPD:</span> <span class="ruby-keyword">nil</span> }
 
@@ -506,7 +516,7 @@ reporting_period.</p>
 
           
           <div class="method-source-code" id="to_hash-source">
-            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 137</span>
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/reporting_period.rb, line 141</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">to_hash</span>
   <span class="ruby-identifier">result</span> = {}
 
@@ -515,32 +525,34 @@ reporting_period.</p>
   <span class="ruby-identifier">result</span>[<span class="ruby-value">:multiplier</span>] = <span class="ruby-ivar">@multiplier</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@multiplier</span>
   <span class="ruby-identifier">result</span>[<span class="ruby-value">:start_date</span>] = <span class="ruby-ivar">@start_date</span>.<span class="ruby-identifier">to_hash</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@start_date</span>
   <span class="ruby-identifier">result</span>[<span class="ruby-value">:end_date</span>] = <span class="ruby-ivar">@end_date</span>.<span class="ruby-identifier">to_hash</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@end_date</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:total_site_energy</span>] = <span class="ruby-ivar">@total_site_energy</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@total_site_energy</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:total_source_energy</span>] = <span class="ruby-ivar">@total_source_energy</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@total_source_energy</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:net_site_energy</span>] = <span class="ruby-ivar">@net_site_energy</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@net_site_energy</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:net_source_energy</span>] = <span class="ruby-ivar">@net_source_energy</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@net_source_energy</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:net_utility_cost</span>] = <span class="ruby-ivar">@net_utility_cost</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@net_utility_cost</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:total_utility_cost</span>] = <span class="ruby-ivar">@total_utility_cost</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@total_utility_cost</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:electricity</span>] = <span class="ruby-ivar">@electricity</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@electricity</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:natural_gas</span>] = <span class="ruby-ivar">@natural_gas</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@natural_gas</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:additional_fuel</span>] = <span class="ruby-ivar">@additional_fuel</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@additional_fuel</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:district_cooling</span>] = <span class="ruby-ivar">@district_cooling</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@district_cooling</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:district_heating</span>] = <span class="ruby-ivar">@district_heating</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@district_heating</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:water</span>] = <span class="ruby-ivar">@water</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@water</span>
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:electricity_produced</span>] = <span class="ruby-ivar">@electricity_produced</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@electricity_produced</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:total_site_energy_kwh</span>] = <span class="ruby-ivar">@total_site_energy_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@total_site_energy_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:total_source_energy_kwh</span>] = <span class="ruby-ivar">@total_source_energy_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@total_source_energy_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:net_site_energy_kwh</span>] = <span class="ruby-ivar">@net_site_energy_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@net_site_energy_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:net_source_energy_kwh</span>] = <span class="ruby-ivar">@net_source_energy_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@net_source_energy_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:net_utility_cost_dollar</span>] = <span class="ruby-ivar">@net_utility_cost_dollar</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@net_utility_cost_dollar</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:total_utility_cost_dollar</span>] = <span class="ruby-ivar">@total_utility_cost_dollar</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@total_utility_cost_dollar</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:electricity_kwh</span>] = <span class="ruby-ivar">@electricity_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@electricity_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:natural_gas_kwh</span>] = <span class="ruby-ivar">@natural_gas_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@natural_gas_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:propane_kwh</span>] = <span class="ruby-ivar">@propane_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@propane_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:fuel_oil_kwh</span>] = <span class="ruby-ivar">@fuel_oil_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@fuel_oil_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:other_fuels_kwh</span>] = <span class="ruby-ivar">@other_fuels_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@other_fuels_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:district_cooling_kwh</span>] = <span class="ruby-ivar">@district_cooling_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@district_cooling_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:district_heating_kwh</span>] = <span class="ruby-ivar">@district_heating_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@district_heating_kwh</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:water_qbft</span>] = <span class="ruby-ivar">@water_qbft</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@water_qbft</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:electricity_produced_kwh</span>] = <span class="ruby-ivar">@electricity_produced_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@electricity_produced_kwh</span>
   <span class="ruby-identifier">result</span>[<span class="ruby-value">:end_uses</span>] = <span class="ruby-ivar">@end_uses</span>.<span class="ruby-identifier">to_hash</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@end_uses</span>
 
-  <span class="ruby-identifier">energy_production_hash</span> = <span class="ruby-ivar">@energy_production</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@energy_production</span>
-  <span class="ruby-identifier">energy_production_hash</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">nil?</span> }
-  <span class="ruby-identifier">energy_production_hash</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">eph</span><span class="ruby-operator">|</span>
+  <span class="ruby-identifier">energy_production_kwh_hash</span> = <span class="ruby-ivar">@energy_production_kwh</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@energy_production_kwh</span>
+  <span class="ruby-identifier">energy_production_kwh_hash</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">nil?</span> }
+  <span class="ruby-identifier">energy_production_kwh_hash</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">eph</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">eph</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">nil?</span> }
   <span class="ruby-keyword">end</span>
 
-  <span class="ruby-identifier">result</span>[<span class="ruby-value">:energy_production</span>] = <span class="ruby-identifier">energy_production_hash</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@energy_production</span>
+  <span class="ruby-identifier">result</span>[<span class="ruby-value">:energy_production_kwh</span>] = <span class="ruby-identifier">energy_production_kwh_hash</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@energy_production_kwh</span>
 
-  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@utility_costs</span>.<span class="ruby-identifier">any?</span>
-    <span class="ruby-identifier">result</span>[<span class="ruby-value">:utility_costs</span>] = <span class="ruby-ivar">@utility_costs</span>
-    <span class="ruby-ivar">@utility_costs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">uc</span><span class="ruby-operator">|</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@utility_costs_dollar</span>.<span class="ruby-identifier">any?</span>
+    <span class="ruby-identifier">result</span>[<span class="ruby-value">:utility_costs_dollar</span>] = <span class="ruby-ivar">@utility_costs_dollar</span>
+    <span class="ruby-ivar">@utility_costs_dollar</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">uc</span><span class="ruby-operator">|</span>
       <span class="ruby-identifier">uc</span>&amp;.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>, <span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span>.<span class="ruby-identifier">nil?</span> }
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
@@ -574,7 +586,7 @@ reporting_period.</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

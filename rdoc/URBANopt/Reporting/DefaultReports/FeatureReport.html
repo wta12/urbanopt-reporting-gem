@@ -11,8 +11,11 @@
   var index_rel_prefix = "../../../";
 </script>
 
-<script src="../../../js/jquery.js"></script>
-<script src="../../../js/darkfish.js"></script>
+<script src="../../../js/navigation.js" defer></script>
+<script src="../../../js/search.js" defer></script>
+<script src="../../../js/search_index.js" defer></script>
+<script src="../../../js/searcher.js" defer></script>
+<script src="../../../js/darkfish.js" defer></script>
 
 <link href="../../../css/fonts.css" rel="stylesheet">
 <link href="../../../css/rdoc.css" rel="stylesheet">
@@ -78,7 +81,11 @@
     
     <li ><a href="#method-i-defaults">#defaults</a>
     
+    <li ><a href="#method-i-save_csv_report">#save_csv_report</a>
+    
     <li ><a href="#method-i-save_feature_report">#save_feature_report</a>
+    
+    <li ><a href="#method-i-save_json_report">#save_json_report</a>
     
     <li ><a href="#method-i-to_hash">#to_hash</a>
     
@@ -347,6 +354,59 @@ feature_report.</p>
       </div>
 
     
+      <div id="method-i-save_csv_report" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">save_csv_report</span><span
+            class="method-args">(file_name = &#39;default_feature_report&#39;)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Saves the &#39;default_feature_report.csv&#39; file to the results
+directory</p>
+
+<p>[parameters]: <code>file_name</code> - <em>String</em> - Assign a name to
+the saved feature report file without an extension</p>
+          
+          
+
+          
+          <div class="method-source-code" id="save_csv_report-source">
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/feature_report.rb, line 273</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_csv_report</span>(<span class="ruby-identifier">file_name</span> = <span class="ruby-string">&#39;default_feature_report&#39;</span>)
+  <span class="ruby-comment"># reassign the initialize local variable @file_name to the file name input.</span>
+  <span class="ruby-ivar">@file_name</span> = <span class="ruby-identifier">file_name</span>
+
+  <span class="ruby-comment"># define the results_dir_path</span>
+  <span class="ruby-identifier">results_dir_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>)
+  <span class="ruby-comment"># create feature reports directory</span>
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-identifier">results_dir_path</span>) <span class="ruby-keyword">unless</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>))
+
+  <span class="ruby-comment">## copy CSV report to the new feature_reports folder</span>
+  <span class="ruby-comment"># get all folder names in the feature diectory</span>
+  <span class="ruby-identifier">directory_folders</span> = <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span> <span class="ruby-node">&quot;#{@directory_name}/*/&quot;</span>
+  <span class="ruby-comment"># copy the CSV report to the new feature_reports folder</span>
+  <span class="ruby-identifier">directory_folders</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">f</span>.<span class="ruby-identifier">include?</span> <span class="ruby-string">&#39;_default_feature_reports&#39;</span>
+      <span class="ruby-constant">FileUtils</span>.<span class="ruby-identifier">cp</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">f</span>, <span class="ruby-string">&#39;default_feature_reports.csv&#39;</span>), <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">results_dir_path</span>, <span class="ruby-ivar">@file_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;.csv&#39;</span>))
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-save_feature_report" class="method-detail ">
         
         <div class="method-heading">
@@ -360,37 +420,71 @@ feature_report.</p>
 
         <div class="method-description">
           
-          <p>Saves the &#39;default_feature_report.json&#39; and
-&#39;default_feature_report.csv&#39; files</p>
+          <p>Calls the individual functions to save
+&#39;default_feature_report.json&#39; and
+&#39;default_feature_report.csv&#39; For backward compatibility and ease of
+use</p>
 
 <p>[parameters]: <code>file_name</code> - <em>String</em> - Assign a name to
-the saved feature report results file without an extension</p>
+the saved feature report file without an extension</p>
           
           
 
           
           <div class="method-source-code" id="save_feature_report-source">
-            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/feature_report.rb, line 231</span>
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/feature_report.rb, line 232</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_feature_report</span>(<span class="ruby-identifier">file_name</span> = <span class="ruby-string">&#39;default_feature_report&#39;</span>)
+  <span class="ruby-identifier">save_json_report</span>(<span class="ruby-identifier">file_name</span>)
+  <span class="ruby-identifier">save_csv_report</span>(<span class="ruby-identifier">file_name</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-save_json_report" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">save_json_report</span><span
+            class="method-args">(file_name = &#39;default_feature_report&#39;)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Saves the &#39;default_feature_report.json&#39; file to the results
+directory</p>
+
+<p>[parameters]: <code>file_name</code> - <em>String</em> - Assign a name to
+the saved feature report file without an extension</p>
+          
+          
+
+          
+          <div class="method-source-code" id="save_json_report-source">
+            <pre><span class="ruby-comment"># File lib/urbanopt/reporting/default_reports/feature_report.rb, line 242</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">save_json_report</span>(<span class="ruby-identifier">file_name</span> = <span class="ruby-string">&#39;default_feature_report&#39;</span>)
   <span class="ruby-comment"># reassign the initialize local variable @file_name to the file name input.</span>
   <span class="ruby-ivar">@file_name</span> = <span class="ruby-identifier">file_name</span>
 
+  <span class="ruby-comment"># define the results_dir_path</span>
+  <span class="ruby-identifier">results_dir_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>)
   <span class="ruby-comment"># create feature reports directory</span>
-  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>)) <span class="ruby-keyword">unless</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>))
+  <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">mkdir</span>(<span class="ruby-identifier">results_dir_path</span>) <span class="ruby-keyword">unless</span> <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>))
 
-  <span class="ruby-comment"># save the csv data</span>
-  <span class="ruby-identifier">old_timeseries_path</span> = <span class="ruby-keyword">nil</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@timeseries_csv</span>.<span class="ruby-identifier">path</span>.<span class="ruby-identifier">nil?</span>
-    <span class="ruby-identifier">old_timeseries_path</span> = <span class="ruby-ivar">@timeseries_csv</span>.<span class="ruby-identifier">path</span>
-  <span class="ruby-keyword">end</span>
-
-  <span class="ruby-ivar">@timeseries_csv</span>.<span class="ruby-identifier">path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>, <span class="ruby-identifier">file_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;.csv&#39;</span>)
-  <span class="ruby-ivar">@timeseries_csv</span>.<span class="ruby-identifier">save_data</span>
-
+  <span class="ruby-comment">## save json rport</span>
   <span class="ruby-comment"># feature_hash</span>
   <span class="ruby-identifier">feature_hash</span> = <span class="ruby-identifier">to_hash</span>
 
-  <span class="ruby-identifier">json_name_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>, <span class="ruby-identifier">file_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;.json&#39;</span>)
+  <span class="ruby-identifier">json_name_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">results_dir_path</span>, <span class="ruby-identifier">file_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;.json&#39;</span>)
 
   <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">json_name_path</span>, <span class="ruby-string">&#39;w&#39;</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-constant">JSON</span>.<span class="ruby-identifier">pretty_generate</span>(<span class="ruby-identifier">feature_hash</span>)
@@ -401,13 +495,6 @@ the saved feature report results file without an extension</p>
       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">flush</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">end</span>
-
-  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">old_timeseries_path</span>.<span class="ruby-identifier">nil?</span>
-    <span class="ruby-ivar">@timeseries_csv</span>.<span class="ruby-identifier">path</span> = <span class="ruby-identifier">old_timeseries_path</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-ivar">@timeseries_csv</span>.<span class="ruby-identifier">path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@directory_name</span>, <span class="ruby-string">&#39;feature_reports&#39;</span>, <span class="ruby-identifier">file_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&#39;.csv&#39;</span>)
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -495,7 +582,7 @@ the saved feature report results file without an extension</p>
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 

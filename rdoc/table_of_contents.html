@@ -11,8 +11,11 @@
   var index_rel_prefix = "./";
 </script>
 
-<script src="./js/jquery.js"></script>
-<script src="./js/darkfish.js"></script>
+<script src="./js/navigation.js" defer></script>
+<script src="./js/search.js" defer></script>
+<script src="./js/search_index.js" defer></script>
+<script src="./js/searcher.js" defer></script>
+<script src="./js/darkfish.js" defer></script>
 
 <link href="./css/fonts.css" rel="stylesheet">
 <link href="./css/rdoc.css" rel="stylesheet">
@@ -31,6 +34,9 @@
 
     <ul>
       <li><a href="CHANGELOG_md.html#label-URBANopt+Reporting+Gem">URBANopt Reporting Gem</a>
+      <li><a href="CHANGELOG_md.html#label-Version+0.3.1">Version 0.3.1</a>
+      <li><a href="CHANGELOG_md.html#label-Version+0.3.0">Version 0.3.0</a>
+      <li><a href="CHANGELOG_md.html#label-Version+0.2.1">Version 0.2.1</a>
       <li><a href="CHANGELOG_md.html#label-Version+0.2.0">Version 0.2.0</a>
       <li><a href="CHANGELOG_md.html#label-Version+0.1.1">Version 0.1.1</a>
       <li><a href="CHANGELOG_md.html#label-Version+0.1.0">Version 0.1.0</a>
@@ -339,6 +345,36 @@
     <span class="container">URBANopt::Reporting::DefaultReports::ScenarioReport</span>
 
   <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/ThermalStorage.html#method-i-defaults">#defaults</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::ThermalStorage</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/ScenarioReport.html#method-i-defaults">#defaults</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::ScenarioReport</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/FeatureReport.html#method-i-defaults">#defaults</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::FeatureReport</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/Location.html#method-i-defaults">#defaults</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::Location</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/PowerDistribution.html#method-i-defaults">#defaults</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::PowerDistribution</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/EndUses.html#method-i-defaults">#defaults</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::EndUses</span>
+
+  <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/Program.html#method-i-defaults">#defaults</a>
     &mdash;
     <span class="container">URBANopt::Reporting::DefaultReports::Program</span>
@@ -349,49 +385,19 @@
     <span class="container">URBANopt::Reporting::DefaultReports::TimeseriesCSV</span>
 
   <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/FeatureReport.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::FeatureReport</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/EndUses.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::EndUses</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/Date.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::Date</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/Location.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::Location</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/ScenarioReport.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::ScenarioReport</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/PowerDistribution.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::PowerDistribution</span>
-
-  <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/ReportingPeriod.html#method-i-defaults">#defaults</a>
     &mdash;
     <span class="container">URBANopt::Reporting::DefaultReports::ReportingPeriod</span>
 
   <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/ThermalStorage.html#method-i-defaults">#defaults</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::ThermalStorage</span>
-
-  <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/ConstructionCost.html#method-i-defaults">#defaults</a>
     &mdash;
     <span class="container">URBANopt::Reporting::DefaultReports::ConstructionCost</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/Date.html#method-i-defaults">#defaults</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::Date</span>
 
   <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/EndUse.html#method-i-defaults">#defaults</a>
@@ -474,12 +480,22 @@
     <span class="container">URBANopt::Reporting::DefaultReports::ScenarioReport</span>
 
   <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/FeatureReport.html#method-i-save_csv_report">#save_csv_report</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::FeatureReport</span>
+
+  <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/TimeseriesCSV.html#method-i-save_data">#save_data</a>
     &mdash;
     <span class="container">URBANopt::Reporting::DefaultReports::TimeseriesCSV</span>
 
   <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/FeatureReport.html#method-i-save_feature_report">#save_feature_report</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::FeatureReport</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/FeatureReport.html#method-i-save_json_report">#save_json_report</a>
     &mdash;
     <span class="container">URBANopt::Reporting::DefaultReports::FeatureReport</span>
 
@@ -504,9 +520,24 @@
     <span class="container">URBANopt::Reporting::DefaultReports::Validator</span>
 
   <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/TimeseriesCSV.html#method-i-to_hash">#to_hash</a>
+    <a href="URBANopt/Reporting/DefaultReports/ConstructionCost.html#method-i-to_hash">#to_hash</a>
     &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::TimeseriesCSV</span>
+    <span class="container">URBANopt::Reporting::DefaultReports::ConstructionCost</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/ScenarioReport.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::ScenarioReport</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/SolarPV.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::SolarPV</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/DistributedGeneration.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::DistributedGeneration</span>
 
   <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/Storage.html#method-i-to_hash">#to_hash</a>
@@ -514,14 +545,39 @@
     <span class="container">URBANopt::Reporting::DefaultReports::Storage</span>
 
   <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/EndUse.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::EndUse</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/ReportingPeriod.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::ReportingPeriod</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/ThermalStorage.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::ThermalStorage</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/Date.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::Date</span>
+
+  <li class="method">
+    <a href="URBANopt/Reporting/DefaultReports/Wind.html#method-i-to_hash">#to_hash</a>
+    &mdash;
+    <span class="container">URBANopt::Reporting::DefaultReports::Wind</span>
+
+  <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/Program.html#method-i-to_hash">#to_hash</a>
     &mdash;
     <span class="container">URBANopt::Reporting::DefaultReports::Program</span>
 
   <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/SolarPV.html#method-i-to_hash">#to_hash</a>
+    <a href="URBANopt/Reporting/DefaultReports/TimeseriesCSV.html#method-i-to_hash">#to_hash</a>
     &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::SolarPV</span>
+    <span class="container">URBANopt::Reporting::DefaultReports::TimeseriesCSV</span>
 
   <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/PowerDistribution.html#method-i-to_hash">#to_hash</a>
@@ -544,46 +600,6 @@
     <span class="container">URBANopt::Reporting::DefaultReports::FeatureReport</span>
 
   <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/ScenarioReport.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::ScenarioReport</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/Date.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::Date</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/Wind.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::Wind</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/ReportingPeriod.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::ReportingPeriod</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/EndUse.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::EndUse</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/DistributedGeneration.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::DistributedGeneration</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/ThermalStorage.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::ThermalStorage</span>
-
-  <li class="method">
-    <a href="URBANopt/Reporting/DefaultReports/ConstructionCost.html#method-i-to_hash">#to_hash</a>
-    &mdash;
-    <span class="container">URBANopt::Reporting::DefaultReports::ConstructionCost</span>
-
-  <li class="method">
     <a href="URBANopt/Reporting/DefaultReports/Generator.html#method-i-to_hash">#to_hash</a>
     &mdash;
     <span class="container">URBANopt::Reporting::DefaultReports::Generator</span>
@@ -598,7 +614,7 @@
 
 <footer id="validator-badges" role="contentinfo">
   <p><a href="https://validator.w3.org/check/referer">Validate</a>
-  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.
+  <p>Generated by <a href="https://ruby.github.io/rdoc/">RDoc</a> 6.0.1.1.
   <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
 </footer>
 
