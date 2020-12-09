@@ -1,5 +1,13 @@
 # URBANopt Reporting Gem
 
+## Version 0.3.2
+
+Date Range: 12/07/20 - 12/08/20
+
+- Fixed [#27]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/27 ), reporting measure fails when there are no additional fuels in the model
+- Fixed [#29]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/29 ), restore save_feature_report function for backward compatibility
+- Fixed [#32]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/32 ), bump extension-gem dependency
+
 ## Version 0.3.1
 
 Date Range: 11/26/2020 - 12/07/2020
@@ -11,7 +19,7 @@ Date Range: 11/26/2020 - 12/07/2020
 ## Version 0.3.0
 
 Date Range: 11/12/2020 - 11/25/2020
- 
+
 - Updating dependencies to support OpenStudio 3.1.0
 
 ## Version 0.2.1
