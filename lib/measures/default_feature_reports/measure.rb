@@ -165,9 +165,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # Request the output for each end use/fuel type combination
     end_uses.each do |end_use|
-      end_use, _ = end_use
+      end_use, = end_use
       fuel_types.each do |fuel_type|
-        fuel_type, _ = fuel_type
+        fuel_type, = fuel_type
         variable_name = if end_use == 'Facility'
                           "#{fuel_type}:#{end_use}"
                         else
@@ -178,17 +178,17 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     end
 
     # OtherFuels
-    other_fuels = ["FuelOil#1", "Diesel", "Gasoline", "Coal", "Steam"]
-    other_fuel_uses = ["HeatRejection", "Heating", "WaterSystems", "InteriorEquipment"]
-    custom_meter_facility = "Meter:Custom,OtherFuels:Facility,OtherFuel1"
+    other_fuels = ['FuelOil#1', 'Diesel', 'Gasoline', 'Coal', 'Steam']
+    other_fuel_uses = ['HeatRejection', 'Heating', 'WaterSystems', 'InteriorEquipment']
+    custom_meter_facility = 'Meter:Custom,OtherFuels:Facility,OtherFuel1'
     other_fuel_uses.each do |end_use|
       custom_meter = "Meter:Custom,#{end_use}:OtherFuels,OtherFuel1"
-      other_fuels.each do |other_fuel|  
+      other_fuels.each do |other_fuel|
         result << OpenStudio::IdfObject.load("Output:Meter,#{end_use}:#{other_fuel},#{reporting_frequency};").get
         custom_meter_facility += ",,#{end_use}:#{other_fuel}"
         custom_meter += ",,#{end_use}:#{other_fuel}"
       end
-      custom_meter += ";"
+      custom_meter += ';'
       result << OpenStudio::IdfObject.load(custom_meter).get
       result << OpenStudio::IdfObject.load("Output:Meter,#{end_use}:OtherFuels,#{reporting_frequency};").get
     end
@@ -698,7 +698,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
           sql_r -= feature_report.reporting_periods[0].end_uses.fuel_oil_kwh.send(y)
         end
         building_types.each do |i|
-          sql_r = 0.0 if (i[:building_type].include?('Single-Family Detached') && x_u.include?('district'))
+          sql_r = 0.0 if i[:building_type].include?('Single-Family Detached') && x_u.include?('district')
         end
         m.send("#{y}=", sql_r)
       end
@@ -850,7 +850,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       puts " *********timeseries_name = #{timeseries_name}******************"
       runner.registerInfo("TIMESERIES: #{timeseries_name}")
 
-      # get all the key values that this timeseries can be reported for (e.g. if PMV is requested for each zone)      
+      # get all the key values that this timeseries can be reported for (e.g. if PMV is requested for each zone)
       if timeseries_name.include?('OtherFuels')
         key_values = sql_file.availableKeyValues('RUN PERIOD 1', 'Zone Timestep', timeseries_name.upcase)
       else
