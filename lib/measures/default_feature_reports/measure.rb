@@ -258,6 +258,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     if value.nil?
       return nil
     end
+    if from_units.nil? || to_units.nil?
+      @runner.registerError("Cannot convert units...from_units: #{from_units} or to_units: #{to_units} left blank.")
+      return nil
+    end
+
     # apply unit conversion
     value_converted = OpenStudio.convert(value, from_units, to_units)
     if value_converted.is_initialized
