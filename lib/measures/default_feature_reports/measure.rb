@@ -586,6 +586,22 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     total_source_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Total Source Energy' AND ColumnName='Total Energy'")
     feature_report.reporting_periods[0].total_source_energy_kwh = convert_units(total_source_energy, 'GJ', 'kWh')
 
+    # EUI is only valid with a full year of energy data
+    if begin_month == 1 && begin_day_of_month == 1 && end_month == 12 && end_day_of_month == 31
+      # calculate site EUI
+      site_EUI_kwh_per_m2 = feature_report.reporting_periods[0].total_site_energy_kwh / floor_area
+      site_EUI_kbtu_per_ft2 = convert_units(total_site_energy, 'GJ', 'kBtu') / feature_report.program.floor_area_sqft
+      # add site EUI to feature report
+      feature_report.reporting_periods[0].site_EUI_kwh_per_m2 = site_EUI_kwh_per_m2
+      feature_report.reporting_periods[0].site_EUI_kbtu_per_ft2 = site_EUI_kbtu_per_ft2
+      # calculate source EUI
+      source_EUI_kwh_per_m2 = feature_report.reporting_periods[0].total_source_energy_kwh / floor_area
+      source_EUI_kbtu_per_ft2 = convert_units(total_source_energy, 'GJ', 'kBtu') / feature_report.program.floor_area_sqft
+      # add source EUI to feature report
+      feature_report.reporting_periods[0].source_EUI_kwh_per_m2 = source_EUI_kwh_per_m2
+      feature_report.reporting_periods[0].source_EUI_kbtu_per_ft2 = source_EUI_kbtu_per_ft2
+    end
+
     # net_site_energy
     net_site_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Net Site Energy' AND ColumnName='Total Energy'")
     feature_report.reporting_periods[0].net_site_energy_kwh = convert_units(net_site_energy, 'GJ', 'kWh')

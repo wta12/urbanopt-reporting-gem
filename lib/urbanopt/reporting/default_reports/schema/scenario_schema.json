@@ -271,6 +271,18 @@
 					"description": "Total source energy used, does not include generation (kWh)",
 					"type": "number"
 				},
+				"site_EUI_kwh_per_m2": {
+					"type": "number"
+				},
+				"site_EUI_kBtu_per_ft2": {
+					"type": "number"
+				},
+				"source_EUI_kwh_per_m2": {
+					"type": "number"
+				},
+				"source_EUI_kBtu_per_ft2": {
+					"type": "number"
+				},
 				"net_site_energy_kwh": {
 					"description": "Net site energy (kWh)",
 					"type": "number"
@@ -301,14 +313,14 @@
 					"description": "Sum of all natural gas end uses consumption (kWh)",
 					"type": "number"
 				},
-        "propane_kwh": {
+				"propane_kwh": {
 					"description": "Sum of all propane end uses consumption (kWh)",
 					"type": "number"
-        },
-        "fuel_oil_kwh": {
+				},
+				"fuel_oil_kwh": {
 					"description": "Sum of all fuel oil #2 end uses consumption (kWh)",
 					"type": "number"
-        },
+				},
 				"other_fuels_kwh": {
 					"description": "Sum of all other (fuel oil #1, diesel, gasoline, coal, steam) fuel end uses consumption (kWh)",
 					"type": "number"
@@ -379,12 +391,12 @@
 				"natural_gas_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
-        "propane_kwh": {
-          "$ref": "#/definitions/EndUse"
-        },
-        "fuel_oil_kwh": {
-          "$ref": "#/definitions/EndUse"
-        },
+				"propane_kwh": {
+					"$ref": "#/definitions/EndUse"
+				},
+				"fuel_oil_kwh": {
+					"$ref": "#/definitions/EndUse"
+				},
 				"other_fuels_kwh": {
 					"$ref": "#/definitions/EndUse"
 				},
@@ -536,8 +548,8 @@
 					"enum": [
 						"Electricity",
 						"Natural Gas",
-            "Propane",
-            "Fuel Oil",
+						"Propane",
+						"Fuel Oil",
 						"District Cooling",
 						"District Heating",
 						"Other Fuels",
