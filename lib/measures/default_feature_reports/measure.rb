@@ -505,9 +505,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.program.roof_area_sqft[:total_roof_area_sqft] = total_roof_area_sqft
 
     # available_roof_area_sqft
-    # RK: a more robust method should be implemented t find the available roof_area 
+    # RK: a more robust method should be implemented to find the available_roof_area 
     # assign available roof area to be a percentage of the total roof area
-    # 27% of single_family_detached building and 65% of the residential buildings
+    # 27% of single_family_detached buildings roof area and 65% of commmercial buildings roof areas
 
     if building_types[0][:building_type].include? 'Single-Family Detached'
       feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.27 * total_roof_area_sqft
