@@ -509,11 +509,14 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # assign available roof area to be a percentage of the total roof area
     # 27% of single_family_detached buildings roof area and 65% of commmercial buildings roof areas
 
-    if building_types[0][:building_type].include? 'Single-Family Detached'
-      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.27 * total_roof_area_sqft
-    else 
-      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.65 * total_roof_area_sqft
-    end
+    # if building_types[0][:building_type].include? 'Single-Family Detached'
+    #   feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.27 * total_roof_area_sqft
+    # else 
+    #   feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.65 * total_roof_area_sqft
+    # end
+
+    # RK: Temporary solution: assign available roof area to be equal to total roof area
+    feature_report.program.roof_area_sqft[:available_roof_area_sqft] = total_roof_area_sqft
 
 
     # orientation
