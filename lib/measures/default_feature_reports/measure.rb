@@ -500,7 +500,21 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         total_roof_area += surface.netArea
       end
     end
-    feature_report.program.roof_area_sqft[:total_roof_area_sqft] = convert_units(total_roof_area, 'm^2', 'ft^2')
+
+    total_roof_area_sqft = convert_units(total_roof_area, 'm^2', 'ft^2')
+    feature_report.program.roof_area_sqft[:total_roof_area_sqft] = total_roof_area_sqft
+
+    # available_roof_area_sqft
+    # RK: a more robust method should be implemented t find the available roof_area 
+    # assign available roof area to be a percentage of the total roof area
+    # 27% of single_family_detached building and 65% of the residential buildings
+
+    if building_types[0][:building_type].include? 'Single-Family Detached'
+      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.27 * total_roof_area_sqft
+    else 
+      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.65 * total_roof_area_sqft
+    end
+
 
     # orientation
     # RK: a more robust method should be implemented to find orientation(finding main axis of the building using aspect ratio)
