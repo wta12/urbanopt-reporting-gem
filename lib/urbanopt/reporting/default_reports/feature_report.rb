@@ -224,6 +224,54 @@ module URBANopt
         end
 
         ##
+        # Saves the 'default_scenario_report.json' and 'default_scenario_report.csv' files
+        ##
+        # [parameters]:
+        # +file_name+ - _String_ - Assign a name to the saved scenario results file without an extension
+        def save(file_name = 'default_feature_report')
+          # reassign the initialize local variable @file_name to the file name input.
+          @file_name = file_name
+
+          # save the scenario reports csv and json data
+          old_timeseries_path = nil
+          if !@timeseries_csv.path.nil?
+            old_timeseries_path = @timeseries_csv.path
+          end
+
+          # define the results_dir_path
+          results_dir_path = File.join(@directory_name, 'feature_reports')
+          # create feature reports directory
+          Dir.mkdir(results_dir_path) unless Dir.exist?(File.join(@directory_name, 'feature_reports'))
+
+          @timeseries_csv.path = File.join(@directory_name, 'feature_reports', file_name + '.csv')
+          @timeseries_csv.save_data
+
+          ## save json rport
+          # feature_hash
+          feature_hash = to_hash
+
+          json_name_path = File.join(results_dir_path, file_name + '.json')
+
+          File.open(json_name_path, 'w') do |f|
+            f.puts JSON.pretty_generate(feature_hash)
+            # make sure data is written to the disk one way or the other
+            begin
+              f.fsync
+            rescue StandardError
+              f.flush
+            end
+          end
+
+          if !old_timeseries_path.nil?
+            @timeseries_csv.path = old_timeseries_path
+          else
+            @timeseries_csv.path = File.join(@directory_name, file_name + '.csv')
+          end
+
+          return true
+        end
+        
+        ##
         # Calls the individual functions to save 'default_feature_report.json' and 'default_feature_report.csv'
         # For backward compatibility and ease of use
         ##
