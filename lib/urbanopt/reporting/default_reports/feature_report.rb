@@ -224,15 +224,15 @@ module URBANopt
         end
 
         ##
-        # Saves the 'default_scenario_report.json' and 'default_scenario_report.csv' files
+        # Saves the 'default_feature_report.json' and 'default_feature_report.csv' files
         ##
         # [parameters]:
-        # +file_name+ - _String_ - Assign a name to the saved scenario results file without an extension
+        # +file_name+ - _String_ - Assign a name to the saved feature results file without an extension
         def save(file_name = 'default_feature_report')
           # reassign the initialize local variable @file_name to the file name input.
           @file_name = file_name
 
-          # save the scenario reports csv and json data
+          # save the feature reports csv and json data
           old_timeseries_path = nil
           if !@timeseries_csv.path.nil?
             old_timeseries_path = @timeseries_csv.path
