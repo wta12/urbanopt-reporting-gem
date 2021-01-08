@@ -389,19 +389,22 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # unconditioned_area
     unconditioned_area = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Building Area' AND RowName='Unconditioned Building Area' AND ColumnName='Area'")
     feature_report.program.unconditioned_area_sqft = convert_units(unconditioned_area, 'm^2', 'ft^2')
-
-    # footprint_area
-    feature_report.program.footprint_area_sqft = convert_units(floor_area, 'm^2', 'ft^2')
+    if building.standardsBuildingType.is_initialized
+      feature_report.program.floor_area_sqft -= feature_report.program.unconditioned_area_sqft if ['Residential'].include?(building.standardsBuildingType.get)
+    end
 
     # maximum_number_of_stories
     number_of_stories = building.standardsNumberOfStories.get if building.standardsNumberOfStories.is_initialized
     number_of_stories ||= 1
     feature_report.program.maximum_number_of_stories = number_of_stories
 
+    # footprint_area
+    feature_report.program.footprint_area_sqft = feature_report.program.floor_area_sqft / number_of_stories
+
     # maximum_roof_height
-    floor_to_floor_height = building.nominalFloortoFloorHeight.to_f
-    maximum_roof_height = number_of_stories * floor_to_floor_height
-    feature_report.program.maximum_roof_height_ft = maximum_roof_height
+    floor_to_floor_height = building.nominalFloortoFloorHeight.get if building.nominalFloortoFloorHeight.is_initialized
+    floor_to_floor_height ||= 8
+    feature_report.program.maximum_roof_height_ft = feature_report.program.maximum_number_of_stories * floor_to_floor_height
 
     # maximum_number_of_stories_above_ground
     number_of_stories_above_ground = building.standardsNumberOfAboveGroundStories.get if building.standardsNumberOfAboveGroundStories.is_initialized
@@ -430,6 +433,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       else
         building_type = building_type.get
       end
+      next if ['Residential'].include?(building_type) # space types with empty building type fields will inherit from the building object
       space_type_areas[building_type] = 0 if space_type_areas[building_type].nil?
       space_type_areas[building_type] += convert_units(space_type.floorArea, 'm^2', 'ft^2')
     end
@@ -639,15 +643,15 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # district_cooling
     district_cooling = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Cooling'")
     feature_report.reporting_periods[0].district_cooling_kwh = convert_units(district_cooling, 'GJ', 'kWh')
-    building_types.each do |i|
-      feature_report.reporting_periods[0].district_cooling_kwh = 0.0 if i[:building_type].include?('Single-Family Detached')
+    if building.standardsBuildingType.is_initialized
+      feature_report.reporting_periods[0].district_cooling_kwh = 0.0 if ['Residential'].include?(building.standardsBuildingType.get)
     end
 
     # district_heating
     district_heating = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Heating'")
     feature_report.reporting_periods[0].district_heating_kwh = convert_units(district_heating, 'GJ', 'kWh')
-    building_types.each do |i|
-      feature_report.reporting_periods[0].district_heating_kwh = 0.0 if i[:building_type].include?('Single-Family Detached')
+    if building.standardsBuildingType.is_initialized
+      feature_report.reporting_periods[0].district_heating_kwh = 0.0 if ['Residential'].include?(building.standardsBuildingType.get)
     end
 
     # water
@@ -718,8 +722,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
           sql_r -= feature_report.reporting_periods[0].end_uses.propane_kwh.send(y)
           sql_r -= feature_report.reporting_periods[0].end_uses.fuel_oil_kwh.send(y)
         end
-        building_types.each do |i|
-          sql_r = 0.0 if i[:building_type].include?('Single-Family Detached') && x_u.include?('district')
+
+        if building.standardsBuildingType.is_initialized
+          sql_r = 0.0 if ['Residential'].include?(building.standardsBuildingType.get) && x_u.include?('district')
         end
         m.send("#{y}=", sql_r)
       end
@@ -940,8 +945,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         end
 
         # residential considerations
-        building_types.each do |i|
-          values[key_cnt] = Array.new(n, 0) if ['DistrictCooling:Facility', 'DistrictHeating:Facility'].include?(timeseries_name) && i[:building_type].include?('Single-Family Detached')
+        if building.standardsBuildingType.is_initialized
+          values[key_cnt] = Array.new(n, 0) if ['DistrictCooling:Facility', 'DistrictHeating:Facility'].include?(timeseries_name) && ['Residential'].include?(building.standardsBuildingType.get)
         end
 
         # unit conversion
