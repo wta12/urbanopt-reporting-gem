@@ -358,10 +358,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ##
 
     if feature_location.include? '['
-      # get latitude from feature_location
-      latitude = (feature_location.split(',')[0].delete! '[]').to_f
       # get longitude from feature_location
-      longitude = (feature_location.split(',')[1].delete! '[]').to_f
+      longitude = (feature_location.split(',')[0].delete! '[]').to_f
+      # get latitude from feature_location
+      latitude = (feature_location.split(',')[1].delete! '[]').to_f
       # latitude
       feature_report.location.latitude_deg = latitude
       # longitude
@@ -500,7 +500,23 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         total_roof_area += surface.netArea
       end
     end
-    feature_report.program.roof_area_sqft[:total_roof_area_sqft] = convert_units(total_roof_area, 'm^2', 'ft^2')
+
+    total_roof_area_sqft = convert_units(total_roof_area, 'm^2', 'ft^2')
+    feature_report.program.roof_area_sqft[:total_roof_area_sqft] = total_roof_area_sqft
+
+    # available_roof_area_sqft
+    # RK: a more robust method should be implemented to find the available_roof_area 
+    # assign available roof area to be a percentage of the total roof area
+
+    if building_types[0][:building_type].include? 'Single-Family Detached'
+      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.45 * total_roof_area_sqft
+    else 
+      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.75 * total_roof_area_sqft
+    end
+
+    # RK: Temporary solution: assign available roof area to be equal to total roof area
+    #feature_report.program.roof_area_sqft[:available_roof_area_sqft] = total_roof_area_sqft
+
 
     # orientation
     # RK: a more robust method should be implemented to find orientation(finding main axis of the building using aspect ratio)
