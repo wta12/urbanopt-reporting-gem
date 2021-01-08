@@ -409,7 +409,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.program.maximum_number_of_stories_above_ground = number_of_stories_above_ground
 
     # number_of_residential_units
-    number_of_living_units = building.standardsNumberOfLivingUnits.to_i.get if building.standardsNumberOfLivingUnits.is_initialized
+    number_of_living_units = building.standardsNumberOfLivingUnits.get if building.standardsNumberOfLivingUnits.is_initialized
     number_of_living_units ||= 1
     feature_report.program.number_of_residential_units = number_of_living_units
 
