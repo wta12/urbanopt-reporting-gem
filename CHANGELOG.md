@@ -2,8 +2,9 @@
 
 ## Version 0.3.3
 
-Date Range: 12/09/20 - 01/08/21
+Date Range: 12/09/20 - 01/13/21
 
+- Fixed [#36]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/36 ), Add reporting measure for district heating/cooling system mass flow rates
 - Fixed [#37]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/37 ), Add EUI to default report
 - Fixed [#38]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/38 ), Add better error handling around convert_units
 - Fixed [#43]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/43 ), Add available_roof_area calculation
