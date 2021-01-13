@@ -258,6 +258,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     if value.nil?
       return nil
     end
+    if from_units.nil? || to_units.nil?
+      @runner.registerError("Cannot convert units...from_units: #{from_units} or to_units: #{to_units} left blank.")
+      return nil
+    end
+
     # apply unit conversion
     value_converted = OpenStudio.convert(value, from_units, to_units)
     if value_converted.is_initialized
@@ -353,10 +358,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ##
 
     if feature_location.include? '['
-      # get latitude from feature_location
-      latitude = (feature_location.split(',')[0].delete! '[]').to_f
       # get longitude from feature_location
-      longitude = (feature_location.split(',')[1].delete! '[]').to_f
+      longitude = (feature_location.split(',')[0].delete! '[]').to_f
+      # get latitude from feature_location
+      latitude = (feature_location.split(',')[1].delete! '[]').to_f
       # latitude
       feature_report.location.latitude_deg = latitude
       # longitude
@@ -495,7 +500,23 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         total_roof_area += surface.netArea
       end
     end
-    feature_report.program.roof_area_sqft[:total_roof_area_sqft] = convert_units(total_roof_area, 'm^2', 'ft^2')
+
+    total_roof_area_sqft = convert_units(total_roof_area, 'm^2', 'ft^2')
+    feature_report.program.roof_area_sqft[:total_roof_area_sqft] = total_roof_area_sqft
+
+    # available_roof_area_sqft
+    # RK: a more robust method should be implemented to find the available_roof_area 
+    # assign available roof area to be a percentage of the total roof area
+
+    if building_types[0][:building_type].include? 'Single-Family Detached'
+      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.45 * total_roof_area_sqft
+    else 
+      feature_report.program.roof_area_sqft[:available_roof_area_sqft] = 0.75 * total_roof_area_sqft
+    end
+
+    # RK: Temporary solution: assign available roof area to be equal to total roof area
+    #feature_report.program.roof_area_sqft[:available_roof_area_sqft] = total_roof_area_sqft
+
 
     # orientation
     # RK: a more robust method should be implemented to find orientation(finding main axis of the building using aspect ratio)
@@ -580,6 +601,22 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # total_source_energy
     total_source_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Total Source Energy' AND ColumnName='Total Energy'")
     feature_report.reporting_periods[0].total_source_energy_kwh = convert_units(total_source_energy, 'GJ', 'kWh')
+
+    # EUI is only valid with a full year of energy data
+    if begin_month == 1 && begin_day_of_month == 1 && end_month == 12 && end_day_of_month == 31
+      # calculate site EUI
+      site_EUI_kwh_per_m2 = feature_report.reporting_periods[0].total_site_energy_kwh / floor_area
+      site_EUI_kbtu_per_ft2 = convert_units(total_site_energy, 'GJ', 'kBtu') / feature_report.program.floor_area_sqft
+      # add site EUI to feature report
+      feature_report.reporting_periods[0].site_EUI_kwh_per_m2 = site_EUI_kwh_per_m2
+      feature_report.reporting_periods[0].site_EUI_kbtu_per_ft2 = site_EUI_kbtu_per_ft2
+      # calculate source EUI
+      source_EUI_kwh_per_m2 = feature_report.reporting_periods[0].total_source_energy_kwh / floor_area
+      source_EUI_kbtu_per_ft2 = convert_units(total_source_energy, 'GJ', 'kBtu') / feature_report.program.floor_area_sqft
+      # add source EUI to feature report
+      feature_report.reporting_periods[0].source_EUI_kwh_per_m2 = source_EUI_kwh_per_m2
+      feature_report.reporting_periods[0].source_EUI_kbtu_per_ft2 = source_EUI_kbtu_per_ft2
+    end
 
     # net_site_energy
     net_site_energy = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Site and Source Energy' AND RowName='Net Site Energy' AND ColumnName='Total Energy'")

@@ -43,13 +43,13 @@ module URBANopt
       # ReportingPeriod includes all the results of a specific reporting period.
       ##
       class ReportingPeriod
-        attr_accessor :id, :name, :multiplier, :start_date, :end_date, :month, :day_of_month, :year, :total_site_energy_kwh, :total_source_energy_kwh,
+        attr_accessor :id, :name, :multiplier, :start_date, :end_date, :month, :day_of_month, :year, :total_site_energy_kwh, :total_source_energy_kwh, :site_EUI_kwh_per_m2, :site_EUI_kbtu_per_ft2, :source_EUI_kwh_per_m2, :source_EUI_kbtu_per_ft2,
                       :net_site_energy_kwh, :net_source_energy_kwh, :total_utility_cost_dollar, :net_utility_cost_dollar, :utility_costs_dollar, :electricity_kwh, :natural_gas_kwh, :propane_kwh, :fuel_oil_kwh, :other_fuels_kwh, :district_cooling_kwh,
                       :district_heating_kwh, :water_qbft, :electricity_produced_kwh, :end_uses, :energy_production_kwh, :photovoltaic,
                       :fuel_type, :total_cost_dollar, :usage_cost_dollar, :demand_cost_dollar, :comfort_result, :time_setpoint_not_met_during_occupied_cooling,
                       :time_setpoint_not_met_during_occupied_heating, :time_setpoint_not_met_during_occupied_hours, :hours_out_of_comfort_bounds_PMV, :hours_out_of_comfort_bounds_PPD #:nodoc:
         # ReportingPeriod class initializes the reporting period attributes:
-        # +:id+ , +:name+ , +:multiplier+ , +:start_date+ , +:end_date+ , +:month+ , +:day_of_month+ , +:year+ , +:total_site_energy_kwh+ , +:total_source_energy_kwh+ ,
+        # +:id+ , +:name+ , +:multiplier+ , +:start_date+ , +:end_date+ , +:month+ , +:day_of_month+ , +:year+ , +:total_site_energy_kwh+ , +:total_source_energy_kwh+ , +:site_EUI_kwh_per_m2+, +:site_EUI_kbtu_per_ft2+, +:source_EUI_kwh_per_m2+, +:source_EUI_kbtu_per_ft2+,
         # +:net_site_energy_kwh+ , +:net_source_energy_kwh+ , +:total_utility_cost_dollar , +:net_utility_cost_dollar+ , +:utility_costs_dollar+ , +:electricity_kwh+ , +:natural_gas_kwh+ , +:propane_kwh+ , +:fuel_oil_kwh+ , +:other_fuels_kwh+ , +:district_cooling_kwh+ ,
         # +:district_heating_kwh+ , +:water_qbft+ , +:electricity_produced_kwh+ , +:end_uses+ , +:energy_production_kwh+ , +:photovoltaic_kwh+ ,
         # +:fuel_type+ , +:total_cost_dollar+ , +:usage_cost_dollar+ , +:demand_cost_dollar+ , +:comfort_result+ , +:time_setpoint_not_met_during_occupied_cooling+ ,
@@ -70,6 +70,10 @@ module URBANopt
 
           @total_site_energy_kwh = hash[:total_site_energy_kwh]
           @total_source_energy_kwh = hash[:total_source_energy_kwh]
+          @site_EUI_kwh_per_m2 = hash[:site_EUI_kwh_per_m2]
+          @site_EUI_kbtu_per_ft2 = hash[:site_EUI_kbtu_per_ft2]
+          @source_EUI_kwh_per_m2 = hash[:source_EUI_kwh_per_m2]
+          @source_EUI_kbtu_per_ft2 = hash[:source_EUI_kbtu_per_ft2]
           @net_site_energy_kwh = hash[:net_site_energy_kwh]
           @net_source_energy_kwh = hash[:net_source_energy_kwh]
           @net_utility_cost_dollar = hash[:net_utility_cost_dollar]
@@ -110,6 +114,10 @@ module URBANopt
 
           hash[:total_site_energy_kwh] = nil
           hash[:total_source_energy_kwh] = nil
+          hash[:site_EUI_kwh_per_m2] = nil
+          hash[:site_EUI_kbtu_per_ft2] = nil
+          hash[:source_EUI_kwh_per_m2] = nil
+          hash[:source_EUI_kbtu_per_ft2] = nil
           hash[:net_site_energy_kwh] = nil
           hash[:net_source_energy_kwh] = nil
           hash[:net_utility_cost_dollar] = nil
@@ -148,6 +156,10 @@ module URBANopt
           result[:end_date] = @end_date.to_hash if @end_date
           result[:total_site_energy_kwh] = @total_site_energy_kwh if @total_site_energy_kwh
           result[:total_source_energy_kwh] = @total_source_energy_kwh if @total_source_energy_kwh
+          result[:site_EUI_kwh_per_m2] = @site_EUI_kwh_per_m2 if @site_EUI_kwh_per_m2
+          result[:site_EUI_kbtu_per_ft2] = @site_EUI_kbtu_per_ft2 if @site_EUI_kbtu_per_ft2
+          result[:source_EUI_kwh_per_m2] = @source_EUI_kwh_per_m2 if @source_EUI_kwh_per_m2
+          result[:source_EUI_kbtu_per_ft2] = @source_EUI_kbtu_per_ft2 if @source_EUI_kbtu_per_ft2
           result[:net_site_energy_kwh] = @net_site_energy_kwh if @net_site_energy_kwh
           result[:net_source_energy_kwh] = @net_source_energy_kwh if @net_source_energy_kwh
           result[:net_utility_cost_dollar] = @net_utility_cost_dollar if @net_utility_cost_dollar
