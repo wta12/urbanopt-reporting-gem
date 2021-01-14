@@ -40,6 +40,7 @@ require_relative  'thermal_storage'
 
 require 'json-schema'
 require 'json'
+require 'fileutils'
 
 module URBANopt
   module Reporting
@@ -244,6 +245,7 @@ module URBANopt
           Dir.mkdir(results_dir_path) unless Dir.exist?(File.join(@directory_name, 'feature_reports'))
 
           @timeseries_csv.path = File.join(@directory_name, 'feature_reports', file_name + '.csv')
+          FileUtils.mkdir_p File.dirname(@timeseries_csv.path)
           @timeseries_csv.save_data
 
           ## save json rport
