@@ -272,7 +272,7 @@ module URBANopt
 
           return true
         end
-        
+
         ##
         # Calls the individual functions to save 'default_feature_report.json' and 'default_feature_report.csv'
         # For backward compatibility and ease of use
