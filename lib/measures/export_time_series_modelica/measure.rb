@@ -61,25 +61,25 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     puts "#{Time.now}: #{str}"
   end
 
-  def arguments(_model) 
+  def arguments(_model)
     args = OpenStudio::Measure::OSArgumentVector.new
-	
+
     hhw_loop_name = OpenStudio::Measure::OSArgument.makeStringArgument('hhw_loop_name', true)
     hhw_loop_name.setDisplayName('Name or Partial Name of Heating Hot Water Loop, non-case-sensitive')
     hhw_loop_name.setDefaultValue('hot')
     args << hhw_loop_name
-	
-	chw_loop_name = OpenStudio::Measure::OSArgument.makeStringArgument('chw_loop_name', true)
+
+	  chw_loop_name = OpenStudio::Measure::OSArgument.makeStringArgument('chw_loop_name', true)
     chw_loop_name.setDisplayName('Name or Partial Name of Chilled Water Loop, non-case-sensitive')
     chw_loop_name.setDefaultValue('chilled')
     args << chw_loop_name
-	
-	dec_places_mass_flow = OpenStudio::Measure::OSArgument.makeIntegerArgument('dec_places_mass_flow', true)
+
+	  dec_places_mass_flow = OpenStudio::Measure::OSArgument.makeIntegerArgument('dec_places_mass_flow', true)
     dec_places_mass_flow.setDisplayName('Number of Decimal Places to Round Mass Flow Rate')
     dec_places_mass_flow.setDescription('Number of decimal places to which mass flow rate will be rounded')
     dec_places_mass_flow.setDefaultValue(3)
     args << dec_places_mass_flow
-	
+
     dec_places_temp = OpenStudio::Measure::OSArgument.makeIntegerArgument('dec_places_temp', true)
     dec_places_temp.setDisplayName('Number of Decimal Places to Round Temperature')
     dec_places_temp.setDescription('Number of decimal places to which temperature will be rounded')
@@ -94,7 +94,6 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     super(runner, user_arguments)
 
     result = OpenStudio::IdfObjectVector.new
-	
 
     # To use the built-in error checking we need the model...
     # get the last model and sql file
@@ -107,51 +106,48 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
 
     # use the built-in error checking
     return false unless runner.validateUserArguments(arguments(model), user_arguments)
-	
-	##Read in argumetns related to variables for output requests 
-	hhw_loop_name = runner.getStringArgumentValue('hhw_loop_name', user_arguments)
-	chw_loop_name = runner.getStringArgumentValue('chw_loop_name', user_arguments)
-	
 
-	#Identify key names for output variables. 
-	plantloops = model.getPlantLoops
+    ##Read in argumetns related to variables for output requests
+    hhw_loop_name = runner.getStringArgumentValue('hhw_loop_name', user_arguments)
+    chw_loop_name = runner.getStringArgumentValue('chw_loop_name', user_arguments)
+
+    #Identify key names for output variables.
+    plantloops = model.getPlantLoops
 
     selected_plant_loops = []
     i = 0
-	
-	variable_name1 = 'System Node Mass Flow Rate'
-	variable_name2 = 'System Node Temperature'
-	reporting_frequency = 'timestep' 
 
-	
+    variable_name1 = 'System Node Mass Flow Rate'
+    variable_name2 = 'System Node Temperature'
+    reporting_frequency = 'timestep'
+
     plantloops.each do |plantLoop|
-	  log "plant loop name #{plantLoop.name.get.to_s}"
-	  if plantLoop.name.get.to_s.downcase.include? chw_loop_name.to_s
-	     #Extract plant loop information 
-         selected_plant_loops[0]=plantLoop
-		 key_value_chw_outlet = selected_plant_loops[0].demandOutletNode.name.to_s
-	     key_value_chw_inlet = selected_plant_loops[0].demandInletNode.name.to_s
-		 result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_outlet},#{variable_name2},timestep;").get 
-		 result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_inlet},#{variable_name2},timestep;").get 
-         result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_outlet},#{variable_name1},timestep;").get 
-      end 
-	  if plantLoop.name.get.to_s.downcase.include? hhw_loop_name.to_s and !plantLoop.name.get.to_s.downcase.include? "service" and !plantLoop.name.get.to_s.downcase.include? "domestic"
-	     #Extract plant loop information 
-		 selected_plant_loops[1]=plantLoop
-		 key_value_hhw_outlet = selected_plant_loops[1].demandOutletNode.name.to_s
-	     key_value_hhw_inlet = selected_plant_loops[1].demandInletNode.name.to_s
-		 result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_hhw_outlet},#{variable_name2},timestep;").get 
-		 result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_hhw_inlet},#{variable_name2},timestep;").get 
-         result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_hhw_outlet},#{variable_name1},timestep;").get 
-     end 
-   end 
-   
+	    log "plant loop name #{plantLoop.name.get.to_s}"
+      if plantLoop.name.get.to_s.downcase.include? chw_loop_name.to_s
+        #Extract plant loop information
+        selected_plant_loops[0]=plantLoop
+        key_value_chw_outlet = selected_plant_loops[0].demandOutletNode.name.to_s
+        key_value_chw_inlet = selected_plant_loops[0].demandInletNode.name.to_s
+        result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_outlet},#{variable_name2},timestep;").get
+        result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_inlet},#{variable_name2},timestep;").get
+        result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_outlet},#{variable_name1},timestep;").get
+      end
+      if plantLoop.name.get.to_s.downcase.include? hhw_loop_name.to_s and !plantLoop.name.get.to_s.downcase.include? "service" and !plantLoop.name.get.to_s.downcase.include? "domestic"
+        #Extract plant loop information
+        selected_plant_loops[1]=plantLoop
+        key_value_hhw_outlet = selected_plant_loops[1].demandOutletNode.name.to_s
+        key_value_hhw_inlet = selected_plant_loops[1].demandInletNode.name.to_s
+        result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_hhw_outlet},#{variable_name2},timestep;").get
+        result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_hhw_inlet},#{variable_name2},timestep;").get
+        result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_hhw_outlet},#{variable_name1},timestep;").get
+      end
+    end
 
     result << OpenStudio::IdfObject.load('Output:Variable,,Site Mains Water Temperature,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Drybulb Temperature,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Relative Humidity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,hourly;').get
-	result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,timestep;').get ##Using this for data at timestep interval 
+	  result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get ##Using this for data at timestep interval
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:Electricity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:Gas,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorLights:Electricity,hourly;').get
@@ -169,17 +165,16 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     result
   end
 
-  def extract_timeseries_into_matrix(sqlfile, data, variable_name, str, key_value = nil, default_if_empty = 0,dec_places, timestep) 
+  def extract_timeseries_into_matrix(sqlfile, data, variable_name, str, key_value = nil, default_if_empty = 0,dec_places, timestep)
     log "Executing query for #{variable_name}"
     #column_name = variable_name
     if key_value
-      #ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name, key_value) 
-      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name, key_value) 
+      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name, key_value)
       #column_name += "_#{key_value}"
-	  column_name=str
+	    column_name=str
     else
       #ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name)
-      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name) 
+      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name)
     end
     log 'Iterating over timeseries'
     column = [column_name.delete(':').delete(' ')] # Set the header of the data to the variable name, removing : and spaces
@@ -191,7 +186,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     else
       ts = ts.get if ts.respond_to?(:get)
       ts = ts.first if ts.respond_to?(:first)
-	  
+
       start = Time.now
       # Iterating in OpenStudio can take up to 60 seconds with 10min data. The quick_proc takes 0.03 seconds.
       # for i in 0..ts.values.size - 1
@@ -200,24 +195,21 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
       # end
 
       quick_proc = ts.values.to_s.split(',')
-	  quick_proc[0]=quick_proc[0].split('(', 2).last #cleanup necessary to remove opening paren 
-	  quick_proc=quick_proc.map(&:to_f) 
-	  x = 0
+      quick_proc[0]=quick_proc[0].split('(', 2).last #cleanup necessary to remove opening paren
+      quick_proc=quick_proc.map(&:to_f)
+      x = 0
       len = quick_proc.length
-	  log "quick proc #{quick_proc}" 
-      while(x < len) #Round to the # of decimal places specified 
+	    log "quick proc #{quick_proc}"
+      while(x < len) #Round to the # of decimal places specified
           quick_proc[x]=(quick_proc[x]).round(dec_places)
           x=x+1
-	  end 
-	  quick_proc=quick_proc.map(&:to_s)
+	      end
+	    quick_proc=quick_proc.map(&:to_s)
 
-	  
       # the first and last have some cleanup items because of the Vector method
-      quick_proc[0] = quick_proc[0].gsub(/^.*\(/, '') 
-      quick_proc[-1] = quick_proc[-1].delete(')') 
+      quick_proc[0] = quick_proc[0].gsub(/^.*\(/, '')
+      quick_proc[-1] = quick_proc[-1].delete(')')
       column += quick_proc
-	  
-	  
 
       log "Took #{Time.now - start} to iterate"
     end
@@ -279,9 +271,11 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
 
     # use the built-in error checking
     return false unless runner.validateUserArguments(arguments(model), user_arguments)
-	
-	args = OsLib_HelperMethods.createRunVariables(runner, model, user_arguments, arguments(model))
-	if !args then return false end
+
+    args = OsLib_HelperMethods.createRunVariables(runner, model, user_arguments, arguments(model))
+    if !args
+      return false
+    end
 
     # lookup and replace argument values from upstream measures
     if args['use_upstream_args'] == true
@@ -291,7 +285,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
         if !value_from_osw.empty?
           runner.registerInfo("Replacing argument named #{arg} from current measure with a value of #{value_from_osw[:value]} from #{value_from_osw[:measure_name]}.")
           new_val = value_from_osw[:value]
-          # todo - make code to handle non strings more robust. check_upstream_measure_for_arg could pass bakc the argument type
+          # TODO: make code to handle non strings more robust. check_upstream_measure_for_arg could pass back the argument type
           if arg == 'hhw_loop_name'
             args[arg] = new_val.to_s
           elsif arg == 'chw_loop_name'
@@ -303,9 +297,9 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
       end
     end
     hhw_loop_name = args['hhw_loop_name']
-	chw_loop_name = args['chw_loop_name']
-	dec_places_temp = args['dec_places_temp']
-	dec_places_mass_flow = args['dec_places_mass_flow']
+    chw_loop_name = args['chw_loop_name']
+    dec_places_temp = args['dec_places_temp']
+    dec_places_mass_flow = args['dec_places_mass_flow']
     # get the last model and sql file
     model = runner.lastOpenStudioModel
     if model.empty?
@@ -313,10 +307,9 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
       return false
     end
     model = model.get
-	
 
-	timesteps_per_hour=model.getTimestep.numberOfTimestepsPerHour.to_i
-	timestep=60/timesteps_per_hour #timestep in minutes 
+    timesteps_per_hour=model.getTimestep.numberOfTimestepsPerHour.to_i
+    timestep=60/timesteps_per_hour #timestep in minutes
 
     sqlFile = runner.lastEnergyPlusSqlFile
     if sqlFile.empty?
@@ -339,9 +332,12 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     ]
 
     # just grab one of the variables to get the date/time stamps
-    ts = sqlFile.timeSeries('RUN PERIOD 1', 'Zone Timestep', 'Cooling:Electricity')
-	#ts = sqlFile.timeSeries('RUN PERIOD 1', 'Hourly', 'Cooling:Electricity')
-	unless ts.empty? 
+    attribute_name = 'Electricity:Facility'
+    ts = sqlFile.timeSeries('RUN PERIOD 1', 'Zone Timestep', attribute_name)
+    if ts.empty?
+      runner.registerError("This feature does not have the attribute '#{attribute_name}' to enable this measure to work." \
+      "To resolve, simulate a building with electricity or remove this measure from your workflow.")
+    else
       ts = ts.first
       dt_base = nil
       # Save off the date time values
@@ -355,7 +351,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
           dt.date.dayOfWeek.value,
           dt.time.hours,
           dt.time.minutes,
-          dt_current.to_time.to_i - dt_base.to_time.to_i + timestep*60 
+          dt_current.to_time.to_i - dt_base.to_time.to_i + timestep*60
         ]
       end
     end
@@ -364,69 +360,69 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
 
     selected_plant_loops = []
     i = 0
-	
-	key_var={}
+
+    key_var={}
 
     plantloops.each do |plantLoop|
-	  if plantLoop.name.get.to_s.downcase.include? chw_loop_name.to_str
-	     #Extract plant loop information 
-         selected_plant_loops[0]=plantLoop
-	  end 
-	  if plantLoop.name.get.to_s.downcase.include? hhw_loop_name.to_str
-         #Get plant loop information
-		 selected_plant_loops[1]=plantLoop
-	  end 
-    end
-	
-	if !selected_plant_loops[1].nil?
-	 #Set up variables for output 
-	 key_value_hhw_outlet = selected_plant_loops[1].demandOutletNode.name.to_s
-	 key_value_hhw_inlet = selected_plant_loops[1].demandInletNode.name.to_s
-	 key_var['hhw_outlet_massflow']='massFlowRateHeating'
-	 key_var['hhw_outlet_temp']='heatingReturnTemperature[C]'
-	 key_var['hhw_inlet_temp']='heatingSupplyTemperature[C]'
-	 #Extract time series 
-	 extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['hhw_outlet_temp'], key_value_hhw_outlet, 0, dec_places_temp, timestep) 
-	 extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['hhw_inlet_temp'], key_value_hhw_inlet, 0, dec_places_temp, timestep)
-	 extract_timeseries_into_matrix(sqlFile, rows, 'System Node Mass Flow Rate', key_var['hhw_outlet_massflow'], key_value_hhw_outlet, 0, dec_places_mass_flow, timestep) 
-	 else 
-		runner.registerWarning("No hot water loop found. If one is expected, make sure the hot water loop name argument provides a string present in its name.") 
-     end 
-	
-	if !selected_plant_loops[0].nil?
-	 #Set up variables for outputs 
-	 key_value_chw_outlet = selected_plant_loops[0].demandOutletNode.name.to_s
-	 key_value_chw_inlet = selected_plant_loops[0].demandInletNode.name.to_s
-	 key_var['chw_outlet_massflow']='massFlowRateCooling'
-	 key_var['chw_outlet_temp']='ChilledWaterReturnTemperature[C]'
-	 key_var['chw_inlet_temp']='ChilledWaterSupplyTemperature[C]'
-	 #Extract time series 
-	 extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_outlet_temp'], key_value_chw_outlet, 0, dec_places_temp,timestep)
-	 extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_inlet_temp'], key_value_chw_inlet, 0, dec_places_temp,timestep) 
-	 extract_timeseries_into_matrix(sqlFile, rows, 'System Node Mass Flow Rate', key_var['chw_outlet_massflow'], key_value_chw_outlet, 0, dec_places_mass_flow,timestep)
-	else 
-	     runner.registerWarning("No chilled water loop found. If one is expected, make sure the chilled water loop name argument provides a string present in its name.") 
-    end 
-	
-   
-   if selected_plant_loops[0].nil? and selected_plant_loops[1].nil?
-    runner.registerWarning("No HVAC plant loops found. If one or more plant loops are expected, make sure they follow the naming conventions mentioned in the previous warnings.") 
-   end 
-   
-   if !selected_plant_loops.nil?
-    # convert this to CSV object
-    File.open('./building_loads.csv', 'w') do |f|
-      rows.each do |row|
-        f << row.join(',') << "\n"
+      if plantLoop.name.get.to_s.downcase.include? chw_loop_name.to_str
+        #Extract plant loop information
+          selected_plant_loops[0]=plantLoop
       end
-	end 
-   end 
+      if plantLoop.name.get.to_s.downcase.include? hhw_loop_name.to_str
+          #Get plant loop information
+      selected_plant_loops[1]=plantLoop
+      end
+    end
+
+    if !selected_plant_loops[1].nil?
+      #Set up variables for output
+      key_value_hhw_outlet = selected_plant_loops[1].demandOutletNode.name.to_s
+      key_value_hhw_inlet = selected_plant_loops[1].demandInletNode.name.to_s
+      key_var['hhw_outlet_massflow']='massFlowRateHeating'
+      key_var['hhw_outlet_temp']='heatingReturnTemperature[C]'
+      key_var['hhw_inlet_temp']='heatingSupplyTemperature[C]'
+      #Extract time series
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['hhw_outlet_temp'], key_value_hhw_outlet, 0, dec_places_temp, timestep)
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['hhw_inlet_temp'], key_value_hhw_inlet, 0, dec_places_temp, timestep)
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Mass Flow Rate', key_var['hhw_outlet_massflow'], key_value_hhw_outlet, 0, dec_places_mass_flow, timestep)
+    else
+      runner.registerWarning("No hot water loop found. If one is expected, make sure the hot water loop name argument provides a string present in its name.")
+    end
+
+    if !selected_plant_loops[0].nil?
+      #Set up variables for outputs
+      key_value_chw_outlet = selected_plant_loops[0].demandOutletNode.name.to_s
+      key_value_chw_inlet = selected_plant_loops[0].demandInletNode.name.to_s
+      key_var['chw_outlet_massflow']='massFlowRateCooling'
+      key_var['chw_outlet_temp']='ChilledWaterReturnTemperature[C]'
+      key_var['chw_inlet_temp']='ChilledWaterSupplyTemperature[C]'
+      #Extract time series
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_outlet_temp'], key_value_chw_outlet, 0, dec_places_temp,timestep)
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_inlet_temp'], key_value_chw_inlet, 0, dec_places_temp,timestep)
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Mass Flow Rate', key_var['chw_outlet_massflow'], key_value_chw_outlet, 0, dec_places_mass_flow,timestep)
+    else
+      runner.registerWarning("No chilled water loop found. If one is expected, make sure the chilled water loop name argument provides a string present in its name.")
+    end
+
+
+    if selected_plant_loops[0].nil? and selected_plant_loops[1].nil?
+      runner.registerWarning("No HVAC plant loops found. If one or more plant loops are expected, make sure they follow the naming conventions mentioned in the previous warnings.")
+    end
+
+    if !selected_plant_loops.nil?
+      # convert this to CSV object
+      File.open('./building_loads.csv', 'w') do |f|
+        rows.each do |row|
+          f << row.join(',') << "\n"
+        end
+      end
+    end
 
     true
   ensure
     sqlFile&.close
   end
-  end 
+end
 
 
 # register the measure to be used by the application

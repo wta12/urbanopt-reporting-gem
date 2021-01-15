@@ -161,4 +161,3 @@ class ExportModelicaLoadsTest < Minitest::Test
     assert(File.exist?(report_path(test_name)))
   end
 end
-

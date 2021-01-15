@@ -1,5 +1,12 @@
 # URBANopt Reporting Gem
 
+## Version 0.3.4
+
+Date Range: 01/14/21 - 01/15/21
+
+- Fixed [#53]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/53 ), Make subfolders in feature saving if necessary
+- Fixed [#55]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/55 ), Fix new measures
+
 ## Version 0.3.3
 
 Date Range: 12/09/20 - 01/13/21

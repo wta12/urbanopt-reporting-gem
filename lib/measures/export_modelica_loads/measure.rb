@@ -82,37 +82,38 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
       return false
     end
 
-    result << OpenStudio::IdfObject.load('Output:Variable,,Site Mains Water Temperature,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Drybulb Temperature,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Relative Humidity,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,Heating:Electricity,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,Heating:Gas,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,InteriorLights:Electricity,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,Fans:Electricity,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,InteriorEquipment:Electricity,hourly;').get # Joules
-    result << OpenStudio::IdfObject.load('Output:Meter,ExteriorLighting:Electricity,hourly;').get # Joules
-    result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,hourly;').get # Joules
-    result << OpenStudio::IdfObject.load('Output:Meter,Gas:Facility,hourly;').get # Joules
-    result << OpenStudio::IdfObject.load('Output:Meter,Heating:EnergyTransfer,hourly;').get  # Joules
-    result << OpenStudio::IdfObject.load('Output:Meter,WaterSystems:EnergyTransfer,hourly;').get  # Joules
+    result << OpenStudio::IdfObject.load('Output:Variable,,Site Mains Water Temperature,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Drybulb Temperature,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Relative Humidity,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,Heating:Electricity,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,Heating:Gas,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,InteriorLights:Electricity,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,Fans:Electricity,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,InteriorEquipment:Electricity,timestep;').get # Joules
+    result << OpenStudio::IdfObject.load('Output:Meter,ExteriorLighting:Electricity,timestep;').get # Joules
+    result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get # Joules
+    result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get ##Using this for data at timestep interval
+    result << OpenStudio::IdfObject.load('Output:Meter,Gas:Facility,timestep;').get # Joules
+    result << OpenStudio::IdfObject.load('Output:Meter,Heating:EnergyTransfer,timestep;').get # Joules
+    result << OpenStudio::IdfObject.load('Output:Meter,WaterSystems:EnergyTransfer,timestep;').get # Joules
     # these variables are used for the modelica export.
-    result << OpenStudio::IdfObject.load('Output:Variable,*,Zone Predicted Sensible Load to Setpoint Heat Transfer Rate,hourly;').get  # watts according to e+
-    result << OpenStudio::IdfObject.load('Output:Variable,*,Water Heater Total Demand Heat Transfer Rate,hourly;').get # Watts
+    result << OpenStudio::IdfObject.load('Output:Variable,*,Zone Predicted Sensible Load to Setpoint Heat Transfer Rate,timestep;').get # watts according to e+
+    result << OpenStudio::IdfObject.load('Output:Variable,*,Water Heater Total Demand Heat Transfer Rate,timestep;').get # Watts
 
     return result
   end
 
-  def extract_timeseries_into_matrix(sqlfile, data, variable_name, key_value = nil, default_if_empty=0)
+  def extract_timeseries_into_matrix(sqlfile, data, variable_name, key_value = nil, default_if_empty = 0, timestep)
     log "Executing query for #{variable_name}"
     column_name = variable_name
     if key_value
-      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name, key_value)
-      # ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name, key_value)
+      # ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name, key_value)
+      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name, key_value)
       column_name += "_#{key_value}"
     else
-      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name)
-      # ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name)
+      # ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name)
+      ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name)
     end
     log 'Iterating over timeseries'
     column = [column_name.delete(':').delete(' ')] # Set the header of the data to the variable name, removing : and spaces
@@ -120,7 +121,7 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     if ts.empty?
       log "No time series for #{variable_name}:#{key_value}... defaulting to #{default_if_empty}"
       # needs to be data.size-1 since the column name is already stored above (+=)
-      column += [default_if_empty] * (data.size-1)
+      column += [default_if_empty] * (data.size - 1)
     else
       ts = ts.get if ts.respond_to?(:get)
       ts = ts.first if ts.respond_to?(:first)
@@ -154,10 +155,10 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     log "Finished extracting #{variable_name}"
   end
 
-  def create_new_variable_sum(data, new_var_name, include_str, options=nil)
+  def create_new_variable_sum(data, new_var_name, include_str, options = nil)
     var_info = {
-        name: new_var_name,
-        var_indexes: []
+      name: new_var_name,
+      var_indexes: []
     }
     data.each_with_index do |row, index|
       if index.zero?
@@ -212,6 +213,9 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     end
     model = model.get
 
+    timesteps_per_hour=model.getTimestep.numberOfTimestepsPerHour.to_i
+    timestep=60/timesteps_per_hour #timestep in minutes
+
     sqlFile = runner.lastEnergyPlusSqlFile
     if sqlFile.empty?
       runner.registerError('Cannot find last sql file.')
@@ -233,45 +237,47 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     ]
 
     # just grab one of the variables to get the date/time stamps
-    # ts = sqlFile.timeSeries('RUN PERIOD 1', 'Zone Timestep', 'Cooling:Electricity')
-    ts = sqlFile.timeSeries('RUN PERIOD 1', 'Hourly', 'Cooling:Electricity')
-    unless ts.empty?
+    attribute_name = 'Electricity:Facility'
+    ts = sqlFile.timeSeries('RUN PERIOD 1', 'Zone Timestep', attribute_name)
+    if ts.empty?
+      runner.registerError("This feature does not have the attribute '#{attribute_name}' to enable this measure to work." \
+      "To resolve, simulate a building with electricity or remove this measure from your workflow.")
+    else
       ts = ts.first
       dt_base = nil
       # Save off the date time values
       ts.dateTimes.each_with_index do |dt, index|
-        runner.registerInfo("My index is #{index}")
         dt_base = DateTime.parse(dt.to_s) if dt_base.nil?
         dt_current = DateTime.parse(dt.to_s)
         rows << [
           DateTime.parse(dt.to_s).strftime('%m/%d/%Y %H:%M'),
-            dt.date.monthOfYear.value,
-            dt.date.dayOfMonth,
-            dt.date.dayOfWeek.value,
-            dt.time.hours,
-            dt.time.minutes,
-            dt_current.to_time.to_i - dt_base.to_time.to_i
+          dt.date.monthOfYear.value,
+          dt.date.dayOfMonth,
+          dt.date.dayOfWeek.value,
+          dt.time.hours,
+          dt.time.minutes,
+          dt_current.to_time.to_i - dt_base.to_time.to_i + timestep*60
         ]
       end
     end
 
     # add in the other variables by columns -- should really pull this from the report variables defined above
-    extract_timeseries_into_matrix(sqlFile, rows, 'Site Outdoor Air Drybulb Temperature', 'Environment', 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Site Outdoor Air Relative Humidity', 'Environment', 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:Electricity', nil, 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:Gas', nil, 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Cooling:Electricity', nil, 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Electricity:Facility', nil, 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Gas:Facility', nil, 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:EnergyTransfer', nil, 0)
-    extract_timeseries_into_matrix(sqlFile, rows, 'WaterSystems:EnergyTransfer', nil, 0)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Site Outdoor Air Drybulb Temperature', 'Environment', 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Site Outdoor Air Relative Humidity', 'Environment', 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:Electricity', nil, 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:Gas', nil, 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Cooling:Electricity', nil, 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Electricity:Facility', nil, 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Gas:Facility', nil, 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:EnergyTransfer', nil, 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'WaterSystems:EnergyTransfer', nil, 0, timestep)
 
     # get all zones and save the names for later use in aggregation.
     tz_names = []
     model.getThermalZones.each do |tz|
       tz_names << tz.name.get if tz.name.is_initialized
-      extract_timeseries_into_matrix(sqlFile, rows, 'Zone Predicted Sensible Load to Setpoint Heat Transfer Rate', tz_names.last, 0)
-      extract_timeseries_into_matrix(sqlFile, rows, 'Water Heater Heating Rate', tz_names.last, 0)
+      extract_timeseries_into_matrix(sqlFile, rows, 'Zone Predicted Sensible Load to Setpoint Heat Transfer Rate', tz_names.last, 0, timestep)
+      extract_timeseries_into_matrix(sqlFile, rows, 'Water Heater Heating Rate', tz_names.last, 0, timestep)
     end
 
     # sum up a couple of the columns and create a new columns
@@ -346,7 +352,7 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     # Find the total runtime for energyplus and save it into a registerValue
     total_time = -999
     location_of_file = ['../eplusout.end', './run/eplusout.end']
-    first_index = location_of_file.map {|f| File.exist?(f)}.index(true)
+    first_index = location_of_file.map { |f| File.exist?(f) }.index(true)
     if first_index
       match = File.read(location_of_file[first_index]).to_s.match(/Elapsed.Time=(.*)hr(.*)min(.*)sec/)
       total_time = match[1].to_i * 3600 + match[2].to_i * 60 + match[3].to_f
