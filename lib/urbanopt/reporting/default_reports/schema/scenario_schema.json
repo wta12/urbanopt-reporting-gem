@@ -309,8 +309,8 @@
 					"description": "Sum of all electricity used, does not include electricity produced (kWh)",
 					"type": "number"
 				},
-				"natural_gas_kwh": {
-					"description": "Sum of all natural gas end uses consumption (kWh)",
+				"natural_gas_kbtu": {
+					"description": "Sum of all natural gas end uses consumption (kbtu)",
 					"type": "number"
 				},
 				"propane_kwh": {

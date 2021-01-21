@@ -629,9 +629,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     electricity = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Electricity'")
     feature_report.reporting_periods[0].electricity_kwh = convert_units(electricity, 'GJ', 'kWh')
 
-    # natural_gas
+    # natural_gas 
+    # only Gas in KBtu
     natural_gas = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='Natural Gas'")
-    feature_report.reporting_periods[0].natural_gas_kwh = convert_units(natural_gas, 'GJ', 'kWh')
+    feature_report.reporting_periods[0].natural_gas_kbtu = convert_units(natural_gas, 'GJ', 'kBtu')
 
     # propane
     propane = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='Propane:Facility' AND ColumnName='Annual Value'")
