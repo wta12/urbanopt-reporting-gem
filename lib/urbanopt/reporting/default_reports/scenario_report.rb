@@ -185,13 +185,13 @@ module URBANopt
             @timeseries_csv.path = File.join(@directory_name, file_name + '.csv')
           end
 
-          if file_name == 'default_scenario_report'
-            file_name = 'default_feature_report'
-          end
-          #save the feature reports csv and json data
-          @feature_reports.each do |feature_report|
-           feature_report.save file_name
-          end
+          # if file_name == 'default_scenario_report'
+          #   file_name = 'default_feature_report'
+          # end
+          # #save the feature reports csv and json data
+          # @feature_reports.each do |feature_report|
+          #  feature_report.save file_name
+          # end
 
           return true
         end
