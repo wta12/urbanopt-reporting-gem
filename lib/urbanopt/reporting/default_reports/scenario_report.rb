@@ -187,11 +187,11 @@ module URBANopt
 
           if save_feature_reports 
             if file_name == 'default_scenario_report'
-              fr_file_name = 'default_feature_report'
+              file_name = 'default_feature_report'
             end
             #save the feature reports csv and json data
             @feature_reports.each do |feature_report|
-             feature_report.save fr_file_name
+             feature_report.save file_name
             end
           end
 
