@@ -1,5 +1,22 @@
 # URBANopt Reporting Gem
 
+## Version 0.3.4
+
+Date Range: 01/14/21 - 01/15/21
+
+- Fixed [#53]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/53 ), Make subfolders in feature saving if necessary
+- Fixed [#55]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/55 ), Fix new measures
+
+## Version 0.3.3
+
+Date Range: 12/09/20 - 01/13/21
+
+- Fixed [#36]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/36 ), Add reporting measure for district heating/cooling system mass flow rates
+- Fixed [#37]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/37 ), Add EUI to default report
+- Fixed [#38]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/38 ), Add better error handling around convert_units
+- Fixed [#43]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/43 ), Add available_roof_area calculation
+- Fixed [#44]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/44 ), Fix coordinates order
+
 ## Version 0.3.2
 
 Date Range: 12/07/20 - 12/08/20

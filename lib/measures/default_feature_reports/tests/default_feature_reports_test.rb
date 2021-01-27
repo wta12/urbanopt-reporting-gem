@@ -198,7 +198,7 @@ class DefaultFeatureReportsTest < MiniTest::Test
     setup_test(test_name, idf_output_requests, model_in_path)
 
     assert(File.exist?(model_out_path(test_name)))
-    #assert(File.exist?(sql_path(test_name)))
+    # assert(File.exist?(sql_path(test_name)))
     assert(File.exist?(epw_path))
 
     # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
