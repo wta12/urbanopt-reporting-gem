@@ -201,6 +201,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Gas:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictCooling:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictHeating:Facility,#{reporting_frequency};").get
+     
+
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Cooling:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Heating:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,InteriorLights:Electricity,#{reporting_frequency};").get
@@ -213,14 +215,19 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,WaterSystems:Gas,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,InteriorEquipment:Gas,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load('Output:Variable,*,Heating Coil Heating Rate,hourly; !- HVAC Average [W];').get
+    result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
 
     timeseries_data = ['District Cooling Chilled Water Rate', 'District Cooling Mass Flow Rate',
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
                        'District Heating Hot Water Rate', 'District Heating Mass Flow Rate',
                        'District Heating Inlet Temperature', 'District Heating Outlet Temperature', 'Cooling Coil Total Cooling Rate',
-                       'Heating Coil Heating Rate']
+                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity']
+
 
     tes_timeseries_data = ['Ice Thermal Storage End Fraction', 'Cooling coil Ice Thermal Storage End Fraction']
+  
+    ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
+    
     timeseries_data += tes_timeseries_data
 
     timeseries_data.each do |ts|
@@ -740,6 +747,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       end
     end
 
+    # add enduses subcategories
+    electric_vehicles = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses By Subcategory' AND RowName='Exterior Equipment:Electric Vehicles' AND ColumnName='Electricity'")
+    puts "electric_vehicle = #{electric_vehicles}"
+    feature_report.reporting_periods[0].end_uses.electricity_kwh.electric_vehicles = convert_units(electric_vehicles, 'GJ', 'kWh')
+
     ### energy_production
     ## electricity_produced
     # photovoltaic
@@ -803,6 +815,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'InteriorLights:Electricity',
       'ExteriorLights:Electricity',
       'InteriorEquipment:Electricity',
+      'ExteriorEquipment:Electricity',
+      'Exterior Equipment:Electric Vehicles',
       'Fans:Electricity',
       'Pumps:Electricity',
       'WaterSystems:Electricity',

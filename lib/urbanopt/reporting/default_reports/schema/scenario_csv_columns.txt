@@ -10,6 +10,8 @@ Heating:Electricity
 InteriorLights:Electricity
 ExteriorLights:Electricity
 InteriorEquipment:Electricity
+ExteriorEquipment:Electricity
+Exterior Equipment:Electric Vehicles
 Fans:Electricity
 Pumps:Electricity
 WaterSystems:Electricity
