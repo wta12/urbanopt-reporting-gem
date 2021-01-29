@@ -215,7 +215,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,WaterSystems:Gas,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,InteriorEquipment:Gas,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load('Output:Variable,*,Heating Coil Heating Rate,hourly; !- HVAC Average [W];').get
-    result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
+    #result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
 
     timeseries_data = ['District Cooling Chilled Water Rate', 'District Cooling Mass Flow Rate',
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
@@ -816,7 +816,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'ExteriorLights:Electricity',
       'InteriorEquipment:Electricity',
       'ExteriorEquipment:Electricity',
-      'Exterior Equipment:Electric Vehicles',
       'Fans:Electricity',
       'Pumps:Electricity',
       'WaterSystems:Electricity',
