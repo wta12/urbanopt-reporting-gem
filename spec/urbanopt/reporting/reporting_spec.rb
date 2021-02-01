@@ -159,12 +159,13 @@ RSpec.describe URBANopt::Reporting do
 
   it 'can merge end uses' do
     existing_end_uses = URBANopt::Reporting::DefaultReports::EndUses.new(electricity_kwh: { heating: 1, cooling: 1 }, natural_gas_kwh: { fans: 1, pumps: 1 })
-    new_end_uses = URBANopt::Reporting::DefaultReports::EndUses.new(electricity_kwh: { heating: 1, cooling: 1 }, natural_gas_kwh: { fans: 1, pumps: 1 })
+    new_end_uses = URBANopt::Reporting::DefaultReports::EndUses.new(electricity_kwh: { heating: 1, cooling: 1, electric_vehicles: 1 }, natural_gas_kwh: { fans: 1, pumps: 1 })
 
     existing_end_uses.merge_end_uses!(new_end_uses)
 
     expect(existing_end_uses.electricity_kwh.heating).to eq(2)
     expect(existing_end_uses.electricity_kwh.cooling).to eq(2)
+    expect(existing_end_uses.electricity_kwh.electric_vehicles).to eq(1)
     expect(existing_end_uses.natural_gas_kwh.fans).to eq(2)
     expect(existing_end_uses.natural_gas_kwh.pumps).to eq(2)
   end
