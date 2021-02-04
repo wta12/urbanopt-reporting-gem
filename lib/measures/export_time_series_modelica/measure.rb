@@ -36,6 +36,7 @@
 require 'erb'
 
 
+# This measure is originally from https://github.com/urbanopt/DES_HVAC
 # start the measure
 class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
   Dir[File.dirname(__FILE__) + '/resources/*.rb'].each { |file| require file }

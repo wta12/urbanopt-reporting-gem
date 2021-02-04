@@ -38,7 +38,7 @@ module URBANopt
       # Enduse class all enduse energy consumption results.
       ##
       class EndUse
-        attr_accessor :heating, :cooling, :interior_lighting, :exterior_lighting, :interior_equipment, :exterior_equipment,
+        attr_accessor :heating, :cooling, :interior_lighting, :exterior_lighting, :interior_equipment, :exterior_equipment, :electric_vehicles,
                       :fans, :pumps, :heat_rejection, :humidification, :heat_recovery, :water_systems, :refrigeration, :generators # :nodoc:
 
         ##
@@ -59,6 +59,7 @@ module URBANopt
           @exterior_lighting = hash[:exterior_lighting]
           @interior_equipment = hash[:interior_equipment]
           @exterior_equipment = hash[:exterior_equipment]
+          @electric_vehicles = hash[:electric_vehicles]
           @fans = hash[:fans]
           @pumps = hash[:pumps]
           @heat_rejection = hash[:heat_rejection]
@@ -85,6 +86,7 @@ module URBANopt
           hash[:exterior_lighting] = nil
           hash[:interior_equipment] = nil
           hash[:exterior_equipment] = nil
+          hash[:electric_vehicles] = nil
           hash[:fans] = nil
           hash[:pumps] = nil
           hash[:heat_rejection] = nil
@@ -112,6 +114,7 @@ module URBANopt
           result[:exterior_lighting] = @exterior_lighting
           result[:interior_equipment] = @interior_equipment
           result[:exterior_equipment] = @exterior_equipment
+          result[:electric_vehicles] = @electric_vehicles
           result[:fans] = @fans
           result[:pumps] = @pumps
           result[:heat_rejection] = @heat_rejection
@@ -130,26 +133,45 @@ module URBANopt
         end
 
         ##
+        # Adds up +existing_value+ and +new_values+ if not nill.
+        ##
+        # [parameter:]
+        # +existing_value+ - _Float_ - A value corresponding to a EndUse attribute.
+        ##
+        # +new_value+ - _Float_ - A value corresponding to a EndUse attribute.
+        ##
+        def add_values(existing_value, new_value)
+          if existing_value && new_value
+            existing_value += new_value
+          elsif new_value
+            existing_value = new_value
+          end
+          return existing_value
+        end
+
+        ##
         # Aggregate values of each EndUse attribute.
         ##
         # [Parameters:]
-        # +new_end_use+ - _EndUse_ - An object of EndUse class.
+        # +other+ - _EndUse_ - An object of EndUse class.
         ##
-        def merge_end_use!(new_end_use)
-          @heating += new_end_use.heating if new_end_use.heating
-          @cooling += new_end_use.cooling if new_end_use.cooling
-          @interior_lighting += new_end_use.interior_lighting if new_end_use.interior_lighting
-          @exterior_lighting += new_end_use.exterior_lighting if new_end_use.exterior_lighting
-          @interior_equipment += new_end_use.interior_equipment if new_end_use.interior_equipment
-          @exterior_equipment += new_end_use.exterior_equipment if new_end_use.exterior_equipment
-          @fans += new_end_use.fans if new_end_use.fans
-          @pumps += new_end_use.pumps if new_end_use.pumps
-          @heat_rejection += new_end_use.heat_rejection if new_end_use.heat_rejection
-          @humidification += new_end_use.humidification if new_end_use.humidification
-          @heat_recovery += new_end_use.heat_recovery if new_end_use.heat_recovery
-          @water_systems += new_end_use.water_systems if new_end_use.water_systems
-          @refrigeration += new_end_use.refrigeration if new_end_use.refrigeration
-          @generators += new_end_use.generators if new_end_use.generators
+        def merge_end_use!(other)
+
+          @heating = add_values(@heating, other.heating)
+          @cooling = add_values(@cooling, other.cooling)
+          @interior_lighting = add_values(@interior_lighting, other.interior_lighting)
+          @exterior_lighting = add_values(@exterior_lighting, other.exterior_lighting)
+          @interior_equipment = add_values(@interior_equipment, other.interior_equipment)
+          @exterior_equipment = add_values(@exterior_equipment, other.exterior_equipment)
+          @electric_vehicles = add_values(@electric_vehicles, other.electric_vehicles)
+          @fans = add_values(@fans, other.fans)
+          @pumps = add_values(@pumps, other.pumps)
+          @heat_rejection = add_values(@heat_rejection, other.heat_rejection)
+          @humidification = add_values(@humidification, other.humidification)
+          @heat_recovery = add_values(@heat_recovery, other.heat_recovery)
+          @water_systems = add_values(@water_systems, other.water_systems)
+          @refrigeration = add_values(@refrigeration, other.refrigeration)
+          @generators = add_values(@generators, other.generators)
 
           return self
         end
