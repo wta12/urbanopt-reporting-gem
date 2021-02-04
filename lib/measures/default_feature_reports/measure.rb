@@ -101,10 +101,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
   def fuel_types
     fuel_types = {
       'Electricity' => 'Electricity',
-      'Gas' => 'Natural Gas',
-      'FuelOil#2' => 'Fuel Oil #2',
+      'NaturalGas' => 'Natural Gas',
+      'FuelOilNo2' => 'Fuel Oil #2',
       'Propane' => 'Propane',
-      'AdditionalFuel' => 'Additional Fuel',
       'DistrictCooling' => 'District Cooling',
       'DistrictHeating' => 'District Heating',
       'Water' => 'Water'
@@ -201,7 +200,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Gas:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictCooling:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictHeating:Facility,#{reporting_frequency};").get
-     
+
 
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Cooling:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Heating:Electricity,#{reporting_frequency};").get
@@ -225,9 +224,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
 
     tes_timeseries_data = ['Ice Thermal Storage End Fraction', 'Cooling coil Ice Thermal Storage End Fraction']
-  
+
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
-    
+
     timeseries_data += tes_timeseries_data
 
     timeseries_data.each do |ts|
