@@ -150,7 +150,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,hourly;').get
 	  result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get ##Using this for data at timestep interval
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:Electricity,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,Heating:Gas,hourly;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,Heating:NaturalGas,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorLights:Electricity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Fans:Electricity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorEquipment:Electricity,hourly;').get # Joules
