@@ -156,7 +156,6 @@ module URBANopt
         # +other+ - _EndUse_ - An object of EndUse class.
         ##
         def merge_end_use!(other)
-
           @heating = add_values(@heating, other.heating)
           @cooling = add_values(@cooling, other.cooling)
           @interior_lighting = add_values(@interior_lighting, other.interior_lighting)

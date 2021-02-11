@@ -101,10 +101,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
   def fuel_types
     fuel_types = {
       'Electricity' => 'Electricity',
-      'Gas' => 'Natural Gas',
-      'FuelOil#2' => 'Fuel Oil #2',
+      'NaturalGas' => 'Natural Gas',
+      'FuelOilNo2' => 'Fuel Oil #2',
       'Propane' => 'Propane',
-      'AdditionalFuel' => 'Additional Fuel',
       'DistrictCooling' => 'District Cooling',
       'DistrictHeating' => 'District Heating',
       'Water' => 'Water'
@@ -201,7 +200,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Gas:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictCooling:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictHeating:Facility,#{reporting_frequency};").get
-     
 
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Cooling:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Heating:Electricity,#{reporting_frequency};").get
@@ -211,11 +209,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Fans:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Pumps:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,WaterSystems:Electricity,#{reporting_frequency};").get
-    # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Heating:Gas,#{reporting_frequency};").get
-    # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,WaterSystems:Gas,#{reporting_frequency};").get
-    # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,InteriorEquipment:Gas,#{reporting_frequency};").get
+    # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Heating:NaturalGas,#{reporting_frequency};").get
+    # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,WaterSystems:NaturalGas,#{reporting_frequency};").get
+    # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,InteriorEquipment:NaturalGas,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load('Output:Variable,*,Heating Coil Heating Rate,hourly; !- HVAC Average [W];').get
-    #result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
 
     timeseries_data = ['District Cooling Chilled Water Rate', 'District Cooling Mass Flow Rate',
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
@@ -223,11 +221,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                        'District Heating Inlet Temperature', 'District Heating Outlet Temperature', 'Cooling Coil Total Cooling Rate',
                        'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity']
 
-
     tes_timeseries_data = ['Ice Thermal Storage End Fraction', 'Cooling coil Ice Thermal Storage End Fraction']
-  
+
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
-    
+
     timeseries_data += tes_timeseries_data
 
     timeseries_data.each do |ts|
@@ -646,7 +643,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.reporting_periods[0].propane_kwh = convert_units(propane, 'GJ', 'kWh') unless propane.nil?
 
     # fuel_oil
-    fuel_oil = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='FuelOil#2:Facility' AND ColumnName='Annual Value'")
+    fuel_oil = sql_query(runner, sql_file, 'EnergyMeters', "TableName='Annual and Peak Values - Other' AND RowName='FuelOilNo2:Facility' AND ColumnName='Annual Value'")
     feature_report.reporting_periods[0].fuel_oil_kwh = 0.0
     feature_report.reporting_periods[0].fuel_oil_kwh = convert_units(fuel_oil, 'GJ', 'kWh') unless fuel_oil.nil?
 
@@ -806,9 +803,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     requested_timeseries_names = [
       'Electricity:Facility',
       'ElectricityProduced:Facility',
-      'Gas:Facility',
+      'NaturalGas:Facility',
       'Propane:Facility',
-      'FuelOil#2:Facility',
+      'FuelOilNo2:Facility',
       'OtherFuels:Facility',
       'Cooling:Electricity',
       'Heating:Electricity',
@@ -820,18 +817,18 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Pumps:Electricity',
       'WaterSystems:Electricity',
       'HeatRejection:Electricity',
-      'HeatRejection:Gas',
-      'Heating:Gas',
-      'WaterSystems:Gas',
-      'InteriorEquipment:Gas',
+      'HeatRejection:NaturalGas',
+      'Heating:NaturalGas',
+      'WaterSystems:NaturalGas',
+      'InteriorEquipment:NaturalGas',
       'HeatRejection:Propane',
       'Heating:Propane',
       'WaterSystems:Propane',
       'InteriorEquipment:Propane',
-      'HeatRejection:FuelOil#2',
-      'Heating:FuelOil#2',
-      'WaterSystems:FuelOil#2',
-      'InteriorEquipment:FuelOil#2',
+      'HeatRejection:FuelOilNo2',
+      'Heating:FuelOilNo2',
+      'WaterSystems:FuelOilNo2',
+      'InteriorEquipment:FuelOilNo2',
       'HeatRejection:OtherFuels',
       'Heating:OtherFuels',
       'WaterSystems:OtherFuels',
@@ -975,7 +972,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         # unit conversion
         old_unit = ts.get.units if ts.is_initialized
 
-        if timeseries_name.include?('Gas') || timeseries_name.include?('Propane') || timeseries_name.include?('FuelOil#2') || timeseries_name.include?('OtherFuels')
+        if timeseries_name.include?('NaturalGas') || timeseries_name.include?('Propane') || timeseries_name.include?('FuelOilNo2') || timeseries_name.include?('OtherFuels')
           new_unit = 'kBtu'
         else
           new_unit = case old_unit.to_s

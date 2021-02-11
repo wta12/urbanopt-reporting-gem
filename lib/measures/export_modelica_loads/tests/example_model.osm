@@ -2553,7 +2553,7 @@ OS:ScheduleTypeLimits,
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
-OS:Coil:Heating:Gas,
+OS:Coil:Heating:NaturalGas,
   {d3bcc350-6fcc-48d2-b70e-18536a02797e}, !- Handle
   Coil Heating Gas 1,                     !- Name
   {ac27bd9e-96a8-4fed-b7aa-06b830184239}, !- Availability Schedule Name
@@ -3261,4 +3261,3 @@ OS:LifeCycleCost:Parameters,
   ,                                       !- Service Date Month
   ,                                       !- Service Date Year
   ;                                       !- Length of Study Period in Years
-
