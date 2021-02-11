@@ -1,7 +1,7 @@
 Datetime
 Electricity:Facility
 ElectricityProduced:Facility
-Gas:Facility
+NaturalGas:Facility
 Propane:Facility
 FuelOilNo2:Facility
 OtherFuels:Facility
