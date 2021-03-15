@@ -1,5 +1,20 @@
 # URBANopt Reporting Gem
 
+## Version 0.3.6
+
+Date Range: 02/05/21 - 02/11/21
+
+- Fixed [#64]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/64 ), EnergyPlus changed output fuel names in version 9.4
+
+## Version 0.3.5
+
+Date Range: 01/16/21 - 02/04/21
+
+- Fixed [#58]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/58 ), Feature report saving bug fix.
+- Fixed [#60]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/60 ), Added EV/ ExteriorEquipment results to csv and json reports
+- Fixed [#61]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/61 ), Enhance the aggregation of enduses.
+
+
 ## Version 0.3.4
 
 Date Range: 01/14/21 - 01/15/21

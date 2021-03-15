@@ -3,13 +3,14 @@ Electricity:Facility
 ElectricityProduced:Facility
 NaturalGas:Facility
 Propane:Facility
-FuelOil#2:Facility
+FuelOilNo2:Facility
 OtherFuels:Facility
 Cooling:Electricity
 Heating:Electricity
 InteriorLights:Electricity
 ExteriorLights:Electricity
 InteriorEquipment:Electricity
+ExteriorEquipment:Electricity
 Fans:Electricity
 Pumps:Electricity
 WaterSystems:Electricity

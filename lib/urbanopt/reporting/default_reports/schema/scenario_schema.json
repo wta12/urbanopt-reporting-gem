@@ -433,6 +433,9 @@
 				"exterior_equipment": {
 					"type": "number"
 				},
+				"electric_vehicles": {
+					"type": "number"
+				},
 				"fans": {
 					"type": "number"
 				},

@@ -36,6 +36,7 @@
 require 'erb'
 
 
+# This measure is originally from https://github.com/urbanopt/DES_HVAC
 # start the measure
 class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
   Dir[File.dirname(__FILE__) + '/resources/*.rb'].each { |file| require file }
@@ -149,7 +150,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,hourly;').get
 	  result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get ##Using this for data at timestep interval
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:Electricity,hourly;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,Heating:Gas,hourly;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,Heating:NaturalGas,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorLights:Electricity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Fans:Electricity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorEquipment:Electricity,hourly;').get # Joules

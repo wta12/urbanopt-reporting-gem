@@ -35,6 +35,7 @@
 
 require 'erb'
 
+# This measure is originally from https://github.com/urbanopt/DES_HVAC
 # start the measure
 class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
   # human readable name
@@ -87,13 +88,13 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Relative Humidity,timestep;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,timestep;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:Electricity,timestep;').get
-    result << OpenStudio::IdfObject.load('Output:Meter,Heating:Gas,timestep;').get
+    result << OpenStudio::IdfObject.load('Output:Meter,Heating:NaturalGas,timestep;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorLights:Electricity,timestep;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Fans:Electricity,timestep;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorEquipment:Electricity,timestep;').get # Joules
     result << OpenStudio::IdfObject.load('Output:Meter,ExteriorLighting:Electricity,timestep;').get # Joules
     result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get # Joules
-    result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get ##Using this for data at timestep interval
+    result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get # #Using this for data at timestep interval
     result << OpenStudio::IdfObject.load('Output:Meter,Gas:Facility,timestep;').get # Joules
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:EnergyTransfer,timestep;').get # Joules
     result << OpenStudio::IdfObject.load('Output:Meter,WaterSystems:EnergyTransfer,timestep;').get # Joules
@@ -213,8 +214,8 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     end
     model = model.get
 
-    timesteps_per_hour=model.getTimestep.numberOfTimestepsPerHour.to_i
-    timestep=60/timesteps_per_hour #timestep in minutes
+    timesteps_per_hour = model.getTimestep.numberOfTimestepsPerHour.to_i
+    timestep = 60 / timesteps_per_hour # timestep in minutes
 
     sqlFile = runner.lastEnergyPlusSqlFile
     if sqlFile.empty?
@@ -241,7 +242,7 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     ts = sqlFile.timeSeries('RUN PERIOD 1', 'Zone Timestep', attribute_name)
     if ts.empty?
       runner.registerError("This feature does not have the attribute '#{attribute_name}' to enable this measure to work." \
-      "To resolve, simulate a building with electricity or remove this measure from your workflow.")
+      'To resolve, simulate a building with electricity or remove this measure from your workflow.')
     else
       ts = ts.first
       dt_base = nil
@@ -256,7 +257,7 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
           dt.date.dayOfWeek.value,
           dt.time.hours,
           dt.time.minutes,
-          dt_current.to_time.to_i - dt_base.to_time.to_i + timestep*60
+          dt_current.to_time.to_i - dt_base.to_time.to_i + timestep * 60
         ]
       end
     end
@@ -265,7 +266,7 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
     extract_timeseries_into_matrix(sqlFile, rows, 'Site Outdoor Air Drybulb Temperature', 'Environment', 0, timestep)
     extract_timeseries_into_matrix(sqlFile, rows, 'Site Outdoor Air Relative Humidity', 'Environment', 0, timestep)
     extract_timeseries_into_matrix(sqlFile, rows, 'Heating:Electricity', nil, 0, timestep)
-    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:Gas', nil, 0, timestep)
+    extract_timeseries_into_matrix(sqlFile, rows, 'Heating:NaturalGas', nil, 0, timestep)
     extract_timeseries_into_matrix(sqlFile, rows, 'Cooling:Electricity', nil, 0, timestep)
     extract_timeseries_into_matrix(sqlFile, rows, 'Electricity:Facility', nil, 0, timestep)
     extract_timeseries_into_matrix(sqlFile, rows, 'Gas:Facility', nil, 0, timestep)
