@@ -181,7 +181,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       end
     end
 
-    # OtherFuels
+    # Create a custom meter for OtherFuels
     other_fuel_uses = ['HeatRejection', 'Heating', 'WaterSystems', 'InteriorEquipment']
     custom_meter_facility = 'Meter:Custom,OtherFuels:Facility,OtherFuel2'
     other_fuel_uses.each do |end_use|
@@ -398,8 +398,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # unconditioned_area
     unconditioned_area = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Building Area' AND RowName='Unconditioned Building Area' AND ColumnName='Area'")
     feature_report.program.unconditioned_area_sqft = convert_units(unconditioned_area, 'm^2', 'ft^2')
+
     if building.standardsBuildingType.is_initialized
-      feature_report.program.floor_area_sqft -= feature_report.program.unconditioned_area_sqft if ['Residential'].include?(building.standardsBuildingType.get)
+      floor_area -= unconditioned_area if ['Residential'].include?(building.standardsBuildingType.get) # conditioned floor area m2 only
+      feature_report.program.floor_area_sqft -= feature_report.program.unconditioned_area_sqft if ['Residential'].include?(building.standardsBuildingType.get) # conditioned floor area ft2 only
     end
 
     # maximum_number_of_stories
@@ -711,7 +713,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         if x.include? 'water'
           x_u = x + '_qbft'
         else  
-          x = x.gsub('_no_2', '')
+          x = x.gsub('_#2', '')
           x_u = x + '_kwh'
         end
         m = feature_report.reporting_periods[0].end_uses.send(x_u)
@@ -748,7 +750,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # add enduses subcategories
     electric_vehicles = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses By Subcategory' AND RowName='Exterior Equipment:Electric Vehicles' AND ColumnName='Electricity'")
-    puts "electric_vehicle = #{electric_vehicles}"
     feature_report.reporting_periods[0].end_uses.electricity_kwh.electric_vehicles = convert_units(electric_vehicles, 'GJ', 'kWh')
 
     ### energy_production
