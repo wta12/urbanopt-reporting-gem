@@ -398,10 +398,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # unconditioned_area
     unconditioned_area = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Building Area' AND RowName='Unconditioned Building Area' AND ColumnName='Area'")
     feature_report.program.unconditioned_area_sqft = convert_units(unconditioned_area, 'm^2', 'ft^2')
-
     if building.standardsBuildingType.is_initialized
-      floor_area -= unconditioned_area if ['Residential'].include?(building.standardsBuildingType.get) # conditioned floor area m2 only
-      feature_report.program.floor_area_sqft -= feature_report.program.unconditioned_area_sqft if ['Residential'].include?(building.standardsBuildingType.get) # conditioned floor area ft2 only
+      floor_area -= unconditioned_area if ['Residential'].include?(building.standardsBuildingType.get) # conditioned floor area only
     end
 
     # maximum_number_of_stories
@@ -409,18 +407,22 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     number_of_stories ||= 1
     feature_report.program.maximum_number_of_stories = number_of_stories
 
-    # footprint_area
-    feature_report.program.footprint_area_sqft = feature_report.program.floor_area_sqft / number_of_stories
-
-    # maximum_roof_height
-    floor_to_floor_height = building.nominalFloortoFloorHeight.get if building.nominalFloortoFloorHeight.is_initialized
-    floor_to_floor_height ||= 8
-    feature_report.program.maximum_roof_height_ft = feature_report.program.maximum_number_of_stories * floor_to_floor_height
-
     # maximum_number_of_stories_above_ground
     number_of_stories_above_ground = building.standardsNumberOfAboveGroundStories.get if building.standardsNumberOfAboveGroundStories.is_initialized
     number_of_stories_above_ground ||= 1
     feature_report.program.maximum_number_of_stories_above_ground = number_of_stories_above_ground
+
+    # maximum_roof_height
+    floor_to_floor_height = building.nominalFloortoFloorHeight.get if building.nominalFloortoFloorHeight.is_initialized
+    floor_to_floor_height ||= 8
+    feature_report.program.maximum_roof_height_ft = feature_report.program.maximum_number_of_stories_above_ground * floor_to_floor_height
+
+    # footprint_area
+    if not ['Residential'].include?(building.standardsBuildingType.get)
+      feature_report.program.footprint_area_sqft = feature_report.program.floor_area_sqft / number_of_stories
+    else
+      feature_report.program.footprint_area_sqft = convert_units(floor_area, 'm^2', 'ft^2') / building.additionalProperties.getFeatureAsInteger('NumberOfConditionedStories').get
+    end
 
     # number_of_residential_units
     number_of_living_units = building.standardsNumberOfLivingUnits.get if building.standardsNumberOfLivingUnits.is_initialized
@@ -620,13 +622,13 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     if begin_month == 1 && begin_day_of_month == 1 && end_month == 12 && end_day_of_month == 31
       # calculate site EUI
       site_EUI_kwh_per_m2 = feature_report.reporting_periods[0].total_site_energy_kwh / floor_area
-      site_EUI_kbtu_per_ft2 = convert_units(total_site_energy, 'GJ', 'kBtu') / feature_report.program.floor_area_sqft
+      site_EUI_kbtu_per_ft2 = convert_units(total_site_energy, 'GJ', 'kBtu') / convert_units(floor_area, 'm^2', 'ft^2')
       # add site EUI to feature report
       feature_report.reporting_periods[0].site_EUI_kwh_per_m2 = site_EUI_kwh_per_m2
       feature_report.reporting_periods[0].site_EUI_kbtu_per_ft2 = site_EUI_kbtu_per_ft2
       # calculate source EUI
       source_EUI_kwh_per_m2 = feature_report.reporting_periods[0].total_source_energy_kwh / floor_area
-      source_EUI_kbtu_per_ft2 = convert_units(total_source_energy, 'GJ', 'kBtu') / feature_report.program.floor_area_sqft
+      source_EUI_kbtu_per_ft2 = convert_units(total_source_energy, 'GJ', 'kBtu') / convert_units(floor_area, 'm^2', 'ft^2')
       # add source EUI to feature report
       feature_report.reporting_periods[0].source_EUI_kwh_per_m2 = source_EUI_kwh_per_m2
       feature_report.reporting_periods[0].source_EUI_kbtu_per_ft2 = source_EUI_kbtu_per_ft2
