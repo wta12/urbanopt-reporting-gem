@@ -145,7 +145,7 @@ module URBANopt
           result[:footprint_area_sqft] = @footprint_area_sqft if @footprint_area_sqft
           result[:maximum_roof_height_ft] = @maximum_roof_height_ft if @maximum_roof_height_ft
           result[:maximum_number_of_stories] = @maximum_number_of_stories if @maximum_number_of_stories
-          result[:maximum_number_of_stories_above_ground] = @maximum_number_of_stories_above_ground if @maximum_number_of_parking_stories_above_ground
+          result[:maximum_number_of_stories_above_ground] = @maximum_number_of_stories_above_ground if @maximum_number_of_stories_above_ground
           result[:parking_area_sqft] = @parking_area_sqft if @parking_area_sqft
           result[:number_of_parking_spaces] = @number_of_parking_spaces if @number_of_parking_spaces
           result[:number_of_parking_spaces_charging] = @number_of_parking_spaces_charging if @number_of_parking_spaces_charging
