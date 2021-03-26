@@ -327,6 +327,8 @@ module URBANopt
 
         ##
         # Saves the 'default_feature_report.csv' file to the results directory
+        # This method only copies the CSV feature reports from the folder genetrated by the reporting measure 
+        # (<meausure number/017_default_feature_reports/) to the new feature_reports/ folder
         ##
         # [parameters]:
         # +file_name+ - _String_ - Assign a name to the saved feature report file without an extension

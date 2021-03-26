@@ -157,7 +157,7 @@ module URBANopt
         ##
         # [parameters]:
         # +file_name+ - _String_ - Assign a name to the saved scenario results file without an extension
-        def save(file_name = 'default_scenario_report', save_feature_reports = true)
+        def save(file_name = 'default_scenario_report', save_feature_reports = false)
           # reassign the initialize local variable @file_name to the file name input.
           @file_name = file_name
 
@@ -201,7 +201,7 @@ module URBANopt
             end
             #save the feature reports csv and json data
             @feature_reports.each do |feature_report|
-             feature_report.save file_name
+             feature_report.save_feature_report file_name
             end
           end
 
