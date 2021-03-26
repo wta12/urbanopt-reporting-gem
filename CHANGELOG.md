@@ -1,5 +1,12 @@
 # URBANopt Reporting Gem
 
+## Version 0.3.7
+Date Range: 02/12/21 - 03/26/21
+
+- Fixed [#47]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/47 ), Default features report bugfixes and updates
+- Fixed [#67]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/67 ), Update copyrights for 2021
+- Fixed [#70]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/70 ), feature report bug fix
+
 ## Version 0.3.6
 
 Date Range: 02/05/21 - 02/11/21
