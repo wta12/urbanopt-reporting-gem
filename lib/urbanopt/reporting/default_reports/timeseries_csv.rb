@@ -207,7 +207,7 @@ module URBANopt
         ##
         def get_data(column_name)
           load_data
-          return @data[column_name]
+          return @data[column_name].clone
         end
 
         ##
