@@ -24,10 +24,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '~> 2.7.0'
 
-  spec.add_development_dependency 'bundler', '~> 2.1'
+  spec.add_development_dependency 'bundler', '>= 2.1.0'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.7'
   spec.add_runtime_dependency 'json-schema', '~> 2.8'
   spec.add_runtime_dependency 'json_pure', '~> 2.3'
-  spec.add_runtime_dependency 'openstudio-extension', '~> 0.4.0'
+  spec.add_runtime_dependency 'openstudio-extension', '~> 0.4.2'
 end
