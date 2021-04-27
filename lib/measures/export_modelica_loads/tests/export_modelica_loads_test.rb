@@ -92,7 +92,7 @@ class ExportModelicaLoadsTest < Minitest::Test
 
   def test_number_of_arguments_and_argument_names
     # create an instance of the measure
-    measure = Jjjjjjj.new
+    measure = ExportModelicaLoads.new
 
     # Make an empty model
     model = OpenStudio::Model::Model.new
@@ -106,7 +106,7 @@ class ExportModelicaLoadsTest < Minitest::Test
     test_name = 'test_good_argument_values'
 
     # create an instance of the measure
-    measure = Jjjjjjj.new
+    measure = ExportModelicaLoads.new
 
     # create runner with empty OSW
     osw = OpenStudio::WorkflowJSON.new
