@@ -181,11 +181,10 @@ class ExportTimeSeriesModelicaTest < Minitest::Test
       argument_map[arg.name] = temp_arg_var
     end
 
-    model_path = 'C:\Users\User\Documents\GitHub\OpenStudio-measures\lib\measures\export_time_series_modelica\tests\example_model.osm'
     # runner.setLastOpenStudioModelPath(model_out_path(test_name)) ##AA added
-    sql_path = 'C:/Users/User/Documents/GitHub/OpenStudio-measures/lib/measures/export_time_series_modelica/tests/output/test_good_argument_values/run/eplusout.sql'
     # runner.setLastEnergyPlusSqlFilePath("#{File.dirname(__FILE__)}") ##AA commented out
-    runner.setLastEnergyPlusSqlFilePath(sql_path)
+
+    runner.setLastEnergyPlusSqlFilePath(sql_path(test_name))
     runner.setLastOpenStudioModelPath(path)
 
     idf_output_requests = measure.energyPlusOutputRequests(runner, argument_map) # #AA added this
