@@ -72,7 +72,7 @@ class ExportModelicaLoadsTest < Minitest::Test
   end
 
   def report_path(test_name)
-    return "#{run_dir(test_name)}/report.html"
+    return "#{run_dir(test_name)}/building_loads.csv"
   end
 
   # method for running the test simulation using OpenStudio 2.x API
@@ -161,7 +161,7 @@ class ExportModelicaLoadsTest < Minitest::Test
 
     # get the energyplus output requests, this will be done automatically by OS App and PAT
     idf_output_requests = measure.energyPlusOutputRequests(runner, argument_map)
-    assert_equal(1, idf_output_requests.size)
+    assert_equal(17, idf_output_requests.size)
 
     # mimic the process of running this measure in OS App or PAT. Optionally set custom model_in_path and custom epw_path.
     epw_path = epw_path_default
