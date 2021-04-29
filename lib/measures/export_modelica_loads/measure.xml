@@ -3,8 +3,8 @@
   <schema_version>3.0</schema_version>
   <name>export_modelica_loads</name>
   <uid>7051db01-2e55-4223-b5b5-fee615b68dd0</uid>
-  <version_id>7782f28c-19e6-449d-8cf3-e3f915550ebd</version_id>
-  <version_modified>20201203T151454Z</version_modified>
+  <version_id>e80d1948-12bf-4a07-b8b2-cab73c6f8235</version_id>
+  <version_modified>20210427T174740Z</version_modified>
   <xml_checksum>2C8A3EEF</xml_checksum>
   <class_name>ExportModelicaLoads</class_name>
   <display_name>Export Modelica Loads</display_name>
@@ -42,18 +42,6 @@
       <checksum>00000000</checksum>
     </file>
     <file>
-      <filename>export_modelica_loads_test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>83EC81AC</checksum>
-    </file>
-    <file>
-      <filename>example_model.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>39B6E26C</checksum>
-    </file>
-    <file>
       <filename>USA_CO_Golden-NREL.724666_TMY3.epw</filename>
       <filetype>epw</filetype>
       <usage_type>test</usage_type>
@@ -66,16 +54,28 @@
       <checksum>3F69E3FB</checksum>
     </file>
     <file>
-      <filename>LICENSE.md</filename>
-      <filetype>md</filetype>
-      <usage_type>license</usage_type>
-      <checksum>E0468DD6</checksum>
-    </file>
-    <file>
       <filename>README.md</filename>
       <filetype>md</filetype>
       <usage_type>readme</usage_type>
       <checksum>544E6A47</checksum>
+    </file>
+    <file>
+      <filename>export_modelica_loads_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>15232067</checksum>
+    </file>
+    <file>
+      <filename>example_model.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>A2B6C1DD</checksum>
+    </file>
+    <file>
+      <filename>LICENSE.md</filename>
+      <filetype>md</filetype>
+      <usage_type>license</usage_type>
+      <checksum>BBD19F47</checksum>
     </file>
     <file>
       <version>
@@ -86,7 +86,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>AE19F661</checksum>
+      <checksum>DA574F8F</checksum>
     </file>
   </files>
 </measure>

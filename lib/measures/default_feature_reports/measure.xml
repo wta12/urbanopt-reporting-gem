@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <measure>
   <schema_version>3.0</schema_version>
+  <error>wrong number of arguments (given 1, expected 0)</error>
   <name>default_feature_reports</name>
   <uid>9ee3135a-8070-4408-bfa1-b75fecf9dd4f</uid>
-  <version_id>d4f5b2e2-f93d-4ce2-9c68-ed29714fdc0c</version_id>
-  <version_modified>20201208T230102Z</version_modified>
+  <version_id>136d51d4-9a61-48cd-b068-0e02c4094e76</version_id>
+  <version_modified>20210427T174740Z</version_modified>
   <xml_checksum>FB304155</xml_checksum>
   <class_name>DefaultFeatureReports</class_name>
   <display_name>DefaultFeatureReports</display_name>
@@ -121,12 +122,6 @@
       <checksum>703C9964</checksum>
     </file>
     <file>
-      <filename>example_model.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>CC4BFFAF</checksum>
-    </file>
-    <file>
       <filename>README.md</filename>
       <filetype>md</filetype>
       <usage_type>readme</usage_type>
@@ -139,10 +134,16 @@
       <checksum>BBD19F47</checksum>
     </file>
     <file>
+      <filename>example_model.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>A178EC04</checksum>
+    </file>
+    <file>
       <filename>default_feature_reports_test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>19681175</checksum>
+      <checksum>0C4ED2E7</checksum>
     </file>
     <file>
       <version>
@@ -153,8 +154,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>48AEB753</checksum>
+      <checksum>CD1AFD42</checksum>
     </file>
   </files>
 </measure>
-<error>wrong number of arguments (given 1, expected 0)</error>

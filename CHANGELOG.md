@@ -1,6 +1,13 @@
 # URBANopt Reporting Gem
 
+## Version 0.4.0
+
+Date Range: 03/27/21 - 04/26/21
+
+- Update dependencies for OpenStudio 3.2.0 and Ruby 2.7
+
 ## Version 0.3.7
+
 Date Range: 02/12/21 - 03/26/21
 
 - Fixed [#47]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/47 ), Default features report bugfixes and updates
