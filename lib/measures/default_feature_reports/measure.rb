@@ -428,10 +428,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.program.maximum_roof_height_ft = feature_report.program.maximum_number_of_stories_above_ground * floor_to_floor_height
 
     # footprint_area
-    if not ['Residential'].include?(building.standardsBuildingType.get)
-      feature_report.program.footprint_area_sqft = feature_report.program.floor_area_sqft / number_of_stories
-    else
-      feature_report.program.footprint_area_sqft = convert_units(floor_area, 'm^2', 'ft^2') / building.additionalProperties.getFeatureAsInteger('NumberOfConditionedStories').get
+    if building.standardsBuildingType.is_initialized
+      if not ['Residential'].include?(building.standardsBuildingType.get)
+        feature_report.program.footprint_area_sqft = feature_report.program.floor_area_sqft / number_of_stories
+      else
+        feature_report.program.footprint_area_sqft = convert_units(floor_area, 'm^2', 'ft^2') / building.additionalProperties.getFeatureAsInteger('NumberOfConditionedStories').get
+      end
     end
 
     # number_of_residential_units
