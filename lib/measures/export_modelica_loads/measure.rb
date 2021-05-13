@@ -39,6 +39,7 @@
 # *********************************************************************************
 
 require 'erb'
+require 'Date'
 
 # This measure is originally from https://github.com/urbanopt/DES_HVAC
 # start the measure
