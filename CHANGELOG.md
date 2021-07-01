@@ -1,5 +1,10 @@
 # URBANopt Reporting Gem
 
+## Version 0.4.1
+Date Range: 04/27/23 - 07/01/21
+
+- Fixed [#80](https://github.com/urbanopt/urbanopt-reporting-gem/issues/80), Update rubocop configs to v4
+- 
 ## Version 0.4.0
 
 Date Range: 03/27/21 - 04/26/21
