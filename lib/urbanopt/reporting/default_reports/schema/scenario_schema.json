@@ -128,6 +128,10 @@
 				"size_kw": {
 					"description": "rated power in kW",
 					"type": "string"
+				},
+				"location": {
+					"description": "Location of PV. Available options are roof and ground.",
+					"type": "string"
 				}
 			}
 		},

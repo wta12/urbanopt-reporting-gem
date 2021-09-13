@@ -52,6 +52,7 @@ module URBANopt
         # _Float_ - power capacity in kilowatts
         #
         attr_accessor :size_kw
+        attr_accessor :location
 
         ##
         # Initialize SolarPV attributes from a hash. Solar PV attributes currently are limited to power capacity.
@@ -65,6 +66,7 @@ module URBANopt
 
           @size_kw = hash[:size_kw]
           @id = hash[:id]
+          @location = hash[:location]
 
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -81,6 +83,7 @@ module URBANopt
           result = {}
 
           result[:size_kw] = @size_kw if @size_kw
+          result[:location] = @location if @location
 
           return result
         end
