@@ -243,4 +243,11 @@ RSpec.describe URBANopt::Reporting do
 
     # puts "\nfinal periods: #{existing_periods}"
   end
+
+  it 'can report solarPV results' do 
+    solar_pv = URBANopt::Reporting::DefaultReports::SolarPV.new({ size_kw: 100, id: 1, location: 'roof' })
+    expect(solar_pv.size_kw).to eq 100
+    expect(solar_pv.location).to eq 'roof'
+  end
+
 end
