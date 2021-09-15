@@ -131,7 +131,11 @@
 				},
 				"location": {
 					"description": "Location of PV. Available options are roof and ground.",
-					"type": "string"
+					"type": "string",
+					"enum": [
+						"roof",
+						"ground"
+					]
 				}
 			}
 		},
