@@ -130,11 +130,12 @@
 					"type": "string"
 				},
 				"location": {
-					"description": "Location of PV. Available options are roof and ground.",
+					"description": "Location of PV. Available options are roof, ground or both.",
 					"type": "string",
 					"enum": [
 						"roof",
-						"ground"
+						"ground",
+						"both"
 					]
 				}
 			}
