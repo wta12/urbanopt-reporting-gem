@@ -3,6 +3,7 @@
 ## Version 0.4.2
 Date Range: 07/01/21 - 10/15/21
 
+- Fixed [#86]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/86 ), Add location of PV to Scenario and Feature optimization reopt reports #86
 - Fixed [#77]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/77 ), Fix test_with_openstudio model failures
 
 ## Version 0.4.1
