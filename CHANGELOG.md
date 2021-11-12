@@ -1,5 +1,10 @@
 # URBANopt Reporting Gem
 
+## Version 0.4.3
+Date Range: 10/16/21 - 11/12/21
+
+- Fixed [#93]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/93 ), Fix aggregation of storage system typo
+
 ## Version 0.4.2
 Date Range: 07/01/21 - 10/15/21
 

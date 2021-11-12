@@ -40,6 +40,6 @@
 
 module URBANopt
   module Reporting
-    VERSION = '0.4.2'.freeze
+    VERSION = '0.4.3'.freeze
   end
 end
