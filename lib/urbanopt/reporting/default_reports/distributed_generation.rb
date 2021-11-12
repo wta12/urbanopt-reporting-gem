@@ -476,7 +476,7 @@ module URBANopt
 
           new_dgen.storage.each do |storage|
             existing_dgen.storage.push storage
-            if existing_dgen.total_wind_kw.nil?
+            if existing_dgen.total_storage_kw.nil?
               existing_dgen.total_storage_kw = storage.size_kw
               existing_dgen.total_storage_kwh = storage.size_kwh
             else
