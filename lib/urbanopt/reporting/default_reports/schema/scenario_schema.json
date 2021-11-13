@@ -84,6 +84,10 @@
 		"DistributedGeneration": {
 			"type": "object",
 			"properties": {
+				"reopt_assumptions_file_path": {
+					"description": "File path of REopt assumptions file used to generate results, if known",
+					"type": "string"
+				},
 				"lcc_us_dollars": {
 					"description": "Optimal lifecycle cost",
 					"type": "number"

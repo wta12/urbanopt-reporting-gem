@@ -67,6 +67,39 @@ module URBANopt
           @size_kw = hash[:size_kw]
           @id = hash[:id]
           @location = hash[:location]
+          @approx_area_m2 = 0
+          
+          if hash[:azimuth]
+            @azimuth = hash[:azimuth]
+          end
+          if hash[:tilt]
+            @tilt = hash[:tilt]
+          end
+          if hash[:module_type]
+            @module_type = hash[:module_type]
+            
+            # calculate area with PVWatts formulas
+            # Size (kW) = Array Area (m²) × 1 kW/m² × Module Efficiency (%)
+            # also grab module efficiency: 0 (standard) = 15%, 1 (premium) = 19%, 2 (thin film) = 10%
+            eff = 0
+            case @module_type
+            when 0
+              eff = 0.15
+            when 1
+              eff = 0.19
+            when 2
+              eff = 0.10
+            end
+            if @size_kw != 0
+              @approx_area_m2 = (@size_kw / eff).round(3)
+            end
+          end
+          if hash[:gcr]
+            @gcr = hash[:gcr]
+          end
+          if hash[:average_yearly_energy_produced_kwh]
+            @annual_energy_produced = hash[:average_yearly_energy_produced_kwh]
+          end
 
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -81,9 +114,15 @@ module URBANopt
         ##
         def to_hash
           result = {}
-
+ 
           result[:size_kw] = @size_kw if @size_kw
           result[:location] = @location if @location
+          result[:azimuth] = @azimuth if @azimuth
+          result[:tilt] = @tilt if @tilt
+          result[:module_type] = @module_type if @module_type
+          result[:approximate_area_m2] = @approx_area_m2 if @approx_area_m2
+          result[:gcr] = @gcr if @gcr
+          result[:average_yearly_energy_produced_kwh] = @annual_energy_produced if @annual_energy_produced
 
           return result
         end
@@ -97,7 +136,7 @@ module URBANopt
           else
             existing_pv.size_kw = (existing_pv.size_kw || 0) + (new_pv.size_kw || 0)
           end
-
+          # KAF: todo, recalculate area?
           return existing_pv
         end
       end

@@ -258,7 +258,7 @@ module URBANopt
           FileUtils.mkdir_p File.dirname(@timeseries_csv.path)
           @timeseries_csv.save_data
 
-          ## save json rport
+          ## save json report
           # feature_hash
           feature_hash = to_hash
 
