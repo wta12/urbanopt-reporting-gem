@@ -63,6 +63,7 @@ module URBANopt
         attr_accessor :id, :name, :directory_name, :timesteps_per_hour, :number_of_not_started_simulations,
                       :number_of_started_simulations, :number_of_complete_simulations, :number_of_failed_simulations,
                       :timeseries_csv, :location, :program, :construction_costs, :reporting_periods, :feature_reports, :distributed_generation # :nodoc:
+
         # ScenarioReport class intializes the scenario report attributes:
         # +:id+ , +:name+ , +:directory_name+, +:timesteps_per_hour+ , +:number_of_not_started_simulations+ ,
         # +:number_of_started_simulations+ , +:number_of_complete_simulations+ , +:number_of_failed_simulations+ ,
@@ -142,14 +143,14 @@ module URBANopt
         # Gets the saved JSON file path.
         ##
         def json_path
-          File.join(@directory_name, @file_name + '.json')
+          File.join(@directory_name, "#{@file_name}.json")
         end
 
         ##
         # Gets the saved CSV file path.
         ##
         def csv_path
-          File.join(@directory_name, @file_name + '.csv')
+          File.join(@directory_name, "#{@file_name}.csv")
         end
 
         ##
@@ -167,7 +168,7 @@ module URBANopt
             old_timeseries_path = @timeseries_csv.path
           end
 
-          @timeseries_csv.path = File.join(@directory_name, file_name + '.csv')
+          @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
           @timeseries_csv.save_data
 
           hash = {}
@@ -177,7 +178,7 @@ module URBANopt
             hash[:feature_reports] << feature_report.to_hash
           end
 
-          json_name_path = File.join(@directory_name, file_name + '.json')
+          json_name_path = File.join(@directory_name, "#{file_name}.json")
 
           File.open(json_name_path, 'w') do |f|
             f.puts JSON.pretty_generate(hash)
@@ -192,16 +193,16 @@ module URBANopt
           if !old_timeseries_path.nil?
             @timeseries_csv.path = old_timeseries_path
           else
-            @timeseries_csv.path = File.join(@directory_name, file_name + '.csv')
+            @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
           end
 
           if save_feature_reports
             if file_name == 'default_scenario_report'
               file_name = 'default_feature_report'
             end
-            #save the feature reports csv and json data
+            # save the feature reports csv and json data
             @feature_reports.each do |feature_report|
-             feature_report.save file_name
+              feature_report.save file_name
             end
           end
 
@@ -292,13 +293,14 @@ module URBANopt
           end
 
           # check feature simulation status
-          if feature_report.simulation_status == 'Not Started'
+          case feature_report.simulation_status
+          when 'Not Started'
             @number_of_not_started_simulations += 1
-          elsif feature_report.simulation_status == 'Started'
+          when 'Started'
             @number_of_started_simulations += 1
-          elsif feature_report.simulation_status == 'Complete'
+          when 'Complete'
             @number_of_complete_simulations += 1
-          elsif feature_report.simulation_status == 'Failed'
+          when 'Failed'
             @number_of_failed_simulations += 1
           else
             raise "Unknown feature_report simulation_status = '#{feature_report.simulation_status}'"

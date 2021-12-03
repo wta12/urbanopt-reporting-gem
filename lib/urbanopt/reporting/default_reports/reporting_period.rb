@@ -58,6 +58,7 @@ module URBANopt
                       :district_heating_kwh, :water_qbft, :electricity_produced_kwh, :end_uses, :energy_production_kwh, :photovoltaic,
                       :fuel_type, :total_cost_dollar, :usage_cost_dollar, :demand_cost_dollar, :comfort_result, :time_setpoint_not_met_during_occupied_cooling,
                       :time_setpoint_not_met_during_occupied_heating, :time_setpoint_not_met_during_occupied_hours, :hours_out_of_comfort_bounds_PMV, :hours_out_of_comfort_bounds_PPD #:nodoc:
+
         # ReportingPeriod class initializes the reporting period attributes:
         # +:id+ , +:name+ , +:multiplier+ , +:start_date+ , +:end_date+ , +:month+ , +:day_of_month+ , +:year+ , +:total_site_energy_kwh+ , +:total_source_energy_kwh+ , +:site_EUI_kwh_per_m2+, +:site_EUI_kbtu_per_ft2+, +:source_EUI_kwh_per_m2+, +:source_EUI_kbtu_per_ft2+,
         # +:net_site_energy_kwh+ , +:net_source_energy_kwh+ , +:total_utility_cost_dollar , +:net_utility_cost_dollar+ , +:utility_costs_dollar+ , +:electricity_kwh+ , +:natural_gas_kwh+ , +:propane_kwh+ , +:fuel_oil_kwh+ , +:other_fuels_kwh+ , +:district_cooling_kwh+ ,
@@ -258,10 +259,8 @@ module URBANopt
           new_end_uses = new_period.end_uses
           existing_period.end_uses&.merge_end_uses!(new_end_uses)
 
-          if existing_period.energy_production_kwh
-            if existing_period.energy_production_kwh[:electricity_produced_kwh]
-              existing_period.energy_production_kwh[:electricity_produced_kwh][:photovoltaic_kwh] = add_values(existing_period.energy_production_kwh[:electricity_produced][:photovoltaic], new_period.energy_production_kwh[:electricity_produced_kwh][:photovoltaic_kwh])
-            end
+          if existing_period.energy_production_kwh && existing_period.energy_production_kwh[:electricity_produced_kwh]
+            existing_period.energy_production_kwh[:electricity_produced_kwh][:photovoltaic_kwh] = add_values(existing_period.energy_production_kwh[:electricity_produced][:photovoltaic], new_period.energy_production_kwh[:electricity_produced_kwh][:photovoltaic_kwh])
           end
 
           existing_period.utility_costs_dollar&.each_with_index do |item, i|
