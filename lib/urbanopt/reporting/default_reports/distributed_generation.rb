@@ -234,7 +234,7 @@ module URBANopt
           @total_storage_kwh = nil
 
           @solar_pv = []
-          if hash[:solar_pv].class == Hash
+          if hash[:solar_pv].instance_of?(Hash)
             hash[:solar_pv] = [hash[:solar_pv]]
           elsif hash[:solar_pv].nil?
             hash[:solar_pv] = []
@@ -252,7 +252,7 @@ module URBANopt
           end
 
           @wind = []
-          if hash[:wind].class == Hash
+          if hash[:wind].instance_of?(Hash)
             hash[:wind] = [hash[:wind]]
           elsif hash[:wind].nil?
             hash[:wind] = []
@@ -270,7 +270,7 @@ module URBANopt
           end
 
           @generator = []
-          if hash[:generator].class == Hash
+          if hash[:generator].instance_of?(Hash)
             hash[:generator] = [hash[:generator]]
           elsif hash[:generator].nil?
             hash[:generator] = []
@@ -288,7 +288,7 @@ module URBANopt
           end
 
           @storage = []
-          if hash[:storage].class == Hash
+          if hash[:storage].instance_of?(Hash)
             hash[:storage] = [hash[:storage]]
           elsif hash[:storage].nil?
             hash[:storage] = []

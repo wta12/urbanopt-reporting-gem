@@ -40,11 +40,10 @@
 
 require 'erb'
 
-
 # This measure is originally from https://github.com/urbanopt/DES_HVAC
 # start the measure
 class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
-  Dir[File.dirname(__FILE__) + '/resources/*.rb'].each { |file| require file }
+  Dir["#{File.dirname(__FILE__)}/resources/*.rb"].sort.each { |file| require file }
   include OsLib_HelperMethods
   # human readable name
   def name
@@ -75,12 +74,12 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     hhw_loop_name.setDefaultValue('hot')
     args << hhw_loop_name
 
-	  chw_loop_name = OpenStudio::Measure::OSArgument.makeStringArgument('chw_loop_name', true)
+    chw_loop_name = OpenStudio::Measure::OSArgument.makeStringArgument('chw_loop_name', true)
     chw_loop_name.setDisplayName('Name or Partial Name of Chilled Water Loop, non-case-sensitive')
     chw_loop_name.setDefaultValue('chilled')
     args << chw_loop_name
 
-	  dec_places_mass_flow = OpenStudio::Measure::OSArgument.makeIntegerArgument('dec_places_mass_flow', true)
+    dec_places_mass_flow = OpenStudio::Measure::OSArgument.makeIntegerArgument('dec_places_mass_flow', true)
     dec_places_mass_flow.setDisplayName('Number of Decimal Places to Round Mass Flow Rate')
     dec_places_mass_flow.setDescription('Number of decimal places to which mass flow rate will be rounded')
     dec_places_mass_flow.setDefaultValue(3)
@@ -113,11 +112,11 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     # use the built-in error checking
     return false unless runner.validateUserArguments(arguments(model), user_arguments)
 
-    ##Read in argumetns related to variables for output requests
+    # #Read in argumetns related to variables for output requests
     hhw_loop_name = runner.getStringArgumentValue('hhw_loop_name', user_arguments)
     chw_loop_name = runner.getStringArgumentValue('chw_loop_name', user_arguments)
 
-    #Identify key names for output variables.
+    # Identify key names for output variables.
     plantloops = model.getPlantLoops
 
     selected_plant_loops = []
@@ -128,19 +127,19 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     reporting_frequency = 'timestep'
 
     plantloops.each do |plantLoop|
-	    log "plant loop name #{plantLoop.name.get.to_s}"
+      log "plant loop name #{plantLoop.name.get}"
       if plantLoop.name.get.to_s.downcase.include? chw_loop_name.to_s
-        #Extract plant loop information
-        selected_plant_loops[0]=plantLoop
+        # Extract plant loop information
+        selected_plant_loops[0] = plantLoop
         key_value_chw_outlet = selected_plant_loops[0].demandOutletNode.name.to_s
         key_value_chw_inlet = selected_plant_loops[0].demandInletNode.name.to_s
         result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_outlet},#{variable_name2},timestep;").get
         result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_inlet},#{variable_name2},timestep;").get
         result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_chw_outlet},#{variable_name1},timestep;").get
       end
-      if plantLoop.name.get.to_s.downcase.include? hhw_loop_name.to_s and !plantLoop.name.get.to_s.downcase.include? "service" and !plantLoop.name.get.to_s.downcase.include? "domestic"
-        #Extract plant loop information
-        selected_plant_loops[1]=plantLoop
+      if plantLoop.name.get.to_s.downcase.include?(hhw_loop_name.to_s) && !plantLoop.name.get.to_s.downcase.include?('service') && !plantLoop.name.get.to_s.downcase.include?('domestic')
+        # Extract plant loop information
+        selected_plant_loops[1] = plantLoop
         key_value_hhw_outlet = selected_plant_loops[1].demandOutletNode.name.to_s
         key_value_hhw_inlet = selected_plant_loops[1].demandInletNode.name.to_s
         result << OpenStudio::IdfObject.load("Output:Variable,#{key_value_hhw_outlet},#{variable_name2},timestep;").get
@@ -153,7 +152,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Drybulb Temperature,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Variable,,Site Outdoor Air Relative Humidity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Cooling:Electricity,hourly;').get
-	  result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get ##Using this for data at timestep interval
+    result << OpenStudio::IdfObject.load('Output:Meter,Electricity:Facility,timestep;').get # #Using this for data at timestep interval
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:Electricity,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,Heating:NaturalGas,hourly;').get
     result << OpenStudio::IdfObject.load('Output:Meter,InteriorLights:Electricity,hourly;').get
@@ -171,15 +170,15 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     result
   end
 
-  def extract_timeseries_into_matrix(sqlfile, data, variable_name, str, key_value = nil, default_if_empty = 0,dec_places, timestep)
+  def extract_timeseries_into_matrix(sqlfile, data, variable_name, str, key_value = nil, default_if_empty = 0, dec_places, timestep)
     log "Executing query for #{variable_name}"
-    #column_name = variable_name
+    # column_name = variable_name
     if key_value
       ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name, key_value)
-      #column_name += "_#{key_value}"
-	    column_name=str
+      # column_name += "_#{key_value}"
+      column_name = str
     else
-      #ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name)
+      # ts = sqlfile.timeSeries('RUN PERIOD 1', 'Hourly', variable_name)
       ts = sqlfile.timeSeries('RUN PERIOD 1', 'Zone Timestep', variable_name)
     end
     log 'Iterating over timeseries'
@@ -201,16 +200,16 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
       # end
 
       quick_proc = ts.values.to_s.split(',')
-      quick_proc[0]=quick_proc[0].split('(', 2).last #cleanup necessary to remove opening paren
-      quick_proc=quick_proc.map(&:to_f)
+      quick_proc[0] = quick_proc[0].split('(', 2).last # cleanup necessary to remove opening paren
+      quick_proc = quick_proc.map(&:to_f)
       x = 0
       len = quick_proc.length
-	    log "quick proc #{quick_proc}"
-      while(x < len) #Round to the # of decimal places specified
-          quick_proc[x]=(quick_proc[x]).round(dec_places)
-          x=x+1
-	      end
-	    quick_proc=quick_proc.map(&:to_s)
+      log "quick proc #{quick_proc}"
+      while x < len # Round to the # of decimal places specified
+        quick_proc[x] = (quick_proc[x]).round(dec_places)
+        x += 1
+      end
+      quick_proc = quick_proc.map(&:to_s)
 
       # the first and last have some cleanup items because of the Vector method
       quick_proc[0] = quick_proc[0].gsub(/^.*\(/, '')
@@ -232,7 +231,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     log "Finished extracting #{variable_name}"
   end
 
-  def create_new_variable_sum(data, new_var_name, include_str, options=nil)
+  def create_new_variable_sum(data, new_var_name, include_str, options = nil)
     var_info = {
       name: new_var_name,
       var_indexes: []
@@ -285,16 +284,18 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
 
     # lookup and replace argument values from upstream measures
     if args['use_upstream_args'] == true
-      args.each do |arg,value|
+      args.each do |arg, value|
         next if arg == 'use_upstream_args' # this argument should not be changed
+
         value_from_osw = OsLib_HelperMethods.check_upstream_measure_for_arg(runner, arg)
         if !value_from_osw.empty?
           runner.registerInfo("Replacing argument named #{arg} from current measure with a value of #{value_from_osw[:value]} from #{value_from_osw[:measure_name]}.")
           new_val = value_from_osw[:value]
           # TODO: make code to handle non strings more robust. check_upstream_measure_for_arg could pass back the argument type
-          if arg == 'hhw_loop_name'
+          case arg
+          when 'hhw_loop_name'
             args[arg] = new_val.to_s
-          elsif arg == 'chw_loop_name'
+          when 'chw_loop_name'
             args[arg] = new_val.to_s
           else
             args[arg] = new_val
@@ -314,8 +315,8 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     end
     model = model.get
 
-    timesteps_per_hour=model.getTimestep.numberOfTimestepsPerHour.to_i
-    timestep=60/timesteps_per_hour #timestep in minutes
+    timesteps_per_hour = model.getTimestep.numberOfTimestepsPerHour.to_i
+    timestep = 60 / timesteps_per_hour # timestep in minutes
 
     sqlFile = runner.lastEnergyPlusSqlFile
     if sqlFile.empty?
@@ -342,7 +343,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     ts = sqlFile.timeSeries('RUN PERIOD 1', 'Zone Timestep', attribute_name)
     if ts.empty?
       runner.registerError("This feature does not have the attribute '#{attribute_name}' to enable this measure to work." \
-      "To resolve, simulate a building with electricity or remove this measure from your workflow.")
+      'To resolve, simulate a building with electricity or remove this measure from your workflow.')
     else
       ts = ts.first
       dt_base = nil
@@ -357,7 +358,7 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
           dt.date.dayOfWeek.value,
           dt.time.hours,
           dt.time.minutes,
-          dt_current.to_time.to_i - dt_base.to_time.to_i + timestep*60
+          dt_current.to_time.to_i - dt_base.to_time.to_i + timestep * 60
         ]
       end
     end
@@ -367,52 +368,51 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     selected_plant_loops = []
     i = 0
 
-    key_var={}
+    key_var = {}
 
     plantloops.each do |plantLoop|
       if plantLoop.name.get.to_s.downcase.include? chw_loop_name.to_str
-        #Extract plant loop information
-          selected_plant_loops[0]=plantLoop
+        # Extract plant loop information
+        selected_plant_loops[0] = plantLoop
       end
       if plantLoop.name.get.to_s.downcase.include? hhw_loop_name.to_str
-          #Get plant loop information
-      selected_plant_loops[1]=plantLoop
+        # Get plant loop information
+        selected_plant_loops[1] = plantLoop
       end
     end
 
     if !selected_plant_loops[1].nil?
-      #Set up variables for output
+      # Set up variables for output
       key_value_hhw_outlet = selected_plant_loops[1].demandOutletNode.name.to_s
       key_value_hhw_inlet = selected_plant_loops[1].demandInletNode.name.to_s
-      key_var['hhw_outlet_massflow']='massFlowRateHeating'
-      key_var['hhw_outlet_temp']='heatingReturnTemperature[C]'
-      key_var['hhw_inlet_temp']='heatingSupplyTemperature[C]'
-      #Extract time series
+      key_var['hhw_outlet_massflow'] = 'massFlowRateHeating'
+      key_var['hhw_outlet_temp'] = 'heatingReturnTemperature[C]'
+      key_var['hhw_inlet_temp'] = 'heatingSupplyTemperature[C]'
+      # Extract time series
       extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['hhw_outlet_temp'], key_value_hhw_outlet, 0, dec_places_temp, timestep)
       extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['hhw_inlet_temp'], key_value_hhw_inlet, 0, dec_places_temp, timestep)
       extract_timeseries_into_matrix(sqlFile, rows, 'System Node Mass Flow Rate', key_var['hhw_outlet_massflow'], key_value_hhw_outlet, 0, dec_places_mass_flow, timestep)
     else
-      runner.registerWarning("No hot water loop found. If one is expected, make sure the hot water loop name argument provides a string present in its name.")
+      runner.registerWarning('No hot water loop found. If one is expected, make sure the hot water loop name argument provides a string present in its name.')
     end
 
     if !selected_plant_loops[0].nil?
-      #Set up variables for outputs
+      # Set up variables for outputs
       key_value_chw_outlet = selected_plant_loops[0].demandOutletNode.name.to_s
       key_value_chw_inlet = selected_plant_loops[0].demandInletNode.name.to_s
-      key_var['chw_outlet_massflow']='massFlowRateCooling'
-      key_var['chw_outlet_temp']='ChilledWaterReturnTemperature[C]'
-      key_var['chw_inlet_temp']='ChilledWaterSupplyTemperature[C]'
-      #Extract time series
-      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_outlet_temp'], key_value_chw_outlet, 0, dec_places_temp,timestep)
-      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_inlet_temp'], key_value_chw_inlet, 0, dec_places_temp,timestep)
-      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Mass Flow Rate', key_var['chw_outlet_massflow'], key_value_chw_outlet, 0, dec_places_mass_flow,timestep)
+      key_var['chw_outlet_massflow'] = 'massFlowRateCooling'
+      key_var['chw_outlet_temp'] = 'ChilledWaterReturnTemperature[C]'
+      key_var['chw_inlet_temp'] = 'ChilledWaterSupplyTemperature[C]'
+      # Extract time series
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_outlet_temp'], key_value_chw_outlet, 0, dec_places_temp, timestep)
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Temperature', key_var['chw_inlet_temp'], key_value_chw_inlet, 0, dec_places_temp, timestep)
+      extract_timeseries_into_matrix(sqlFile, rows, 'System Node Mass Flow Rate', key_var['chw_outlet_massflow'], key_value_chw_outlet, 0, dec_places_mass_flow, timestep)
     else
-      runner.registerWarning("No chilled water loop found. If one is expected, make sure the chilled water loop name argument provides a string present in its name.")
+      runner.registerWarning('No chilled water loop found. If one is expected, make sure the chilled water loop name argument provides a string present in its name.')
     end
 
-
-    if selected_plant_loops[0].nil? and selected_plant_loops[1].nil?
-      runner.registerWarning("No HVAC plant loops found. If one or more plant loops are expected, make sure they follow the naming conventions mentioned in the previous warnings.")
+    if selected_plant_loops[0].nil? && selected_plant_loops[1].nil?
+      runner.registerWarning('No HVAC plant loops found. If one or more plant loops are expected, make sure they follow the naming conventions mentioned in the previous warnings.')
     end
 
     if !selected_plant_loops.nil?
@@ -429,7 +429,6 @@ class ExportTimeSeriesLoadsCSV < OpenStudio::Measure::ReportingMeasure
     sqlFile&.close
   end
 end
-
 
 # register the measure to be used by the application
 ExportTimeSeriesLoadsCSV.new.registerWithApplication

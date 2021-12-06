@@ -50,6 +50,7 @@ module URBANopt
       ##
       class Location
         attr_accessor :latitude_deg, :longitude_deg, :surface_elevation_ft, :weather_filename #:nodoc:
+
         ##
         # Location class initialize location attributes: +:latitude_deg+ , +:longitude_deg+ , +:surface_elevation_ft+ , +:weather_filename+
         ##

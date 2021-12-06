@@ -337,6 +337,7 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
       f << "double tab1(8760,4)\n"
       modelica_data.each_with_index do |row, index|
         next if index.zero?
+
         f << row.join(';') << "\n"
       end
     end

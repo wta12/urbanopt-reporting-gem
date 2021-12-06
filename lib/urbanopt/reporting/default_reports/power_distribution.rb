@@ -51,6 +51,7 @@ module URBANopt
       ##
       class PowerDistribution
         attr_accessor :under_voltage_hours, :over_voltage_hours # :nodoc:
+
         ##
         # PowerDistrinution class intialize all power_distribution attributes:
         # +:under_voltage_hours+ , +:over_voltage_hours+
