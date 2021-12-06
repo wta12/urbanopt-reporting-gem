@@ -43,7 +43,7 @@ require 'csv'
 require 'benchmark'
 require 'logger'
 
-@@logger = Logger.new(STDOUT)
+@@logger = Logger.new($stdout)
 
 # start the measure
 class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
@@ -277,6 +277,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     if value.nil?
       return nil
     end
+
     if from_units.nil? || to_units.nil?
       @runner.registerError("Cannot convert units...from_units: #{from_units} or to_units: #{to_units} left blank.")
       return nil
@@ -408,8 +409,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # unconditioned_area
     unconditioned_area = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='Building Area' AND RowName='Unconditioned Building Area' AND ColumnName='Area'")
     feature_report.program.unconditioned_area_sqft = convert_units(unconditioned_area, 'm^2', 'ft^2')
-    if building.standardsBuildingType.is_initialized
-      floor_area -= unconditioned_area if ['Residential'].include?(building.standardsBuildingType.get) # conditioned floor area only
+    if building.standardsBuildingType.is_initialized && ['Residential'].include?(building.standardsBuildingType.get)
+      floor_area -= unconditioned_area # conditioned floor area only
     end
 
     # maximum_number_of_stories
@@ -429,7 +430,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # footprint_area
     if building.standardsBuildingType.is_initialized
-      if not ['Residential'].include?(building.standardsBuildingType.get)
+      if !['Residential'].include?(building.standardsBuildingType.get)
         feature_report.program.footprint_area_sqft = feature_report.program.floor_area_sqft / number_of_stories
       else
         feature_report.program.footprint_area_sqft = convert_units(floor_area, 'm^2', 'ft^2') / building.additionalProperties.getFeatureAsInteger('NumberOfConditionedStories').get
@@ -459,6 +460,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         building_type = building_type.get
       end
       next if ['Residential'].include?(building_type) # space types with empty building type fields will inherit from the building object
+
       space_type_areas[building_type] = 0 if space_type_areas[building_type].nil?
       space_type_areas[building_type] += convert_units(space_type.floorArea, 'm^2', 'ft^2')
     end
@@ -471,6 +473,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       else
         building_type = space.spaceType.get.standardsBuildingType
       end
+
       if building_type.empty?
         building_type = 'unknown'
       else
@@ -689,15 +692,15 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # district_cooling
     district_cooling = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Cooling'")
     feature_report.reporting_periods[0].district_cooling_kwh = convert_units(district_cooling, 'GJ', 'kWh')
-    if building.standardsBuildingType.is_initialized
-      feature_report.reporting_periods[0].district_cooling_kwh = 0.0 if ['Residential'].include?(building.standardsBuildingType.get)
+    if building.standardsBuildingType.is_initialized && ['Residential'].include?(building.standardsBuildingType.get)
+      feature_report.reporting_periods[0].district_cooling_kwh = 0.0
     end
 
     # district_heating
     district_heating = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='Total End Uses' AND ColumnName='District Heating'")
     feature_report.reporting_periods[0].district_heating_kwh = convert_units(district_heating, 'GJ', 'kWh')
-    if building.standardsBuildingType.is_initialized
-      feature_report.reporting_periods[0].district_heating_kwh = 0.0 if ['Residential'].include?(building.standardsBuildingType.get)
+    if building.standardsBuildingType.is_initialized && ['Residential'].include?(building.standardsBuildingType.get)
+      feature_report.reporting_periods[0].district_heating_kwh = 0.0
     end
 
     # water
@@ -725,10 +728,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         # report each query in its corresponding feature report obeject
         x = ft.tr(' ', '_').downcase
         if x.include? 'water'
-          x_u = x + '_qbft'
-        else  
+          x_u = "#{x}_qbft"
+        else
           x = x.gsub('_#2', '')
-          x_u = x + '_kwh'
+          x_u = "#{x}_kwh"
         end
         m = feature_report.reporting_periods[0].end_uses.send(x_u)
 
@@ -739,8 +742,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         end
         sql_r = convert_units(sql_r, 'GJ', 'kWh')
 
-        if building.standardsBuildingType.is_initialized
-          sql_r = 0.0 if ['Residential'].include?(building.standardsBuildingType.get) && x_u.include?('district')
+        if building.standardsBuildingType.is_initialized && (['Residential'].include?(building.standardsBuildingType.get) && x_u.include?('district'))
+          sql_r = 0.0
         end
         m.send("#{y}=", sql_r)
       end
@@ -755,7 +758,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         sql = sql_query(runner, sql_file, 'AnnualBuildingUtilityPerformanceSummary', "TableName='End Uses' AND RowName='#{eu}' AND ColumnName='#{ft}'")
 
         # ensure not nil so the equations below don't error out
-        if not sql.nil?
+        if !sql.nil?
           sql_r += convert_units(sql, 'GJ', 'kWh')
         end
       end
@@ -804,10 +807,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ann_env_pd = nil
     sql_file.availableEnvPeriods.each do |env_pd|
       env_type = sql_file.environmentType(env_pd)
-      if env_type.is_initialized
-        if env_type.get == OpenStudio::EnvironmentType.new('WeatherRunPeriod')
-          ann_env_pd = env_pd
-        end
+      if env_type.is_initialized && (env_type.get == OpenStudio::EnvironmentType.new('WeatherRunPeriod'))
+        ann_env_pd = env_pd
       end
     end
 
@@ -954,7 +955,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
           # use key_value name
           # special case for Zone Thermal Comfort: use both timeseries_name and key_value
           if timeseries_name.include? 'Zone Thermal Comfort'
-            new_timeseries_name = timeseries_name + ' ' + key_value
+            new_timeseries_name = "#{timeseries_name} #{key_value}"
           else
             new_timeseries_name = key_value
           end
@@ -982,8 +983,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         end
 
         # residential considerations
-        if building.standardsBuildingType.is_initialized
-          values[key_cnt] = Array.new(n, 0) if ['DistrictCooling:Facility', 'DistrictHeating:Facility'].include?(timeseries_name) && ['Residential'].include?(building.standardsBuildingType.get)
+        if building.standardsBuildingType.is_initialized && (['DistrictCooling:Facility', 'DistrictHeating:Facility'].include?(timeseries_name) && ['Residential'].include?(building.standardsBuildingType.get))
+          values[key_cnt] = Array.new(n, 0)
         end
 
         # unit conversion
@@ -1001,7 +1002,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                           'm3'
                         when 'W'
                           'W'
-                      end
+                     end
         end
 
         # loop through each value and apply unit conversion

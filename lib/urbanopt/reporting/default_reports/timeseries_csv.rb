@@ -291,6 +291,7 @@ module URBANopt
                 if current_values.size != new_values.size
                   raise 'Values of different sizes in add_timeseries_csv'
                 end
+
                 new_values.each_with_index do |value, i|
                   # aggregate all columns except Datime column
                   if column_name != 'Datetime'

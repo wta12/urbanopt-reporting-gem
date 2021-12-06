@@ -50,6 +50,7 @@ module URBANopt
       ##
       class ConstructionCost
         attr_accessor :category, :item_name, :unit_cost, :cost_units, :item_quantity, :total_cost # :nodoc:
+
         ##
         # ConstructionCost class intialize all construction_cost attributes:
         # +:category+ , +:item_name+ , +:unit_cost+ , +:cost_units+ , +:item_quantity+ , +:total_cost+
