@@ -49,13 +49,11 @@ module URBANopt
       ##
       # power_distributio include eletrical power distribution systems information.
       ##
-      class PowerDistribution
-        attr_accessor :under_voltage_hours, :over_voltage_hours, :nominal_capacity, 
-        :reactance_resistance_ratio, :nominal_voltage, :max_power_kw, :max_reactive_power_kvar # :nodoc:
-
+      class ScenarioPowerDistribution
+        attr_accessor :substations, :distribution_lines
         ##
-        # PowerDistribution class initialize all power_distribution attributes:
-        # +:under_voltage_hours+ , +:over_voltage_hours+, +:nominal_capacity+, +:reactance_resistance_ratio+
+        # ScenarioPowerDistribution class initialize all scenario_power_distribution attributes:
+        # +:substations+ , +:distribution_lines+
         ##
         # [parameters:]
         # +hash+ - _Hash_ - A hash which may contain a deserialized power_distribution.
@@ -64,15 +62,9 @@ module URBANopt
           hash.delete_if { |k, v| v.nil? }
           hash = defaults.merge(hash)
 
-          @under_voltage_hours = hash[:under_voltage_hours]
-          @over_voltage_hours = hash[:over_voltage_hours]
-          @nominal_capacity = hash[:nominal_capacity]
-          @reactance_resistance_ratio = hash[:reactance_resistance_ratio]
-          @nominal_voltage = hash[:nominal_voltage] # in V
-          @max_power_kw = hash[:max_power_kw]
-          @max_reactive_power_kvar = hash[:max_reactive_power_kvar]
-
-
+          @substations = hash[:substations]
+          @distribution_lines = hash[:distribution_lines]
+         
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
           @@schema ||= @@validator.schema
@@ -83,13 +75,8 @@ module URBANopt
         ##
         def defaults
           hash = {}
-          hash[:under_voltage_hours] = nil
-          hash[:over_voltage_hours] = nil
-          hash[:nominal_capacity] = nil
-          hash[:reactance_resistance_ratio] = nil
-          hash[:nominal_voltage] = nil
-          hash[:max_power_kw] = nil
-          hash[:max_reactive_power_kvar] = nil
+          hash[:substations] = []
+          hash[:distribution_lines] = []
 
           return hash
         end
@@ -102,29 +89,44 @@ module URBANopt
         ##
         def to_hash
           result = {}
-          result[:under_voltage_hours] = @under_voltage_hours if @under_voltage_hours
-          result[:over_voltage_hours] = @over_voltage_hours if @over_voltage_hours
-          result[:nominal_capacity] = @nominal_capacity if @nominal_capacity
-          result[:reactance_resistance_ratio] = @reactance_resistance_ratio if @reactance_resistance_ratio
-          results[:nominal_voltage] = @nominal_voltage if @nominal_voltage
-          results[:max_power_kw] = @max_power_kw if @max_power_kw
-          results[:max_reactive_power_kvar] = @max_reactive_power_kvar if @max_reactive_power_kvar
-
+          result[:substations] = @substations if @substations
+          result[:distribution_lines] = @distribution_lines if @distribution_lines
+      
           # validate power_distribution properties against schema
-          if @@validator.validate(@@schema[:definitions][:PowerDistribution][:properties], result).any?
-            raise "power_distribution properties does not match schema: #{@@validator.validate(@@schema[:definitions][:PowerDistribution][:properties], result)}"
+          if @@validator.validate(@@schema[:definitions][:ScenarioPowerDistribution][:properties], result).any?
+            raise "scenario_power_distribution properties does not match schema: #{@@validator.validate(@@schema[:definitions][:ScenarioPowerDistribution][:properties], result)}"
           end
 
           return result
         end
 
         ##
-        # Merges muliple power distribution results together.
-        ##
-        # +new_costs+ - _Array_ - An array of ConstructionCost objects.
-        def merge_power_distribution
-          # method to be developed for any attributes to be aggregated or merged
+        # Add a substation
+        ## 
+        def add_substation(hash = {})
+          hash.delete_if { |k, v| v.nil? }
+          hash = defaults.merge(hash)
+          # field: nominal_voltage
+          substation = {}
+          substation['nominal_voltage'] = hash[:nominal_voltage]
+          @substations << substation
         end
+
+        ##
+        # Add a line
+        ##
+        def add_line(hash = {})
+          hash.delete_if { |k, v| v.nil? }
+          hash = defaults.merge(hash)
+          # fields: length, ampacity, commercial_line_type
+          line = {}
+          line['length'] = hash[:length]
+          line['ampacity'] = hash[:ampacity]
+          line['commercial_line_type'] = hash[:commercial_line_type]
+
+          @distribution_lines << line
+        end
+
       end
     end
   end
