@@ -168,7 +168,7 @@
 					"description": "rated power in kW",
 					"type": "string"
 				},
-				"size_kw": {
+				"size_kwh": {
 					"description": "rated capacity in kWh",
 					"type": "string"
 				}
@@ -217,7 +217,8 @@
 							"type": "object",
 							"properties": {
 								"$ref": "#/definitions/RnmCost"
-							},
+							}
+						},
 						"yearly_maintenance": {
 							"description": "Yearly maintenance cost",
 							"type": "object",
@@ -258,8 +259,7 @@
 				},
 				"peak_demand_kw": {
 					"description": "Peak demand in kw for this type",
-					"type": "number",
-
+					"type": "number"
 				},
 				"number_of_nodes_in_network": {
 					"description": "Number of nodes of this type in the network",
