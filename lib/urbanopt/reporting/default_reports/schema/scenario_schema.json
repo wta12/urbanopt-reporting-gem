@@ -172,7 +172,7 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
-					"type": "string"
+					"type": "number"
 				},
 				"location": {
 					"description": "Location of PV. Available options are roof, ground or both.",
@@ -182,6 +182,14 @@
 						"ground",
 						"both"
 					]
+				},
+				"tilt": {
+					"description": "PV system tilt",
+					"type": "number"
+				},
+				"azimuth": {
+					"description": "PV azimuth angle",
+					"type": "number"
 				}
 			}
 		},
@@ -190,6 +198,14 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
+					"type": "number"
+				},
+				"average_yearly_energy_produced_kwh": {
+					"description": "average yearly energy produced in kWh",
+					"type": "number"
+				},
+				"size_class": {
+					"description": "Turbine size-class. One of [residential, commercial, medium, large]",
 					"type": "string"
 				}
 			}
@@ -199,7 +215,7 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
-					"type": "string"
+					"type": "number"
 				}
 			}
 		},
@@ -208,11 +224,11 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
-					"type": "string"
+					"type": "number"
 				},
-				"size_kw": {
+				"size_kwh": {
 					"description": "rated capacity in kWh",
-					"type": "string"
+					"type": "number"
 				}
 			}
 		},

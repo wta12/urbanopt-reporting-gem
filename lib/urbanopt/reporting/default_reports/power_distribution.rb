@@ -106,9 +106,9 @@ module URBANopt
           result[:over_voltage_hours] = @over_voltage_hours if @over_voltage_hours
           result[:nominal_capacity] = @nominal_capacity if @nominal_capacity
           result[:reactance_resistance_ratio] = @reactance_resistance_ratio if @reactance_resistance_ratio
-          results[:nominal_voltage] = @nominal_voltage if @nominal_voltage
-          results[:max_power_kw] = @max_power_kw if @max_power_kw
-          results[:max_reactive_power_kvar] = @max_reactive_power_kvar if @max_reactive_power_kvar
+          result[:nominal_voltage] = @nominal_voltage if @nominal_voltage
+          result[:max_power_kw] = @max_power_kw if @max_power_kw
+          result[:max_reactive_power_kvar] = @max_reactive_power_kvar if @max_reactive_power_kvar
 
           # validate power_distribution properties against schema
           if @@validator.validate(@@schema[:definitions][:PowerDistribution][:properties], result).any?

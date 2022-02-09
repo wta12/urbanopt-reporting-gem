@@ -96,7 +96,7 @@ module URBANopt
 
           @construction_costs = []
           hash[:construction_costs].each do |cc|
-            @constructiion_costs << ConstructionCost.new(cc)
+            @construction_costs << ConstructionCost.new(cc)
           end
 
           @reporting_periods = []

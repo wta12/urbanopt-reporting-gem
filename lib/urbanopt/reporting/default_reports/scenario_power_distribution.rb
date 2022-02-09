@@ -47,10 +47,10 @@ module URBANopt
   module Reporting
     module DefaultReports
       ##
-      # power_distributio include eletrical power distribution systems information.
+      # scenario_power_distribution include eletrical power distribution systems information.
       ##
       class ScenarioPowerDistribution
-        attr_accessor :substations, :distribution_lines
+        attr_accessor :substations, :distribution_lines, :capacitors
         ##
         # ScenarioPowerDistribution class initialize all scenario_power_distribution attributes:
         # +:substations+ , +:distribution_lines+
@@ -64,6 +64,7 @@ module URBANopt
 
           @substations = hash[:substations]
           @distribution_lines = hash[:distribution_lines]
+          @capacitors = hash[:capacitors]
          
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -77,6 +78,7 @@ module URBANopt
           hash = {}
           hash[:substations] = []
           hash[:distribution_lines] = []
+          hash[:capacitors] = []
 
           return hash
         end
@@ -91,7 +93,8 @@ module URBANopt
           result = {}
           result[:substations] = @substations if @substations
           result[:distribution_lines] = @distribution_lines if @distribution_lines
-      
+          result[:capacitors] = @capacitors if @capacitors
+
           # validate power_distribution properties against schema
           if @@validator.validate(@@schema[:definitions][:ScenarioPowerDistribution][:properties], result).any?
             raise "scenario_power_distribution properties does not match schema: #{@@validator.validate(@@schema[:definitions][:ScenarioPowerDistribution][:properties], result)}"
@@ -127,6 +130,16 @@ module URBANopt
           @distribution_lines << line
         end
 
+        ## 
+        # Add a capacitor
+        ##
+        def add_capacitor(hash = {})
+          hash.delete_if { |k, v| v.nil? }
+          hash = defaults.merge(hash)
+          # fields: nominal_capacity
+          cap = {}
+          cap['nominal_capacity'] = hash[:nominal_capacity]
+        end
       end
     end
   end

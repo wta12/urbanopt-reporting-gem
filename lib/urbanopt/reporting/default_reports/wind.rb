@@ -51,7 +51,7 @@ module URBANopt
         ##
         # _Float_ - power capacity in kilowatts
         #
-        attr_accessor :size_kw
+        attr_accessor :size_kw, :average_yearly_energy_produced_kwh, :size_class
 
         ##
         # Initialize Wind attributes from a hash. Wind attributes currently are limited to power capacity.
@@ -64,6 +64,8 @@ module URBANopt
           hash.delete_if { |k, v| v.nil? }
 
           @size_kw = hash[:size_kw]
+          @avg_energy_kwh = hash[:average_yearly_energy_produced_kwh]
+          @size_class = hash[:size_class]
 
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -80,6 +82,8 @@ module URBANopt
           result = {}
 
           result[:size_kw] = @size_kw if @size_kw
+          result[:average_yearly_energy_produced_kwh] = @avg_energy_kwh if @avg_energy_kwh
+          result[:size_class] = @size_class if @size_class
 
           return result
         end
@@ -92,6 +96,11 @@ module URBANopt
             existing_wind.size_kw = nil
           else
             existing_wind.size_kw = (existing_wind.size_kw || 0) + (new_wind.size_kw || 0)
+          end
+          if existing_wind.average_yearly_energy_produced_kwh.nil? && new_wind.average_yearly_energy_produced_kwh.nil?
+            existing_wind.average_yearly_energy_produced_kwh = nil
+          else
+            existing_wind.average_yearly_energy_produced_kwh = (existing_wind.average_yearly_energy_produced_kwh || 0) + (new_wind.average_yearly_energy_produced_kwh || 0)
           end
 
           return existing_wind
