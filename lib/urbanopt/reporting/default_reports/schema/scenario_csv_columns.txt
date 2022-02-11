@@ -59,3 +59,4 @@ Total Scheduled EV Energy
 Emission Intensity Schedule Output
 EV Charging Effective Schedule
 EV Charging Original Schedule
+EV Charging Original Load

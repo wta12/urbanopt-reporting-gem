@@ -871,7 +871,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Total Scheduled EV Energy',
       'Emission Intensity Schedule Output',
       'EV Charging Effective Schedule',
-      'EV Charging Original Schedule'
+      'EV Charging Original Schedule',
+      'EV Charging Original Load'
     ]
 
     # add thermal comfort timeseries
