@@ -38,6 +38,8 @@
 # OF THE POSSIBILITY OF SUCH DAMAGE.
 # *********************************************************************************
 
+require_relative 'validator'
+
 require 'json'
 require 'json-schema'
 
@@ -45,69 +47,98 @@ module URBANopt
   module Reporting
     module DefaultReports
       ##
-      # Onsite solar PV system attributes
+      # scenario_power_distribution include eletrical power distribution systems information.
       ##
-      class SolarPV
+      class ScenarioPowerDistribution
+        attr_accessor :substations, :distribution_lines, :capacitors
         ##
-        # _Float_ - power capacity in kilowatts
-        #
-        attr_accessor :size_kw
-        attr_accessor :location
-        attr_accessor :tilt
-        attr_accessor :azimuth
-        attr_accessor :module_type
-
-        ##
-        # Initialize SolarPV attributes from a hash. Solar PV attributes currently are limited to power capacity.
+        # ScenarioPowerDistribution class initialize all scenario_power_distribution attributes:
+        # +:substations+ , +:distribution_lines+
         ##
         # [parameters:]
-        #
-        # * +hash+ - _Hash_ - A hash containting a +:size_kw+ key/value pair which represents the nameplate capacity in kilowatts (kW)
-        #
+        # +hash+ - _Hash_ - A hash which may contain a deserialized power_distribution.
+        ##
         def initialize(hash = {})
           hash.delete_if { |k, v| v.nil? }
+          hash = defaults.merge(hash)
 
-          @size_kw = hash[:size_kw]
-          @id = hash[:id]
-          @location = hash[:location]
-          @tilt = hash[:tilt]
-          @azimuth = hash[:azimuth]
-          @module_type = hash[:module_type]
-
+          @substations = hash[:substations]
+          @distribution_lines = hash[:distribution_lines]
+          @capacitors = hash[:capacitors]
+         
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
           @@schema ||= @@validator.schema
-
-          # initialize @@logger
-          @@logger ||= URBANopt::Reporting::DefaultReports.logger
         end
 
         ##
-        # Convert to a Hash equivalent for JSON serialization
+        # Assigns default values if attribute values do not exist.
+        ##
+        def defaults
+          hash = {}
+          hash[:substations] = []
+          hash[:distribution_lines] = []
+          hash[:capacitors] = []
+
+          return hash
+        end
+
+        ##
+        # Converts to a Hash equivalent for JSON serialization.
+        ##
+        # - Exclude attributes with nil values.
+        # - Validate power_distribution hash properties against schema.
         ##
         def to_hash
           result = {}
+          result[:substations] = @substations if @substations
+          result[:distribution_lines] = @distribution_lines if @distribution_lines
+          result[:capacitors] = @capacitors if @capacitors
 
-          result[:size_kw] = @size_kw if @size_kw
-          result[:location] = @location if @location
-          result[:tilt] = @tilt if @tilt
-          result[:azimuth] = @azimuth if @azimuth
-          result[:module_type] = @module_type if @module_type
+          # validate power_distribution properties against schema
+          if @@validator.validate(@@schema[:definitions][:ScenarioPowerDistribution][:properties], result).any?
+            raise "scenario_power_distribution properties does not match schema: #{@@validator.validate(@@schema[:definitions][:ScenarioPowerDistribution][:properties], result)}"
+          end
 
           return result
         end
 
         ##
-        # Merge PV systems
-        ##
-        def self.add_pv(existing_pv, new_pv)
-          if existing_pv.size_kw.nil? && new_pv.size_kw.nil?
-            existing_pv.size_kw = nil
-          else
-            existing_pv.size_kw = (existing_pv.size_kw || 0) + (new_pv.size_kw || 0)
-          end
+        # Add a substation
+        ## 
+        def add_substation(hash = {})
+          hash.delete_if { |k, v| v.nil? }
+          hash = defaults.merge(hash)
+          # field: nominal_voltage
+          substation = {}
+          substation['nominal_voltage'] = hash[:nominal_voltage]
+          @substations << substation
+        end
 
-          return existing_pv
+        ##
+        # Add a line
+        ##
+        def add_line(hash = {})
+          hash.delete_if { |k, v| v.nil? }
+          hash = defaults.merge(hash)
+          # fields: length, ampacity, commercial_line_type
+          line = {}
+          line['length'] = hash[:length]
+          line['ampacity'] = hash[:ampacity]
+          line['commercial_line_type'] = hash[:commercial_line_type]
+
+          @distribution_lines << line
+        end
+
+        ## 
+        # Add a capacitor
+        ##
+        def add_capacitor(hash = {})
+          hash.delete_if { |k, v| v.nil? }
+          hash = defaults.merge(hash)
+          # fields: nominal_capacity
+          cap = {}
+          cap['nominal_capacity'] = hash[:nominal_capacity]
         end
       end
     end

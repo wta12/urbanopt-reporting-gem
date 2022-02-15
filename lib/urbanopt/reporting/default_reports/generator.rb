@@ -80,7 +80,6 @@ module URBANopt
           result = {}
 
           result[:size_kw] = @size_kw if @size_kw
-
           return result
         end
 
