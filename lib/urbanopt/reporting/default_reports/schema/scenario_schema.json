@@ -129,6 +129,10 @@
 		"DistributedGeneration": {
 			"type": "object",
 			"properties": {
+				"annual_renewable_electricity_pct": {
+					"description": "Percentage of annual renewable electricity generation",
+					"type": "number"
+				},
 				"lcc_us_dollars": {
 					"description": "Optimal lifecycle cost",
 					"type": "number"
