@@ -234,13 +234,16 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
                        'District Heating Hot Water Rate', 'District Heating Mass Flow Rate',
                        'District Heating Inlet Temperature', 'District Heating Outlet Temperature', 'Cooling Coil Total Cooling Rate',
-                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity']
+                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity', ]
 
     tes_timeseries_data = ['Ice Thermal Storage End Fraction', 'Cooling coil Ice Thermal Storage End Fraction']
 
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
+    emissions_timeseries_data = ['Future_Annual_Emissions_Var','Future_Hourly_Emissions_Var','Historical_Annual_Emissions_Var','Historical_Hourly_Emissions_Var' ]
+
     timeseries_data += tes_timeseries_data
+    timeseries_data += emissions_timeseries_data
 
     timeseries_data.each do |ts|
       result << OpenStudio::IdfObject.load("Output:Variable,*,#{ts},#{reporting_frequency};").get
@@ -862,7 +865,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'District Heating Inlet Temperature',
       'District Heating Outlet Temperature',
       'Cooling Coil Total Cooling Rate',
-      'Heating Coil Heating Rate'
+      'Heating Coil Heating Rate',
+      'Future_Annual_Emissions_Var',
+      'Future_Hourly_Emissions_Var',
+      'Historical_Annual_Emissions_Var',
+      'Historical_Hourly_Emissions_Var'
+
     ]
 
     # add thermal comfort timeseries
@@ -1002,6 +1010,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                           'm3'
                         when 'W'
                           'W'
+                        when 'kg'
+                          'kg'
                      end
         end
 

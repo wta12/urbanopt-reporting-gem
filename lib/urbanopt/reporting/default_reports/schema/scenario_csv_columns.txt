@@ -50,3 +50,7 @@ Net Power
 Net Apparent Power
 Ice Thermal Storage End Fraction
 Cooling Coil Ice Thermal Storage End Fraction
+Future_Annual_Emissions_Var
+Future_Hourly_Emissions_Var
+Historical_Annual_Emissions_Var
+Historical_Hourly_Emissions_Var
