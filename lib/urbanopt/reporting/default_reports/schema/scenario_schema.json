@@ -436,6 +436,27 @@
 				},
 				"comfort_result": {
 					"$ref": "#/definitions/ComfortResult"
+				},
+				"emissions_kg": {
+					"type": "object",
+					"properties": {
+						"future_annual_emissions_kg": {
+							"description": "Future emissions in kg calculated based on an annual emission factor value for the selected future year",
+							"type": "number"
+						},
+						"future_hourly_emissions_kg": {
+							"description": "Future emissions in kg calculated based on hourly emission factor values for the selected future year",
+							"type": "number"
+						},
+						"historical_annual_emissions_kg": {
+							"description": "Historical emissions in kg calculated based on an annual emission factor value for the selected historical year",
+							"type": "number"
+						},
+						"historical_hourly_emissions_kg": {
+							"description": "Historical emissions in kg calculated based on hourly emission factor values for the selected historical year",
+							"type": "number"
+						}
+					}
 				}
 			},
 			"additionalProperties": false

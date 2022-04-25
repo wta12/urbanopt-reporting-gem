@@ -347,6 +347,20 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     sql_file = sql_file.get
     model.setSqlFile(sql_file)
 
+    # Get the weather file run period (as opposed to design day run period)
+    ann_env_pd = nil
+    sql_file.availableEnvPeriods.each do |env_pd|
+      env_type = sql_file.environmentType(env_pd)
+      if env_type.is_initialized && (env_type.get == OpenStudio::EnvironmentType.new('WeatherRunPeriod'))
+        ann_env_pd = env_pd
+      end
+    end
+
+    if ann_env_pd == false
+      runner.registerError("Can't find a weather runperiod, make sure you ran an annual simulation, not just the design days.")
+      return false
+    end
+
     # get building from model
     building = model.getBuilding
 
@@ -804,21 +818,24 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     time_setpoint_not_met_during_occupied_hours = time_setpoint_not_met_during_occupied_heating + time_setpoint_not_met_during_occupied_cooling
     feature_report.reporting_periods[0].comfort_result[:time_setpoint_not_met_during_occupied_hours] = time_setpoint_not_met_during_occupied_hours
 
+    ##emissions
+    # future_annual_emissions
+    future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Var', 'EMS')
+    feature_report.reporting_periods[0].emissions_kg[:future_annual_emissions_kg] = future_annual_emissions_ts.get.values.sum
+
+    # future_hourly_emissions
+    future_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Var', 'EMS')
+    feature_report.reporting_periods[0].emissions_kg[:future_hourly_emissions_kg] = future_hourly_emissions_ts.get.values.sum
+
+    # historical_annual_emissions
+    historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Var', 'EMS')
+    feature_report.reporting_periods[0].emissions_kg[:historical_annual_emissions_kg] = historical_annual_emissions_ts.get.values.sum
+
+    # historical_annual_emissions
+    historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Var', 'EMS')
+    feature_report.reporting_periods[0].emissions_kg[:historical_hourly_emissions_kg] = historical_hourly_emissions_ts.get.values.sum
+
     ######################################## Reporting TImeseries Results FOR CSV File ######################################
-
-    # Get the weather file run period (as opposed to design day run period)
-    ann_env_pd = nil
-    sql_file.availableEnvPeriods.each do |env_pd|
-      env_type = sql_file.environmentType(env_pd)
-      if env_type.is_initialized && (env_type.get == OpenStudio::EnvironmentType.new('WeatherRunPeriod'))
-        ann_env_pd = env_pd
-      end
-    end
-
-    if ann_env_pd == false
-      runner.registerError("Can't find a weather runperiod, make sure you ran an annual simulation, not just the design days.")
-      return false
-    end
 
     # timeseries we want to report
     requested_timeseries_names = [
