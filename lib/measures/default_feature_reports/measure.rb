@@ -819,22 +819,25 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.reporting_periods[0].comfort_result[:time_setpoint_not_met_during_occupied_hours] = time_setpoint_not_met_during_occupied_hours
 
     ##emissions
-    # future_annual_emissions
-    future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Var', 'EMS')
-    feature_report.reporting_periods[0].emissions_kg[:future_annual_emissions_kg] = future_annual_emissions_ts.get.values.sum
+    begin
+      # future_annual_emissions
+      future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions_kg[:future_annual_emissions_kg] = future_annual_emissions_ts.get.values.sum
 
-    # future_hourly_emissions
-    future_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Var', 'EMS')
-    feature_report.reporting_periods[0].emissions_kg[:future_hourly_emissions_kg] = future_hourly_emissions_ts.get.values.sum
+      # future_hourly_emissions
+      future_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions_kg[:future_hourly_emissions_kg] = future_hourly_emissions_ts.get.values.sum
 
-    # historical_annual_emissions
-    historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Var', 'EMS')
-    feature_report.reporting_periods[0].emissions_kg[:historical_annual_emissions_kg] = historical_annual_emissions_ts.get.values.sum
+      # historical_annual_emissions
+      historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions_kg[:historical_annual_emissions_kg] = historical_annual_emissions_ts.get.values.sum
 
-    # historical_annual_emissions
-    historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Var', 'EMS')
-    feature_report.reporting_periods[0].emissions_kg[:historical_hourly_emissions_kg] = historical_hourly_emissions_ts.get.values.sum
-
+      # historical_annual_emissions
+      historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions_kg[:historical_hourly_emissions_kg] = historical_hourly_emissions_ts.get.values.sum
+    rescue
+      @@logger.info('Emissions are not reported for this feature')
+    end
     ######################################## Reporting TImeseries Results FOR CSV File ######################################
 
     # timeseries we want to report
