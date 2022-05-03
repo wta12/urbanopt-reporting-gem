@@ -169,7 +169,7 @@
 					"description": "rated power in kW",
 					"type": "string"
 				},
-				"size_kw": {
+				"size_kwh": {
 					"description": "rated capacity in kWh",
 					"type": "string"
 				}
