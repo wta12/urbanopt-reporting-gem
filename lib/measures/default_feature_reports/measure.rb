@@ -234,7 +234,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
                        'District Heating Hot Water Rate', 'District Heating Mass Flow Rate',
                        'District Heating Inlet Temperature', 'District Heating Outlet Temperature', 'Cooling Coil Total Cooling Rate',
-                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity', ]
+                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity' ]
 
     tes_timeseries_data = ['Ice Thermal Storage End Fraction', 'Cooling coil Ice Thermal Storage End Fraction']
 
