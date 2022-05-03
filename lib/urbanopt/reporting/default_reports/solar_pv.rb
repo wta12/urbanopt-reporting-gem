@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -53,6 +53,9 @@ module URBANopt
         #
         attr_accessor :size_kw
         attr_accessor :location
+        attr_accessor :tilt
+        attr_accessor :azimuth
+        attr_accessor :module_type
 
         ##
         # Initialize SolarPV attributes from a hash. Solar PV attributes currently are limited to power capacity.
@@ -67,6 +70,9 @@ module URBANopt
           @size_kw = hash[:size_kw]
           @id = hash[:id]
           @location = hash[:location]
+          @tilt = hash[:tilt]
+          @azimuth = hash[:azimuth]
+          @module_type = hash[:module_type]
 
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
@@ -84,6 +90,9 @@ module URBANopt
 
           result[:size_kw] = @size_kw if @size_kw
           result[:location] = @location if @location
+          result[:tilt] = @tilt if @tilt
+          result[:azimuth] = @azimuth if @azimuth
+          result[:module_type] = @module_type if @module_type
 
           return result
         end
