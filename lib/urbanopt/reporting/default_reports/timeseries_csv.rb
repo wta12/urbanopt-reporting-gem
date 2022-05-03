@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -291,6 +291,7 @@ module URBANopt
                 if current_values.size != new_values.size
                   raise 'Values of different sizes in add_timeseries_csv'
                 end
+
                 new_values.each_with_index do |value, i|
                   # aggregate all columns except Datime column
                   if column_name != 'Datetime'

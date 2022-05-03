@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -50,6 +50,7 @@ module URBANopt
       ##
       class ConstructionCost
         attr_accessor :category, :item_name, :unit_cost, :cost_units, :item_quantity, :total_cost # :nodoc:
+
         ##
         # ConstructionCost class intialize all construction_cost attributes:
         # +:category+ , +:item_name+ , +:unit_cost+ , +:cost_units+ , +:item_quantity+ , +:total_cost+

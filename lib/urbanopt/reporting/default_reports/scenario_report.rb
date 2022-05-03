@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -46,6 +46,7 @@ require_relative 'reporting_period'
 require_relative 'timeseries_csv'
 require_relative 'distributed_generation'
 require_relative 'validator'
+require_relative 'scenario_power_distribution'
 
 require 'json'
 require 'json-schema'
@@ -62,7 +63,9 @@ module URBANopt
       class ScenarioReport
         attr_accessor :id, :name, :directory_name, :timesteps_per_hour, :number_of_not_started_simulations,
                       :number_of_started_simulations, :number_of_complete_simulations, :number_of_failed_simulations,
-                      :timeseries_csv, :location, :program, :construction_costs, :reporting_periods, :feature_reports, :distributed_generation # :nodoc:
+                      :timeseries_csv, :location, :program, :construction_costs, :reporting_periods, :feature_reports, :distributed_generation,
+                      :scenario_power_distribution # :nodoc:
+
         # ScenarioReport class intializes the scenario report attributes:
         # +:id+ , +:name+ , +:directory_name+, +:timesteps_per_hour+ , +:number_of_not_started_simulations+ ,
         # +:number_of_started_simulations+ , +:number_of_complete_simulations+ , +:number_of_failed_simulations+ ,
@@ -89,10 +92,11 @@ module URBANopt
           @location = Location.new(hash[:location])
           @program = Program.new(hash[:program])
           @distributed_generation = DistributedGeneration.new(hash[:distributed_generation] || {})
+          @scenario_power_distribution = ScenarioPowerDistribution.new(hash[:scenario_power_distribution] || {})
 
           @construction_costs = []
           hash[:construction_costs].each do |cc|
-            @constructiion_costs << ConstructionCost.new(cc)
+            @construction_costs << ConstructionCost.new(cc)
           end
 
           @reporting_periods = []
@@ -142,14 +146,14 @@ module URBANopt
         # Gets the saved JSON file path.
         ##
         def json_path
-          File.join(@directory_name, @file_name + '.json')
+          File.join(@directory_name, "#{@file_name}.json")
         end
 
         ##
         # Gets the saved CSV file path.
         ##
         def csv_path
-          File.join(@directory_name, @file_name + '.csv')
+          File.join(@directory_name, "#{@file_name}.csv")
         end
 
         ##
@@ -167,7 +171,7 @@ module URBANopt
             old_timeseries_path = @timeseries_csv.path
           end
 
-          @timeseries_csv.path = File.join(@directory_name, file_name + '.csv')
+          @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
           @timeseries_csv.save_data
 
           hash = {}
@@ -177,7 +181,7 @@ module URBANopt
             hash[:feature_reports] << feature_report.to_hash
           end
 
-          json_name_path = File.join(@directory_name, file_name + '.json')
+          json_name_path = File.join(@directory_name, "#{file_name}.json")
 
           File.open(json_name_path, 'w') do |f|
             f.puts JSON.pretty_generate(hash)
@@ -192,14 +196,14 @@ module URBANopt
           if !old_timeseries_path.nil?
             @timeseries_csv.path = old_timeseries_path
           else
-            @timeseries_csv.path = File.join(@directory_name, file_name + '.csv')
+            @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
           end
 
           if save_feature_reports
             if file_name == 'default_scenario_report'
               file_name = 'default_feature_report'
             end
-            #save the feature reports csv and json data
+            # save the feature reports csv and json data
             @feature_reports.each do |feature_report|
               feature_report.save file_name
             end
@@ -228,6 +232,7 @@ module URBANopt
           result[:location] = @location.to_hash if @location
           result[:program] = @program.to_hash if @program
           result[:distributed_generation] = @distributed_generation.to_hash if @distributed_generation
+          result[:scenario_power_distribution] = @scenario_power_distribution.to_hash if @scenario_power_distribution
 
           result[:construction_costs] = []
           @construction_costs&.each { |cc| result[:construction_costs] << cc.to_hash }
@@ -292,13 +297,14 @@ module URBANopt
           end
 
           # check feature simulation status
-          if feature_report.simulation_status == 'Not Started'
+          case feature_report.simulation_status
+          when 'Not Started'
             @number_of_not_started_simulations += 1
-          elsif feature_report.simulation_status == 'Started'
+          when 'Started'
             @number_of_started_simulations += 1
-          elsif feature_report.simulation_status == 'Complete'
+          when 'Complete'
             @number_of_complete_simulations += 1
-          elsif feature_report.simulation_status == 'Failed'
+          when 'Failed'
             @number_of_failed_simulations += 1
           else
             raise "Unknown feature_report simulation_status = '#{feature_report.simulation_status}'"

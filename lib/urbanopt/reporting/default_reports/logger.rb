@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -43,7 +43,7 @@ require 'logger'
 module URBANopt
   module Reporting
     module DefaultReports
-      @@logger = Logger.new(STDOUT)
+      @@logger = Logger.new($stdout)
       ##
       # Definining class variable "@@logger" to log errors, info and warning messages.
       def self.logger

@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -337,6 +337,7 @@ class ExportModelicaLoads < OpenStudio::Measure::ReportingMeasure
       f << "double tab1(8760,4)\n"
       modelica_data.each_with_index do |row, index|
         next if index.zero?
+
         f << row.join(';') << "\n"
       end
     end
