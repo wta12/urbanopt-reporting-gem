@@ -67,6 +67,9 @@
 				"thermal_storage": {
 					"$ref": "#/definitions/ThermalStorage"
 				},
+				"rnm_results": {
+					"$ref": "#definitions/RnmResults"
+        },
 				"scenario_power_distribution": {
 					"$ref": "#definitions/ScenarioPowerDistribution"
 				}
@@ -234,6 +237,131 @@
 					"description": "rated capacity in kWh",
 					"type": "number"
 				}
+			}
+		},
+		"RnmResults": {
+			"type": "object",
+			"properties": {
+				"demand_generation_planning": {
+					"description": "Demand generation planning",
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/DemandGenPlanning"
+					}
+				},
+				"electrical_lines_length": {
+					"description": "Electrical lines length",
+					"type": "object",
+					"properties": {
+						"low_voltage": {
+							"description": "Low voltage electrical lines length",
+							"type": "object",
+							"properties": {
+								"$ref": "#/definitions/LineLength"
+							}
+						},
+						"medium_voltage": {
+							"description": "Medium voltage electrical lines length",
+							"type": "object",
+							"properties": {
+								"$ref": "#/definitions/LineLength"
+							}
+						}
+					}
+				},
+				"distribution_transformers_capacity_kva": {
+					"description": "Distribution transformers capacity in kVA",
+					"type": "number"
+				},
+				"costs": {
+					"description": "Costs",
+					"type": "object",
+					"properties": {
+						"investment": {
+							"description": "Investment cost",
+							"type": "object",
+							"properties": {
+								"$ref": "#/definitions/RnmCost"
+							}
+						},
+						"yearly_maintenance": {
+							"description": "Yearly maintenance cost",
+							"type": "object",
+							"properties": {
+								"$ref": "#/definitions/RnmCost"
+							}
+						}
+					}
+				},
+				"reliability_indexes": {
+					"description": "Reliability Indexes",
+					"type": "object",
+					"properties": {
+						"SAIDI": {
+							"description": "System Average Interruption Duration Index",
+							"type": "number"
+						},
+						"SAIFI": {
+							"description": "System Average Interruption Frequency Index",
+							"type": "number"
+						}
+					}
+				}
+			}
+		},
+		"DemandGenPlanning": {
+			"type": "object",
+			"properties": {
+				"type": {
+					"description": "Type of demand generation planning",
+					"type": "string",
+					"enum": [
+						"Low Voltage (LV) Consumers",
+						"Medium Voltage (MV) Consumers",
+						"Low Voltage (LV) Distributed generators",
+						"Medium Voltage (MV) Distributed generators"
+					]
+				},
+				"peak_demand_kw": {
+					"description": "Peak demand in kw for this type",
+					"type": "number"
+				},
+				"number_of_nodes_in_network": {
+					"description": "Number of nodes of this type in the network",
+					"type": "number"
+				}
+			}
+		},
+		"LineLength": {
+			"overhead_mi": {
+				"description": "Length of overhead lines (miles)",
+				"type": "number"
+			},
+			"underground_mi": {
+				"description": "Length of underground lines (miles)",
+				"type": "number"
+			}
+		},
+		"RnmCost": {
+			"low_voltage_network": {
+				"description": "Low Voltage Network Cost ($)",
+				"type": "number"
+			},
+			"distribution_transformers": {
+				"description": "Distribution Transformers Cost ($)",
+				"type": "number"
+			},
+			"medium_voltage_network": {
+				"description": "Medium Voltage Network Cost ($)",
+				"type": "number"
+			},
+			"primary_substations": {
+				"description": "Primary Substations Cost ($)",
+				"type": "number"
+			},
+			"total": {
+				"description": "Total Cost ($)",
+				"type": "number"
 			}
 		},
 		"FeatureReport": {
