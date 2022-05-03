@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -53,6 +53,9 @@ module URBANopt
         #
         attr_accessor :size_kw
         attr_accessor :location
+        attr_accessor :tilt
+        attr_accessor :azimuth
+        attr_accessor :module_type
 
         ##
         # Initialize SolarPV attributes from a hash. Solar PV attributes currently are limited to power capacity.

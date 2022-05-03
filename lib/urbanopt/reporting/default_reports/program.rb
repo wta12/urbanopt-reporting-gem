@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -56,6 +56,7 @@ module URBANopt
                       :maximum_number_of_parking_stories_above_ground, :number_of_residential_units, :building_types, :building_type, :maximum_occupancy,
                       :area_sqft, :window_area_sqft, :north_window_area_sqft, :south_window_area_sqft, :east_window_area_sqft, :west_window_area_sqft, :wall_area_sqft, :roof_area_sqft, :equipment_roof_area_sqft,
                       :photovoltaic_roof_area_sqft, :available_roof_area_sqft, :total_roof_area_sqft, :orientation_deg, :aspect_ratio, :total_construction_cost_dollar # :nodoc:
+
         # Program class initialize building program attributes: +:site_area_sqft+ , +:floor_area_sqft+ , +:conditioned_area_sqft+ , +:unconditioned_area_sqft+ ,
         # +:footprint_area_sqft+ , +:maximum_roof_height_ft, +:maximum_number_of_stories+ , +:maximum_number_of_stories_above_ground+ , +:parking_area_sqft+ ,
         # +:number_of_parking_spaces+ , +:number_of_parking_spaces_charging+ , +:parking_footprint_area_sqft+ , +:maximum_parking_height_ft+ , +:maximum_number_of_parking_stories+ ,

@@ -66,6 +66,9 @@
 				},
 				"thermal_storage": {
 					"$ref": "#/definitions/ThermalStorage"
+				},
+				"scenario_power_distribution": {
+					"$ref": "#definitions/ScenarioPowerDistribution"
 				}
 			},
 			"required": [
@@ -81,12 +84,57 @@
 			],
 			"additionalProperties": false
 		},
+		"ScenarioPowerDistribution": {
+			"type": "object",
+			"properties": {
+				"substations": {
+					"description": "Array of electrical substations",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"nominal_voltage": {
+								"description": "Nominal Voltage (V)",
+								"type": "number"
+							}
+						}
+					}
+				},
+				"distribution_lines": {
+					"description": "Array of distribution lines",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"length": {
+								"description": "Length of the line (m)",
+								"type": "number"
+							},
+							"ampacity": {
+								"description": "Maximum ampacity of the line (A)",
+								"type": "number"
+							},
+							"commercial_line_type": {
+								"description": "Array of the wire types that make up the line",
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"DistributedGeneration": {
 			"type": "object",
 			"properties": {
 				"reopt_assumptions_file_path": {
 					"description": "File path of REopt assumptions file used to generate results, if known",
 					"type": "string"
+				"annual_renewable_electricity_pct": {
+					"description": "Percentage of annual renewable electricity generation",
+					"type": "number"
 				},
 				"lcc_us_dollars": {
 					"description": "Optimal lifecycle cost",
@@ -131,7 +179,7 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
-					"type": "string"
+					"type": "number"
 				},
 				"location": {
 					"description": "Location of PV. Available options are roof, ground or both.",
@@ -141,6 +189,14 @@
 						"ground",
 						"both"
 					]
+				},
+				"tilt": {
+					"description": "PV system tilt",
+					"type": "number"
+				},
+				"azimuth": {
+					"description": "PV azimuth angle",
+					"type": "number"
 				}
 			}
 		},
@@ -149,6 +205,14 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
+					"type": "number"
+				},
+				"average_yearly_energy_produced_kwh": {
+					"description": "average yearly energy produced in kWh",
+					"type": "number"
+				},
+				"size_class": {
+					"description": "Turbine size-class. One of [residential, commercial, medium, large]",
 					"type": "string"
 				}
 			}
@@ -158,7 +222,7 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
-					"type": "string"
+					"type": "number"
 				}
 			}
 		},
@@ -167,11 +231,11 @@
 			"properties": {
 				"size_kw": {
 					"description": "rated power in kW",
-					"type": "string"
+					"type": "number"
 				},
 				"size_kwh": {
 					"description": "rated capacity in kWh",
-					"type": "string"
+					"type": "number"
 				}
 			}
 		},

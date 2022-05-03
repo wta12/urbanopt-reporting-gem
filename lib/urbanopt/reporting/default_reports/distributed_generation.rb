@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -197,6 +197,11 @@ module URBANopt
         attr_accessor :reopt_assumptions_file_path
 
         ##
+        # _Float_ - Annual percentage of electricity supplied by renewable sources
+        #
+        attr_accessor :annual_renewable_electricity_pct
+
+        ##
         # Initialize distributed generation system design and financial metrics.
         #
         # * Technologies include +:solar_pv+, +:wind+, +:generator+, and +:storage+.
@@ -210,6 +215,7 @@ module URBANopt
         def initialize(hash = {})
           hash.delete_if { |k, v| v.nil? }
 
+          @annual_renewable_electricity_pct = hash[:annual_renewable_electricity_pct]
           @lcc_us_dollars = hash[:lcc_us_dollars]
           @lcc_bau_us_dollars = hash[:lcc_bau_us_dollars]
           @npv_us_dollars = hash[:npv_us_dollars]
@@ -244,7 +250,7 @@ module URBANopt
           @total_storage_kwh = nil
 
           @solar_pv = []
-          if hash[:solar_pv].class == Hash
+          if hash[:solar_pv].instance_of?(Hash)
             hash[:solar_pv] = [hash[:solar_pv]]
           elsif hash[:solar_pv].nil?
             hash[:solar_pv] = []
@@ -262,7 +268,7 @@ module URBANopt
           end
 
           @wind = []
-          if hash[:wind].class == Hash
+          if hash[:wind].instance_of?(Hash)
             hash[:wind] = [hash[:wind]]
           elsif hash[:wind].nil?
             hash[:wind] = []
@@ -280,7 +286,7 @@ module URBANopt
           end
 
           @generator = []
-          if hash[:generator].class == Hash
+          if hash[:generator].instance_of?(Hash)
             hash[:generator] = [hash[:generator]]
           elsif hash[:generator].nil?
             hash[:generator] = []
@@ -298,7 +304,7 @@ module URBANopt
           end
 
           @storage = []
-          if hash[:storage].class == Hash
+          if hash[:storage].instance_of?(Hash)
             hash[:storage] = [hash[:storage]]
           elsif hash[:storage].nil?
             hash[:storage] = []
@@ -374,6 +380,7 @@ module URBANopt
         def to_hash
           result = {}
           result[:reopt_assumptions_file_path] = @reopt_assumptions_file_path if @reopt_assumptions_file_path
+          result[:annual_renewable_electricity_pct] = @annual_renewable_electricity_pct if @annual_renewable_electricity_pct
           result[:lcc_us_dollars] = @lcc_us_dollars if @lcc_us_dollars
           result[:lcc_bau_us_dollars] = @lcc_bau_us_dollars if @lcc_bau_us_dollars
           result[:npv_us_dollars] = @npv_us_dollars if @npv_us_dollars
@@ -443,6 +450,7 @@ module URBANopt
         # Merge a distributed generation system with a new system
         ##
         def self.merge_distributed_generation(existing_dgen, new_dgen)
+          existing_dgen.annual_renewable_electricity_pct = add_values(existing_dgen.annual_renewable_electricity_pct, new_dgen.annual_renewable_electricity_pct)
           existing_dgen.lcc_us_dollars = add_values(existing_dgen.lcc_us_dollars, new_dgen.lcc_us_dollars)
           existing_dgen.lcc_bau_us_dollars = add_values(existing_dgen.lcc_bau_us_dollars, new_dgen.lcc_bau_us_dollars)
           existing_dgen.npv_us_dollars = add_values(existing_dgen.npv_us_dollars, new_dgen.npv_us_dollars)

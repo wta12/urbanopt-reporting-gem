@@ -1,5 +1,5 @@
 # *********************************************************************************
-# URBANopt™, Copyright (c) 2019-2021, Alliance for Sustainable Energy, LLC, and other
+# URBANopt™, Copyright (c) 2019-2022, Alliance for Sustainable Energy, LLC, and other
 # contributors. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without modification,
@@ -358,10 +358,8 @@ module OsLib_HelperMethods
     objectArray.each do |object|
       object_LCCs = object.lifeCycleCosts
       object_LCCs.each do |object_LCC|
-        if object_LCC.category == category
-          if onlyYearFromStartZero == false || object_LCC.yearsFromStart == 0
-            counter += object_LCC.totalCost
-          end
+        if object_LCC.category == category && (onlyYearFromStartZero == false || object_LCC.yearsFromStart == 0)
+          counter += object_LCC.totalCost
         end
       end
     end
