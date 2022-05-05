@@ -192,6 +192,10 @@ module URBANopt
         #
         attr_accessor :probs_of_surviving_by_hour_of_the_day
 
+        ## 
+        # _String_ - Filepath of reopt assumptions file used, if known
+        attr_accessor :reopt_assumptions_file_path
+
         ##
         # _Float_ - Annual percentage of electricity supplied by renewable sources
         #
@@ -232,6 +236,12 @@ module URBANopt
           @probs_of_surviving = hash[:probs_of_surviving]
           @probs_of_surviving_by_month = hash[:probs_of_surviving_by_month]
           @probs_of_surviving_by_hour_of_the_day = hash[:probs_of_surviving_by_hour_of_the_day]
+
+          # optional
+          @reopt_assumptions_file_path = nil
+          if hash[:reopt_assumptions_file_path]
+            @reopt_assumptions_file_path = hash[:reopt_assumptions_file_path]
+          end
 
           @total_solar_pv_kw = nil
           @total_wind_kw = nil
@@ -369,7 +379,7 @@ module URBANopt
         ##
         def to_hash
           result = {}
-
+          result[:reopt_assumptions_file_path] = @reopt_assumptions_file_path if @reopt_assumptions_file_path
           result[:annual_renewable_electricity_pct] = @annual_renewable_electricity_pct if @annual_renewable_electricity_pct
           result[:lcc_us_dollars] = @lcc_us_dollars if @lcc_us_dollars
           result[:lcc_bau_us_dollars] = @lcc_bau_us_dollars if @lcc_bau_us_dollars

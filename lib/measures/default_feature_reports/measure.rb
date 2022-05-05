@@ -912,8 +912,17 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Future_Annual_Emissions_Intensity_Var',
       'Future_Hourly_Emissions_Intensity_Var',
       'Historical_Annual_Emissions_Intensity_Var',
-      'Historical_Hourly_Emissions_Intensity_Var'
-
+      'Historical_Hourly_Emissions_Intensity_Var',
+      'Curtailed EV Power',
+      'Daily EV Charge Energy Capacity',
+      'EV Charge Ratio',
+      'Total Charged EV Energy',
+      'Total Curtailed EV Energy',
+      'Total Scheduled EV Energy',
+      'Emission Intensity Schedule Output',
+      'EV Charging Effective Schedule',
+      'EV Charging Original Schedule',
+      'EV Charging Original Load'
     ]
 
     # add thermal comfort timeseries
