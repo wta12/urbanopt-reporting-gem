@@ -437,23 +437,39 @@
 				"comfort_result": {
 					"$ref": "#/definitions/ComfortResult"
 				},
-				"emissions_kg": {
+				"emissions": {
 					"type": "object",
 					"properties": {
-						"future_annual_emissions_kg": {
-							"description": "Future emissions in kg calculated based on an annual emission factor value for the selected future year",
+						"future_annual_emissions_mt": {
+							"description": "Future emissions in metric ton (mt) calculated based on an annual emission factor value for the selected future year",
 							"type": "number"
 						},
-						"future_hourly_emissions_kg": {
-							"description": "Future emissions in kg calculated based on hourly emission factor values for the selected future year",
+						"future_hourly_emissions_mt": {
+							"description": "Future emissions in metric ton (mt) calculated based on hourly emission factor values for the selected future year",
 							"type": "number"
 						},
-						"historical_annual_emissions_kg": {
-							"description": "Historical emissions in kg calculated based on an annual emission factor value for the selected historical year",
+						"historical_annual_emissions_mt": {
+							"description": "Historical emissions in metric ton (mt) calculated based on an annual emission factor value for the selected historical year",
 							"type": "number"
 						},
-						"historical_hourly_emissions_kg": {
-							"description": "Historical emissions in kg calculated based on hourly emission factor values for the selected historical year",
+						"historical_hourly_emissions_mt": {
+							"description": "Historical emissions in metric ton (mt) calculated based on hourly emission factor values for the selected historical year",
+							"type": "number"
+						},
+						"future_annual_emissions_intensity_kg_per_ft2": {
+							"description": "Future emissions intensity in kg/ft2 calculated based on an annual emission factor value for the selected future year",
+							"type": "number"
+						},
+						"future_hourly_emissions_intensity_kg_per_ft2": {
+							"description": "Future emissions intensity in kg/ft2 calculated based on hourly emission factor values for the selected future year",
+							"type": "number"
+						},
+						"historical_annual_emissions_intensity_kg_per_ft2": {
+							"description": "Historical emissions intensity in kg/ft2 calculated based on an annual emission factor value for the selected historical year",
+							"type": "number"
+						},
+						"historical_hourly_emissions_intensity_kg_per_ft2": {
+							"description": "Historical emissions intensity in kg.ft2 calculated based on hourly emission factor values for the selected historical year",
 							"type": "number"
 						}
 					}

@@ -240,7 +240,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
-    emissions_timeseries_data = ['Future_Annual_Emissions_Var','Future_Hourly_Emissions_Var','Historical_Annual_Emissions_Var','Historical_Hourly_Emissions_Var' ]
+    emissions_timeseries_data = ['Future_Annual_Emissions_Var','Future_Hourly_Emissions_Var','Historical_Annual_Emissions_Var','Historical_Hourly_Emissions_Var',
+    'Future_Annual_Emissions_Intensity_Var','Future_Hourly_Emissions_Intensity_Var','Historical_Annual_Emissions_Intensity_Var','Historical_Hourly_Emissions_Intensity_Var']
 
     timeseries_data += tes_timeseries_data
     timeseries_data += emissions_timeseries_data
@@ -822,23 +823,41 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     begin
       # future_annual_emissions
       future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions_kg[:future_annual_emissions_kg] = future_annual_emissions_ts.get.values.sum
+      feature_report.reporting_periods[0].emissions[:future_annual_emissions_mt] = future_annual_emissions_ts.get.values.sum
 
       # future_hourly_emissions
       future_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions_kg[:future_hourly_emissions_kg] = future_hourly_emissions_ts.get.values.sum
+      feature_report.reporting_periods[0].emissions[:future_hourly_emissions_mt] = future_hourly_emissions_ts.get.values.sum
 
       # historical_annual_emissions
       historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions_kg[:historical_annual_emissions_kg] = historical_annual_emissions_ts.get.values.sum
+      feature_report.reporting_periods[0].emissions[:historical_annual_emissions_mt] = historical_annual_emissions_ts.get.values.sum
 
       # historical_annual_emissions
       historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions_kg[:historical_hourly_emissions_kg] = historical_hourly_emissions_ts.get.values.sum
+      feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_mt] = historical_hourly_emissions_ts.get.values.sum
+
+
+      # future_annual_emissions
+      future_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_annual_emissions_intensity_kg_per_ft2] = future_annual_emissions_intensity_ts.get.values.sum
+
+      # future_hourly_emissions
+      future_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_hourly_emissions_intensity_kg_per_ft2] = future_hourly_emissions_intensity_ts.get.values.sum
+
+      # historical_annual_emissions
+      historical_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_annual_emissions_intensity_kg_per_ft2] = historical_annual_emissions_intensity_ts.get.values.sum
+
+      # historical_annual_emissions
+      historical_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_intensity_kg_per_ft2] = historical_hourly_emissions_intensity_ts.get.values.sum
+
     rescue
       @@logger.info('Emissions are not reported for this feature')
     end
-    ######################################## Reporting TImeseries Results FOR CSV File ######################################
+    ######################################## Reporting TImeseries Results FOR CSV File #######################################
 
     # timeseries we want to report
     requested_timeseries_names = [
@@ -889,7 +908,11 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Future_Annual_Emissions_Var',
       'Future_Hourly_Emissions_Var',
       'Historical_Annual_Emissions_Var',
-      'Historical_Hourly_Emissions_Var'
+      'Historical_Hourly_Emissions_Var',
+      'Future_Annual_Emissions_Intensity_Var',
+      'Future_Hourly_Emissions_Intensity_Var',
+      'Historical_Annual_Emissions_Intensity_Var',
+      'Historical_Hourly_Emissions_Intensity_Var'
 
     ]
 
@@ -1032,6 +1055,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                           'W'
                         when 'kg'
                           'kg'
+                        when 'MT'
+                          'MT'
+                        when 'KG/FT2'
+                          'KG/FT2'
                      end
         end
 
