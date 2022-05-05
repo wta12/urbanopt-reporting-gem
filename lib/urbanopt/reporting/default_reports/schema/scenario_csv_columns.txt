@@ -50,3 +50,13 @@ Net Power
 Net Apparent Power
 Ice Thermal Storage End Fraction
 Cooling Coil Ice Thermal Storage End Fraction
+Curtailed EV Power
+Daily EV Charge Energy Capacity
+EV Charge Ratio
+Total Charged EV Energy
+Total Curtailed EV Energy
+Total Scheduled EV Energy
+Emission Intensity Schedule Output
+EV Charging Effective Schedule
+EV Charging Original Schedule
+EV Charging Original Load

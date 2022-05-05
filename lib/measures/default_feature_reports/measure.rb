@@ -862,7 +862,17 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'District Heating Inlet Temperature',
       'District Heating Outlet Temperature',
       'Cooling Coil Total Cooling Rate',
-      'Heating Coil Heating Rate'
+      'Heating Coil Heating Rate',
+      'Curtailed EV Power',
+      'Daily EV Charge Energy Capacity',
+      'EV Charge Ratio',
+      'Total Charged EV Energy',
+      'Total Curtailed EV Energy',
+      'Total Scheduled EV Energy',
+      'Emission Intensity Schedule Output',
+      'EV Charging Effective Schedule',
+      'EV Charging Original Schedule',
+      'EV Charging Original Load'
     ]
 
     # add thermal comfort timeseries
