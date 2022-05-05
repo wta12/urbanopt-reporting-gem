@@ -234,13 +234,17 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
                        'District Heating Hot Water Rate', 'District Heating Mass Flow Rate',
                        'District Heating Inlet Temperature', 'District Heating Outlet Temperature', 'Cooling Coil Total Cooling Rate',
-                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity']
+                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity' ]
 
     tes_timeseries_data = ['Ice Thermal Storage End Fraction', 'Cooling coil Ice Thermal Storage End Fraction']
 
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
+    emissions_timeseries_data = ['Future_Annual_Emissions_Var','Future_Hourly_Emissions_Var','Historical_Annual_Emissions_Var','Historical_Hourly_Emissions_Var',
+    'Future_Annual_Emissions_Intensity_Var','Future_Hourly_Emissions_Intensity_Var','Historical_Annual_Emissions_Intensity_Var','Historical_Hourly_Emissions_Intensity_Var']
+
     timeseries_data += tes_timeseries_data
+    timeseries_data += emissions_timeseries_data
 
     timeseries_data.each do |ts|
       result << OpenStudio::IdfObject.load("Output:Variable,*,#{ts},#{reporting_frequency};").get
@@ -343,6 +347,20 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     end
     sql_file = sql_file.get
     model.setSqlFile(sql_file)
+
+    # Get the weather file run period (as opposed to design day run period)
+    ann_env_pd = nil
+    sql_file.availableEnvPeriods.each do |env_pd|
+      env_type = sql_file.environmentType(env_pd)
+      if env_type.is_initialized && (env_type.get == OpenStudio::EnvironmentType.new('WeatherRunPeriod'))
+        ann_env_pd = env_pd
+      end
+    end
+
+    if ann_env_pd == false
+      runner.registerError("Can't find a weather runperiod, make sure you ran an annual simulation, not just the design days.")
+      return false
+    end
 
     # get building from model
     building = model.getBuilding
@@ -801,21 +819,45 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     time_setpoint_not_met_during_occupied_hours = time_setpoint_not_met_during_occupied_heating + time_setpoint_not_met_during_occupied_cooling
     feature_report.reporting_periods[0].comfort_result[:time_setpoint_not_met_during_occupied_hours] = time_setpoint_not_met_during_occupied_hours
 
-    ######################################## Reporting TImeseries Results FOR CSV File ######################################
+    ##emissions
+    begin
+      # future_annual_emissions
+      future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_annual_emissions_mt] = future_annual_emissions_ts.get.values.sum
 
-    # Get the weather file run period (as opposed to design day run period)
-    ann_env_pd = nil
-    sql_file.availableEnvPeriods.each do |env_pd|
-      env_type = sql_file.environmentType(env_pd)
-      if env_type.is_initialized && (env_type.get == OpenStudio::EnvironmentType.new('WeatherRunPeriod'))
-        ann_env_pd = env_pd
-      end
-    end
+      # future_hourly_emissions
+      future_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_hourly_emissions_mt] = future_hourly_emissions_ts.get.values.sum
 
-    if ann_env_pd == false
-      runner.registerError("Can't find a weather runperiod, make sure you ran an annual simulation, not just the design days.")
-      return false
+      # historical_annual_emissions
+      historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_annual_emissions_mt] = historical_annual_emissions_ts.get.values.sum
+
+      # historical_annual_emissions
+      historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_mt] = historical_hourly_emissions_ts.get.values.sum
+
+
+      # future_annual_emissions
+      future_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_annual_emissions_intensity_kg_per_ft2] = future_annual_emissions_intensity_ts.get.values.sum
+
+      # future_hourly_emissions
+      future_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_hourly_emissions_intensity_kg_per_ft2] = future_hourly_emissions_intensity_ts.get.values.sum
+
+      # historical_annual_emissions
+      historical_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_annual_emissions_intensity_kg_per_ft2] = historical_annual_emissions_intensity_ts.get.values.sum
+
+      # historical_annual_emissions
+      historical_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Intensity_Var', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_intensity_kg_per_ft2] = historical_hourly_emissions_intensity_ts.get.values.sum
+
+    rescue
+      @@logger.info('Emissions are not reported for this feature')
     end
+    ######################################## Reporting TImeseries Results FOR CSV File #######################################
 
     # timeseries we want to report
     requested_timeseries_names = [
@@ -863,6 +905,14 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'District Heating Outlet Temperature',
       'Cooling Coil Total Cooling Rate',
       'Heating Coil Heating Rate',
+      'Future_Annual_Emissions_Var',
+      'Future_Hourly_Emissions_Var',
+      'Historical_Annual_Emissions_Var',
+      'Historical_Hourly_Emissions_Var',
+      'Future_Annual_Emissions_Intensity_Var',
+      'Future_Hourly_Emissions_Intensity_Var',
+      'Historical_Annual_Emissions_Intensity_Var',
+      'Historical_Hourly_Emissions_Intensity_Var',
       'Curtailed EV Power',
       'Daily EV Charge Energy Capacity',
       'EV Charge Ratio',
@@ -1012,6 +1062,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                           'm3'
                         when 'W'
                           'W'
+                        when 'kg'
+                          'kg'
+                        when 'MT'
+                          'MT'
+                        when 'KG/FT2'
+                          'KG/FT2'
                      end
         end
 
