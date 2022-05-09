@@ -52,10 +52,7 @@ module URBANopt
         # _Float_ - power capacity in kilowatts
         #
         attr_accessor :size_kw
-        attr_accessor :location
-        attr_accessor :tilt
-        attr_accessor :azimuth
-        attr_accessor :module_type
+        attr_accessor :location, :tilt, :azimuth, :module_type
 
         ##
         # Initialize SolarPV attributes from a hash. Solar PV attributes currently are limited to power capacity.
@@ -71,7 +68,7 @@ module URBANopt
           @id = hash[:id]
           @location = hash[:location]
           @approx_area_m2 = 0
-          
+
           if hash[:azimuth]
             @azimuth = hash[:azimuth]
           end
@@ -80,7 +77,7 @@ module URBANopt
           end
           if hash[:module_type]
             @module_type = hash[:module_type]
-            
+
             # calculate area with PVWatts formulas
             # Size (kW) = Array Area (m²) × 1 kW/m² × Module Efficiency (%)
             # also grab module efficiency: 0 (standard) = 15%, 1 (premium) = 19%, 2 (thin film) = 10%
@@ -117,7 +114,7 @@ module URBANopt
         ##
         def to_hash
           result = {}
- 
+
           result[:size_kw] = @size_kw if @size_kw
           result[:location] = @location if @location
           result[:azimuth] = @azimuth if @azimuth

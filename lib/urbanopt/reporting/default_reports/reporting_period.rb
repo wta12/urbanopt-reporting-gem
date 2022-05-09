@@ -59,7 +59,7 @@ module URBANopt
                       :fuel_type, :total_cost_dollar, :usage_cost_dollar, :demand_cost_dollar, :comfort_result, :time_setpoint_not_met_during_occupied_cooling,
                       :time_setpoint_not_met_during_occupied_heating, :time_setpoint_not_met_during_occupied_hours, :hours_out_of_comfort_bounds_PMV, :hours_out_of_comfort_bounds_PPD,
                       :emissions, :future_annual_emissions_mt, :future_hourly_emissions_mt, :historical_annual_emissions_mt, :historical_hourly_emissions_mt,
-                      :future_annual_emissions_intensity_kg_per_ft2, :future_hourly_emissions_intensity_kg_per_ft2, :historical_annual_emissions_intensity_kg_per_ft2, :historical_hourly_emissions_intensity_kg_per_ft2  #:nodoc:
+                      :future_annual_emissions_intensity_kg_per_ft2, :future_hourly_emissions_intensity_kg_per_ft2, :historical_annual_emissions_intensity_kg_per_ft2, :historical_hourly_emissions_intensity_kg_per_ft2 #:nodoc:
 
         # ReportingPeriod class initializes the reporting period attributes:
         # +:id+ , +:name+ , +:multiplier+ , +:start_date+ , +:end_date+ , +:month+ , +:day_of_month+ , +:year+ , +:total_site_energy_kwh+ , +:total_source_energy_kwh+ , +:site_EUI_kwh_per_m2+, +:site_EUI_kbtu_per_ft2+, +:source_EUI_kwh_per_m2+, +:source_EUI_kbtu_per_ft2+,
@@ -68,7 +68,7 @@ module URBANopt
         # +:fuel_type+ , +:total_cost_dollar+ , +:usage_cost_dollar+ , +:demand_cost_dollar+ , +:comfort_result+ , +:time_setpoint_not_met_during_occupied_cooling+ ,
         # +:time_setpoint_not_met_during_occupied_heating+ , +:time_setpoint_not_met_during_occupied_hours+ , +:hours_out_of_comfort_bounds_PMV , +:hours_out_of_comfort_bounds_PPD ,
         # +:emissions, +:future_annual_emissions_mt, +:future_hourly_emissions_mt, +:historical_annual_emissions_mt, +:historical_hourly_emissions_mt,
-        # +:future_annual_emissions_intensity_kg_per_ft2, +:future_hourly_emissions_intensity_kg_per_ft2, +:historical_annual_emissions_intensity_kg_per_ft2, +:historical_hourly_emissions_intensity_kg_per_ft2 
+        # +:future_annual_emissions_intensity_kg_per_ft2, +:future_hourly_emissions_intensity_kg_per_ft2, +:historical_annual_emissions_intensity_kg_per_ft2, +:historical_hourly_emissions_intensity_kg_per_ft2
         ##
         # [parameters:]
         # +hash+ - _Hash_ - A hash which may contain a deserialized reporting_period.
@@ -154,7 +154,7 @@ module URBANopt
           hash[:comfort_result] = { time_setpoint_not_met_during_occupied_cooling: nil, time_setpoint_not_met_during_occupied_heating: nil,
                                     time_setpoint_not_met_during_occupied_hours: nil, hours_out_of_comfort_bounds_PMV: nil, hours_out_of_comfort_bounds_PPD: nil }
           hash[:emissions] = { future_annual_emissions_mt: nil, future_hourly_emissions_mt: nil, historical_annual_emissions_mt: nil, historical_hourly_emissions_mt: nil,
-                                future_annual_emissions_intensity_kg_per_ft2: nil, future_hourly_emissions_kg_per_ft2: nil, historical_annual_emissions_kg_per_ft2: nil, historical_hourly_emissions_kg_per_ft2: nil }
+                               future_annual_emissions_intensity_kg_per_ft2: nil, future_hourly_emissions_kg_per_ft2: nil, historical_annual_emissions_kg_per_ft2: nil, historical_hourly_emissions_kg_per_ft2: nil }
 
           return hash
         end

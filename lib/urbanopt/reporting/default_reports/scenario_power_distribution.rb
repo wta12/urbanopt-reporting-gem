@@ -51,6 +51,7 @@ module URBANopt
       ##
       class ScenarioPowerDistribution
         attr_accessor :substations, :distribution_lines, :capacitors
+
         ##
         # ScenarioPowerDistribution class initialize all scenario_power_distribution attributes:
         # +:substations+ , +:distribution_lines+
@@ -65,7 +66,7 @@ module URBANopt
           @substations = hash[:substations]
           @distribution_lines = hash[:distribution_lines]
           @capacitors = hash[:capacitors]
-         
+
           # initialize class variables @@validator and @@schema
           @@validator ||= Validator.new
           @@schema ||= @@validator.schema
@@ -105,7 +106,7 @@ module URBANopt
 
         ##
         # Add a substation
-        ## 
+        ##
         def add_substation(hash = {})
           hash.delete_if { |k, v| v.nil? }
           hash = defaults.merge(hash)
@@ -130,7 +131,7 @@ module URBANopt
           @distribution_lines << line
         end
 
-        ## 
+        ##
         # Add a capacitor
         ##
         def add_capacitor(hash = {})
@@ -139,6 +140,7 @@ module URBANopt
           # fields: nominal_capacity
           cap = {}
           cap['nominal_capacity'] = hash[:nominal_capacity]
+          cap
         end
       end
     end
