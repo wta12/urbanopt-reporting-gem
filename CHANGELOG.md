@@ -1,5 +1,15 @@
 # URBANopt Reporting Gem
 
+## Version 0.6.0
+Date Range: 11/22/21 - 05/09/22:
+
+- Fixed [#95]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/95 ), adding additional PV fields to UO output reports
+- Fixed [#98]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/98 ), add RNM results fields to schema
+- Fixed [#100]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/100 ), add EV charging control EMS timeseries outputs in default reports
+- Fixed [#101]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/101 ), add reopt and opendss fields to reporting schema
+- Fixed [#104]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/104 ), Add renewable pct to reporting output
+- Fixed [#108]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/108 ), Adding emissions results to UO reports
+
 ## Version 0.5.0
 Date Range: 11/13/21 - 11/22/21
 
@@ -20,7 +30,7 @@ Date Range: 07/01/21 - 10/15/21
 Date Range: 04/27/23 - 07/01/21
 
 - Fixed [#80](https://github.com/urbanopt/urbanopt-reporting-gem/issues/80), Update rubocop configs to v4
-- 
+
 ## Version 0.4.0
 
 Date Range: 03/27/21 - 04/26/21

@@ -192,7 +192,7 @@ module URBANopt
         #
         attr_accessor :probs_of_surviving_by_hour_of_the_day
 
-        ## 
+        ##
         # _String_ - Filepath of reopt assumptions file used, if known
         attr_accessor :reopt_assumptions_file_path
 

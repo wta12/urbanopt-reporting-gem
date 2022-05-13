@@ -234,14 +234,14 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
                        'District Heating Hot Water Rate', 'District Heating Mass Flow Rate',
                        'District Heating Inlet Temperature', 'District Heating Outlet Temperature', 'Cooling Coil Total Cooling Rate',
-                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity' ]
+                       'Heating Coil Heating Rate', 'ExteriorEquipment:Electricity']
 
     tes_timeseries_data = ['Ice Thermal Storage End Fraction', 'Cooling coil Ice Thermal Storage End Fraction']
 
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
-    emissions_timeseries_data = ['Future_Annual_Emissions_Var','Future_Hourly_Emissions_Var','Historical_Annual_Emissions_Var','Historical_Hourly_Emissions_Var',
-    'Future_Annual_Emissions_Intensity_Var','Future_Hourly_Emissions_Intensity_Var','Historical_Annual_Emissions_Intensity_Var','Historical_Hourly_Emissions_Intensity_Var']
+    emissions_timeseries_data = ['Future_Annual_Emissions_Var', 'Future_Hourly_Emissions_Var', 'Historical_Annual_Emissions_Var', 'Historical_Hourly_Emissions_Var',
+                                 'Future_Annual_Emissions_Intensity_Var', 'Future_Hourly_Emissions_Intensity_Var', 'Historical_Annual_Emissions_Intensity_Var', 'Historical_Hourly_Emissions_Intensity_Var']
 
     timeseries_data += tes_timeseries_data
     timeseries_data += emissions_timeseries_data
@@ -819,7 +819,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     time_setpoint_not_met_during_occupied_hours = time_setpoint_not_met_during_occupied_heating + time_setpoint_not_met_during_occupied_cooling
     feature_report.reporting_periods[0].comfort_result[:time_setpoint_not_met_during_occupied_hours] = time_setpoint_not_met_during_occupied_hours
 
-    ##emissions
+    # #emissions
     begin
       # future_annual_emissions
       future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Var', 'EMS')
@@ -837,7 +837,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Var', 'EMS')
       feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_mt] = historical_hourly_emissions_ts.get.values.sum
 
-
       # future_annual_emissions
       future_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Intensity_Var', 'EMS')
       feature_report.reporting_periods[0].emissions[:future_annual_emissions_intensity_kg_per_ft2] = future_annual_emissions_intensity_ts.get.values.sum
@@ -853,8 +852,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       # historical_annual_emissions
       historical_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Intensity_Var', 'EMS')
       feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_intensity_kg_per_ft2] = historical_hourly_emissions_intensity_ts.get.values.sum
-
-    rescue
+    rescue StandardError
       @@logger.info('Emissions are not reported for this feature')
     end
     ######################################## Reporting TImeseries Results FOR CSV File #######################################
