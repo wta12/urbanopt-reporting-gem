@@ -230,6 +230,15 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load('Output:Variable,*,Heating Coil Heating Rate,hourly; !- HVAC Average [W];').get
     # result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
 
+    ## add environmental factor outputs
+    #result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Output:EnvironmentalImpactFactors,#{reporting_frequency};").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total N2O Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total CH4 Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total CO2 Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact NaturalGas CO2 Emissions Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact NaturalGas CH4 Emissions Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact NaturalGas N2O Emissions Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+
     timeseries_data = ['District Cooling Chilled Water Rate', 'District Cooling Mass Flow Rate',
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
                        'District Heating Hot Water Rate', 'District Heating Mass Flow Rate',
@@ -240,8 +249,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
-    emissions_timeseries_data = ['Future_Annual_Emissions_Var', 'Future_Hourly_Emissions_Var', 'Historical_Annual_Emissions_Var', 'Historical_Hourly_Emissions_Var',
-                                 'Future_Annual_Emissions_Intensity_Var', 'Future_Hourly_Emissions_Intensity_Var', 'Historical_Annual_Emissions_Intensity_Var', 'Historical_Hourly_Emissions_Intensity_Var']
+    emissions_timeseries_data = ['Future_Annual_Emissions_Var', 'Future_Hourly_Emissions_Var', 'Historical_Annual_Emissions_Var', 'Historical_Hourly_Emissions_Var', 
+                                  'Future_Annual_Emissions_Intensity_Var', 'Future_Hourly_Emissions_Intensity_Var', 'Historical_Annual_Emissions_Intensity_Var', 'Historical_Hourly_Emissions_Intensity_Var',
+                                  'Natural_Gas_Emissions_Intensity_Var', 'Natural_Gas_Emissions_Var', 'Propane_Emissions_Var', 'Propane_Emissions_Intensity_Var',
+                                  'FuelOil1_Emissions_Var','FuelOil1_Emissions_Intensity_Var', 'FuelOil2_Emissions_Var','FuelOil2_Emissions_Intensity_Var']
+
+
 
     timeseries_data += tes_timeseries_data
     timeseries_data += emissions_timeseries_data
@@ -911,6 +924,14 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Future_Hourly_Emissions_Intensity_Var',
       'Historical_Annual_Emissions_Intensity_Var',
       'Historical_Hourly_Emissions_Intensity_Var',
+      'Natural_Gas_Emissions_Var',
+      'Natural_Gas_Emissions_Intensity_Var',
+      'Propane_Emissions_Var', 
+      'Propane_Emissions_Intensity_Var',
+      'FuelOil1_Emissions_Var',
+      'FuelOil1_Emissions_Intensity_Var',
+      'FuelOil2_Emissions_Var',
+      'FuelOil2_Emissions_Intensity_Var',
       'Curtailed EV Power',
       'Daily EV Charge Energy Capacity',
       'EV Charge Ratio',

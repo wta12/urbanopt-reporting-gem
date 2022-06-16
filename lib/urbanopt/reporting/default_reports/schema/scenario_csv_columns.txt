@@ -58,6 +58,14 @@ Future_Annual_Emissions_Intensity_Var
 Future_Hourly_Emissions_Intensity_Var
 Historical_Annual_Emissions_Intensity_Var
 Historical_Hourly_Emissions_Intensity_Var
+Natural_Gas_Emissions_Var
+Natural_Gas_Emissions_Intensity_Var
+Propane_Emissions_Var
+Propane_Emissions_Intensity_Var
+FuelOil1_Emissions_Var
+FuelOil1_Emissions_Intensity_Var
+FuelOil2_Emissions_Var
+FuelOil2_Emissions_Intensity_Var
 Curtailed EV Power
 Daily EV Charge Energy Capacity
 EV Charge Ratio
