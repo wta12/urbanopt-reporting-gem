@@ -601,9 +601,42 @@
 							"type": "number"
 						},
 						"historical_hourly_emissions_intensity_kg_per_ft2": {
-							"description": "Historical emissions intensity in kg.ft2 calculated based on hourly emission factor values for the selected historical year",
+							"description": "Historical emissions intensity in kg/ft2 calculated based on hourly emission factor values for the selected historical year",
+							"type": "number"
+						},
+						"natural_gas_emissions_mt": {
+							"description": "Natural Gas emissions in mt calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"natural_gas_emissions_intensity_kg_per_ft2": {
+							"description": "Natural Gas emissions intensity in kg/ft2 calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"propane_emissions_mt": {
+							"description": "Propane emissions in mt calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"propane_emissions_intensity_kg_per_ft2": {
+							"description": "Propane emissions intensity in kg/ft2 calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"fueloil_no1_emissions_mt": {
+							"description": "FuelOilNo1 emissions in mt calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"fueloil_no1_emissions_intensity_kg_per_ft2": {
+							"description": "FuelOilNo1 emissions intensity in kg/ft2 calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"fueloil_no2_emissions_mt": {
+							"description": "FuelOilNo2 emissions in mt calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"fueloil_no2_emissions_intensity_kg_per_ft2": {
+							"description": "FuelOilNo2 emissions intensity in kg/ft2 calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
 							"type": "number"
 						}
+						
 					}
 				}
 			},

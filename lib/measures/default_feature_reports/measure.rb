@@ -215,6 +215,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,NaturalGas:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictCooling:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictHeating:Facility,#{reporting_frequency};").get
+    result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Propane:Facility,#{reporting_frequency};").get
+    result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,FuelOilNo1:Facility,#{reporting_frequency};").get
+    result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,FuelOilNo2:Facility,#{reporting_frequency};").get
 
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Cooling:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Heating:Electricity,#{reporting_frequency};").get
@@ -868,6 +871,24 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     rescue StandardError
       @@logger.info('Emissions are not reported for this feature')
     end
+
+    ##########################################################################################################################
+    # set conversion variables
+    conv = 1000000 * 60 * 60 # J to MWh (1000000J/MJ * 60hr/min * 60 min/sec)
+    conv_kg_mt = 0.001 # kg to metric ton
+    conv_kbtu_kwh = 0.293071 # KBtu to kwh (1kBtu = 0.293071 kwh)
+
+    ##### Emisison factors for natural gas, propane, and fuel oil based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1
+    ## natural gas :  277.358126 KG/MWH
+    ## propane : 323.896704 KG/MWH
+    ## Fuel oil : 294.962046 KG/MWH
+    nat_gas_val = 277.358126
+    lpg_val = 323.896704
+    fo1_val = 294.962046
+    fo2_val = 294.962046
+
+
+    ##########################################################################################################################
     ######################################## Reporting TImeseries Results FOR CSV File #######################################
 
     # timeseries we want to report
@@ -960,7 +981,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     runner.registerInfo("All timeseries: #{requested_timeseries_names}")
 
     # timeseries variables to keep to calculate power
-    tsToKeep = ['Electricity:Facility', 'ElectricityProduced:Facility']
+    tsToKeep = ['Electricity:Facility', 'ElectricityProduced:Facility','Propane:Facility', 'NaturalGas:Facility', 'FuelOilNo2:Facility', 'FuelOilNo1:Facility']
     tsToKeepIndexes = {}
 
     ### powerFactor ###
@@ -1106,6 +1127,109 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         if tsToKeep.include? timeseries_name
           tsToKeepIndexes[timeseries_name] = key_cnt
         end
+
+        ### add emissions for natural gas, propane and fuel oil
+        # # set conversion variables
+        # conv = 1000000 * 60 * 60 # J to MWh (1000000J/MJ * 60hr/min * 60 min/sec)
+        # conv_kg_mt = 0.001 # kg to metric ton
+        # conv_kbtu_kwh = 0.293071 # KBtu to kwh (1kBtu = 0.293071 kwh)
+
+        # ##### Emisison factors for natural gas, propane, and fuel oil based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1
+        # ## natural gas :  277.358126 KG/MWH
+        # ## propane : 323.896704 KG/MWH
+        # ## Fuel oil : 294.962046 KG/MWH
+        # nat_gas_val = 277.358126
+        # lpg_val = 323.896704
+        # fo1_val = 294.962046
+        # fo2_val = 294.962046
+
+        if timeseries_name == 'Natural_Gas_Emissions_Var'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f 
+            j += 1
+          end
+          new_unit = 'mt'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:natural_gas_emissions_mt] = newVals.sum
+        end
+
+        if timeseries_name == 'Propane_Emissions_Var'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f 
+            j += 1
+          end
+          new_unit = 'mt'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:propane_emissions_mt] = newVals.sum
+        end
+
+        if timeseries_name == 'FuelOilNo2_Emissions_Var'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f 
+            j += 1
+          end
+          new_unit = 'mt'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:fueloil_no2_emissions_mt] = newVals.sum
+        end
+
+        ### calculate emissions intensity metric
+        # get flr_area
+        flr_area = building.floorArea * 10.764 #change from m2 to ft2
+
+        if timeseries_name == 'Natural_Gas_Emissions_Intensity_Var'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (((nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            j += 1
+          end
+          new_unit = 'kg/ft2'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:natural_gas_intensity_kg_per_ft2] = newVals.sum
+        end
+
+        if timeseries_name == 'Propane_Emissions_Intensity_Var'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (((lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            j += 1
+          end
+          new_unit = 'kg/ft2'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:propane_emissions_intensity_kg_per_ft2] = newVals.sum
+        end
+
+        if timeseries_name == 'FuelOilNo2_Emissions_Intensity_Var'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (((fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            j += 1
+          end
+          new_unit = 'kg/ft2'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:fueloil_no2_emissions_intensity_kg_per_ft2] = newVals.sum
+        end
+
+
+
+
+
+
 
         # special processing: power
         if powerTimeseries.include? timeseries_name
@@ -1295,6 +1419,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         file.puts(line.join(','))
       end
     end
+
+    puts "values = #{values}"
 
     # closing the sql file
     sql_file.close
