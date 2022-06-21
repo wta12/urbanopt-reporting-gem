@@ -1149,7 +1149,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
             newVals[j] = (nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f 
             j += 1
           end
-          new_unit = 'mt'
+          new_unit = 'MT'
           values[key_cnt] = newVals
 
           # add emissions sum to feature report
@@ -1162,7 +1162,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
             newVals[j] = (lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f 
             j += 1
           end
-          new_unit = 'mt'
+          new_unit = 'MT'
           values[key_cnt] = newVals
 
           # add emissions sum to feature report
@@ -1175,7 +1175,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
             newVals[j] = (fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f 
             j += 1
           end
-          new_unit = 'mt'
+          new_unit = 'MT'
           values[key_cnt] = newVals
 
           # add emissions sum to feature report
@@ -1192,7 +1192,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
             newVals[j] = (((nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
             j += 1
           end
-          new_unit = 'kg/ft2'
+          new_unit = 'KG/FT2'
           values[key_cnt] = newVals
 
           # add emissions sum to feature report
@@ -1205,7 +1205,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
             newVals[j] = (((lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
             j += 1
           end
-          new_unit = 'kg/ft2'
+          new_unit = 'KG/FT2'
           values[key_cnt] = newVals
 
           # add emissions sum to feature report
@@ -1218,18 +1218,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
             newVals[j] = (((fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_kwh.to_f) / conv.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
             j += 1
           end
-          new_unit = 'kg/ft2'
+          new_unit = 'KG/FT2'
           values[key_cnt] = newVals
 
           # add emissions sum to feature report
           feature_report.reporting_periods[0].emissions[:fueloil_no2_emissions_intensity_kg_per_ft2] = newVals.sum
         end
-
-
-
-
-
-
 
         # special processing: power
         if powerTimeseries.include? timeseries_name
