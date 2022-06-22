@@ -252,10 +252,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
-    emissions_timeseries_data = ['Future_Annual_Electricity_Emissions', 'Future_Hourly_Electricity_Emissions', 'Historical_Annual_Electricity_Emissions', 
-                                  'Historical_Hourly_Electricity_Emissions','Future_Annual_Emissions_Electricity_Intensity', 
-                                  'Future_Hourly_Electricity_Emissions_Intensity', 'Historical_Annual_Electricity_Emissions_Intensity', 
-                                  'Historical_Hourly__Electricity_Emissions_Intensity']
+    emissions_timeseries_data = ['Future_Annual_Electricity_Emissions', 'Future_Hourly_Electricity_Emissions',
+                                  'Historical_Annual_Electricity_Emissions', 'Historical_Hourly_Electricity_Emissions',
+                                  'Future_Annual_Electricity_Emissions_Intensity', 'Future_Hourly_Electricity_Emissions_Intensity',
+                                  'Historical_Annual_Electricity_Emissions_Intensity', 'Historical_Hourly_Electricity_Emissions_Intensity']
 
 
 
@@ -835,8 +835,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     time_setpoint_not_met_during_occupied_hours = time_setpoint_not_met_during_occupied_heating + time_setpoint_not_met_during_occupied_cooling
     feature_report.reporting_periods[0].comfort_result[:time_setpoint_not_met_during_occupied_hours] = time_setpoint_not_met_during_occupied_hours
 
-    # #emissions
+    # electricity emissions
     begin
+
       # future_annual_emissions
       future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Electricity_Emissions', 'EMS')
       feature_report.reporting_periods[0].emissions[:future_annual_electricity_emissions_mt] = future_annual_emissions_ts.get.values.sum
@@ -849,25 +850,26 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Electricity_Emissions', 'EMS')
       feature_report.reporting_periods[0].emissions[:historical_annual_electricity_emissions_mt] = historical_annual_emissions_ts.get.values.sum
 
-      # historical_annual_emissions
+      # historical_hourly_emissions
       historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Electricity_Emissions', 'EMS')
       feature_report.reporting_periods[0].emissions[:historical_hourly_electricity_emissions_mt] = historical_hourly_emissions_ts.get.values.sum
 
-      # future_annual_emissions
+      # future_annual_emissions_intensity
       future_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Electricity_Emissions_Intensity', 'EMS')
       feature_report.reporting_periods[0].emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2] = future_annual_emissions_intensity_ts.get.values.sum
 
-      # future_hourly_emissions
+      # future_hourly_emissions_intensity
       future_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Electricity_Emissions_Intensity', 'EMS')
       feature_report.reporting_periods[0].emissions[:future_hourly_electricity_emissions_intensity_kg_per_ft2] = future_hourly_emissions_intensity_ts.get.values.sum
 
-      # historical_annual_emissions
+      # historical_annual_emissions_intensity
       historical_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Electricity_Emissions_Intensity', 'EMS')
       feature_report.reporting_periods[0].emissions[:historical_annual_electricity_emissions_intensity_kg_per_ft2] = historical_annual_emissions_intensity_ts.get.values.sum
 
-      # historical_annual_emissions
+      # historical_hourly_emissions_intensity
       historical_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Electricity_Emissions_Intensity', 'EMS')
       feature_report.reporting_periods[0].emissions[:historical_hourly_electricity_emissions_intensity_kg_per_ft2] = historical_hourly_emissions_intensity_ts.get.values.sum
+
     rescue StandardError
       @@logger.info('Emissions are not reported for this feature')
     end
@@ -949,10 +951,10 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Natural_Gas_Emissions_Intensity',
       'Propane_Emissions', 
       'Propane_Emissions_Intensity',
-      'FuelOil1_Emissions',
-      'FuelOil1_Emissions_Intensity',
-      'FuelOil2_Emissions',
-      'FuelOil2_Emissions_Intensity',
+      'FuelOilNo1_Emissions',
+      'FuelOilNo1_Emissions_Intensity',
+      'FuelOilNo2_Emissions',
+      'FuelOilNo2_Emissions_Intensity',
       'Curtailed EV Power',
       'Daily EV Charge Energy Capacity',
       'EV Charge Ratio',
