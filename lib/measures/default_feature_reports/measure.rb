@@ -1196,7 +1196,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
           values[key_cnt] = newVals
 
           # add emissions sum to feature report
-          feature_report.reporting_periods[0].emissions[:natural_gas_intensity_kg_per_ft2] = newVals.sum
+          feature_report.reporting_periods[0].emissions[:natural_gas_emissions_intensity_kg_per_ft2] = newVals.sum
         end
 
         if timeseries_name == 'Propane_Emissions_Intensity'
