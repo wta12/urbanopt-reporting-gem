@@ -951,8 +951,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Natural_Gas_Emissions_Intensity',
       'Propane_Emissions', 
       'Propane_Emissions_Intensity',
-      'FuelOilNo1_Emissions',
-      'FuelOilNo1_Emissions_Intensity',
       'FuelOilNo2_Emissions',
       'FuelOilNo2_Emissions_Intensity',
       'Curtailed EV Power',

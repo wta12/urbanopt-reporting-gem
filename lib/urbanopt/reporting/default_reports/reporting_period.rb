@@ -61,7 +61,7 @@ module URBANopt
                       :emissions, :future_annual_electricity_emissions_mt, :future_hourly_electricity_emissions_mt, :historical_annual_electricity_emissions_mt, :historical_hourly_electricity_emissions_mt,
                       :future_annual_electricity_emissions_intensity_kg_per_ft2, :future_hourly_electricity_emissions_intensity_kg_per_ft2, :historical_annual_electricity_emissions_intensity_kg_per_ft2, :historical_hourly_electricity_emissions_intensity_kg_per_ft2 ,
                       :natural_gas_emissions_mt, :natural_gas_emissions_intensity_kg_per_ft2, :propane_emissions_mt, :propane_emissions_intensity_kg_per_ft2, 
-                      :fueloil_no1_emissions_mt, :fueloil_no1_emissions_intensity_kg_per_ft2, :fueloil_no2_emissions_mt, :fueloil_no2_emissions_intensity_kg_per_ft2  #:nodoc:
+                      :fueloil_no2_emissions_mt, :fueloil_no2_emissions_intensity_kg_per_ft2  #:nodoc:
 
         # ReportingPeriod class initializes the reporting period attributes:
         # +:id+ , +:name+ , +:multiplier+ , +:start_date+ , +:end_date+ , +:month+ , +:day_of_month+ , +:year+ , +:total_site_energy_kwh+ , +:total_source_energy_kwh+ , +:site_EUI_kwh_per_m2+, +:site_EUI_kbtu_per_ft2+, +:source_EUI_kwh_per_m2+, +:source_EUI_kbtu_per_ft2+,
@@ -72,7 +72,7 @@ module URBANopt
         # +:emissions, +:future_annual_electricity_emissions_mt+, +:future_hourly_electricity_emissions_mt+, +:historical_annual_electricity_emissions_mt+, +:historical_hourly_electricity_emissions_mt+,
         # +:future_annual_electricity_emissions_intensity_kg_per_ft2+, +:future_hourly_electricity_emissions_intensity_kg_per_ft2+, +:historical_annual_electricity_emissions_intensity_kg_per_ft2+, +:historical_hourly_electricity_emissions_intensity_kg_per_ft2+,
         # +:natural_gas_emissions_mt+, +:natural_gas_emissions_intensity_kg_per_ft2+, +:propane_emissions_mt+, +:propane_emissions_intensity_kg_per_ft2+, 
-        # +:fueloil_no1_emissions_mt+, +:fueloil_no1_emissions_intensity_kg_per_ft2+, +:fueloil_no2_emissions_mt+, +:fueloil_no2_emissions_intensity_kg_per_ft2+
+        # +:fueloil_no2_emissions_mt+, +:fueloil_no2_emissions_intensity_kg_per_ft2+
         ##
         # [parameters:]
         # +hash+ - _Hash_ - A hash which may contain a deserialized reporting_period.
@@ -162,8 +162,7 @@ module URBANopt
                               future_hourly_electricity_emissions_intensity_kg_per_ft2: nil, historical_annual_electricity_emissions_intensity_kg_per_ft2: nil,
                               historical_hourly_electricity_emissions_intensity_kg_per_ft2: nil, natural_gas_emissions_mt: nil,
                               natural_gas_emissions_intensity_kg_per_ft2: nil, propane_emissions_mt: nil, propane_emissions_intensity_kg_per_ft2: nil,
-                              fueloil_no1_emissions_mt: nil, fueloil_no1_emissions_intensity_kg_per_ft2: nil, fueloil_no2_emissions_mt: nil,
-                              fueloil_no2_emissions_intensity_kg_per_ft2: nil }
+                              fueloil_no2_emissions_mt: nil, fueloil_no2_emissions_intensity_kg_per_ft2: nil }
 
           return hash
         end
@@ -307,7 +306,6 @@ module URBANopt
 
             existing_period.emissions[:natural_gas_emissions_mt] = add_values(existing_period.emissions[:natural_gas_emissions_mt], new_period.emissions[:natural_gas_emissions_mt])
             existing_period.emissions[:propane_emissions_mt] = add_values(existing_period.emissions[:propane_emissions_mt], new_period.emissions[:propane_emissions_mt])
-            existing_period.emissions[:fueloil_no1_emissions_mt] = add_values(existing_period.emissions[:fueloil_no1_emissions_mt], new_period.emissions[:fueloil_no1_emissions_mt])
             existing_period.emissions[:fueloil_no2_emissions_mt] = add_values(existing_period.emissions[:fueloil_no2_emissions_mt], new_period.emissions[:fueloil_no2_emissions_mt])
            
             existing_period.emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2], new_period.emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2])
@@ -317,7 +315,6 @@ module URBANopt
 
             existing_period.emissions[:natural_gas_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:natural_gas_emissions_intensity_kg_per_ft2], new_period.emissions[:natural_gas_emissions_intensity_kg_per_ft2])
             existing_period.emissions[:propane_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:propane_emissions_intensity_kg_per_ft2], new_period.emissions[:propane_emissions_intensity_kg_per_ft2])
-            existing_period.emissions[:fueloil_no1_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:fueloil_no1_emissions_intensity_kg_per_ft2], new_period.emissions[:fueloil_no1_emissions_intensity_kg_per_ft2])
             existing_period.emissions[:fueloil_no2_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:fueloil_no2_emissions_intensity_kg_per_ft2], new_period.emissions[:fueloil_no2_emissions_intensity_kg_per_ft2])
 
           end
