@@ -58,17 +58,21 @@ module URBANopt
                       :district_heating_kwh, :water_qbft, :electricity_produced_kwh, :end_uses, :energy_production_kwh, :photovoltaic,
                       :fuel_type, :total_cost_dollar, :usage_cost_dollar, :demand_cost_dollar, :comfort_result, :time_setpoint_not_met_during_occupied_cooling,
                       :time_setpoint_not_met_during_occupied_heating, :time_setpoint_not_met_during_occupied_hours, :hours_out_of_comfort_bounds_PMV, :hours_out_of_comfort_bounds_PPD,
-                      :emissions, :future_annual_emissions_mt, :future_hourly_emissions_mt, :historical_annual_emissions_mt, :historical_hourly_emissions_mt,
-                      :future_annual_emissions_intensity_kg_per_ft2, :future_hourly_emissions_intensity_kg_per_ft2, :historical_annual_emissions_intensity_kg_per_ft2, :historical_hourly_emissions_intensity_kg_per_ft2 #:nodoc:
+                      :emissions, :future_annual_electricity_emissions_mt, :future_hourly_electricity_emissions_mt, :historical_annual_electricity_emissions_mt, :historical_hourly_electricity_emissions_mt,
+                      :future_annual_electricity_emissions_intensity_kg_per_ft2, :future_hourly_electricity_emissions_intensity_kg_per_ft2, :historical_annual_electricity_emissions_intensity_kg_per_ft2, :historical_hourly_electricity_emissions_intensity_kg_per_ft2 ,
+                      :natural_gas_emissions_mt, :natural_gas_emissions_intensity_kg_per_ft2, :propane_emissions_mt, :propane_emissions_intensity_kg_per_ft2, 
+                      :fueloil_no2_emissions_mt, :fueloil_no2_emissions_intensity_kg_per_ft2  #:nodoc:
 
         # ReportingPeriod class initializes the reporting period attributes:
         # +:id+ , +:name+ , +:multiplier+ , +:start_date+ , +:end_date+ , +:month+ , +:day_of_month+ , +:year+ , +:total_site_energy_kwh+ , +:total_source_energy_kwh+ , +:site_EUI_kwh_per_m2+, +:site_EUI_kbtu_per_ft2+, +:source_EUI_kwh_per_m2+, +:source_EUI_kbtu_per_ft2+,
         # +:net_site_energy_kwh+ , +:net_source_energy_kwh+ , +:total_utility_cost_dollar , +:net_utility_cost_dollar+ , +:utility_costs_dollar+ , +:electricity_kwh+ , +:natural_gas_kwh+ , +:propane_kwh+ , +:fuel_oil_kwh+ , +:other_fuels_kwh+ , +:district_cooling_kwh+ ,
         # +:district_heating_kwh+ , +:water_qbft+ , +:electricity_produced_kwh+ , +:end_uses+ , +:energy_production_kwh+ , +:photovoltaic_kwh+ ,
         # +:fuel_type+ , +:total_cost_dollar+ , +:usage_cost_dollar+ , +:demand_cost_dollar+ , +:comfort_result+ , +:time_setpoint_not_met_during_occupied_cooling+ ,
-        # +:time_setpoint_not_met_during_occupied_heating+ , +:time_setpoint_not_met_during_occupied_hours+ , +:hours_out_of_comfort_bounds_PMV , +:hours_out_of_comfort_bounds_PPD ,
-        # +:emissions, +:future_annual_emissions_mt, +:future_hourly_emissions_mt, +:historical_annual_emissions_mt, +:historical_hourly_emissions_mt,
-        # +:future_annual_emissions_intensity_kg_per_ft2, +:future_hourly_emissions_intensity_kg_per_ft2, +:historical_annual_emissions_intensity_kg_per_ft2, +:historical_hourly_emissions_intensity_kg_per_ft2
+        # +:time_setpoint_not_met_during_occupied_heating+ , +:time_setpoint_not_met_during_occupied_hours+ , +:hours_out_of_comfort_bounds_PMV+ , +:hours_out_of_comfort_bounds_PPD+ ,
+        # +:emissions, +:future_annual_electricity_emissions_mt+, +:future_hourly_electricity_emissions_mt+, +:historical_annual_electricity_emissions_mt+, +:historical_hourly_electricity_emissions_mt+,
+        # +:future_annual_electricity_emissions_intensity_kg_per_ft2+, +:future_hourly_electricity_emissions_intensity_kg_per_ft2+, +:historical_annual_electricity_emissions_intensity_kg_per_ft2+, +:historical_hourly_electricity_emissions_intensity_kg_per_ft2+,
+        # +:natural_gas_emissions_mt+, +:natural_gas_emissions_intensity_kg_per_ft2+, +:propane_emissions_mt+, +:propane_emissions_intensity_kg_per_ft2+, 
+        # +:fueloil_no2_emissions_mt+, +:fueloil_no2_emissions_intensity_kg_per_ft2+
         ##
         # [parameters:]
         # +hash+ - _Hash_ - A hash which may contain a deserialized reporting_period.
@@ -153,8 +157,12 @@ module URBANopt
           hash[:utility_costs_dollar] = [{ fuel_type: nil, total_cost_dollar: nil, usage_cost_dollar: nil, demand_cost_dollar: nil }]
           hash[:comfort_result] = { time_setpoint_not_met_during_occupied_cooling: nil, time_setpoint_not_met_during_occupied_heating: nil,
                                     time_setpoint_not_met_during_occupied_hours: nil, hours_out_of_comfort_bounds_PMV: nil, hours_out_of_comfort_bounds_PPD: nil }
-          hash[:emissions] = { future_annual_emissions_mt: nil, future_hourly_emissions_mt: nil, historical_annual_emissions_mt: nil, historical_hourly_emissions_mt: nil,
-                               future_annual_emissions_intensity_kg_per_ft2: nil, future_hourly_emissions_kg_per_ft2: nil, historical_annual_emissions_kg_per_ft2: nil, historical_hourly_emissions_kg_per_ft2: nil }
+          hash[:emissions] = { future_annual_electricity_emissions_mt: nil, future_hourly_electricity_emissions_mt: nil, historical_annual_electricity_emissions_mt: nil, 
+                              historical_hourly_electricity_emissions_mt: nil, future_annual_electricity_emissions_intensity_kg_per_ft2: nil,
+                              future_hourly_electricity_emissions_intensity_kg_per_ft2: nil, historical_annual_electricity_emissions_intensity_kg_per_ft2: nil,
+                              historical_hourly_electricity_emissions_intensity_kg_per_ft2: nil, natural_gas_emissions_mt: nil,
+                              natural_gas_emissions_intensity_kg_per_ft2: nil, propane_emissions_mt: nil, propane_emissions_intensity_kg_per_ft2: nil,
+                              fueloil_no2_emissions_mt: nil, fueloil_no2_emissions_intensity_kg_per_ft2: nil }
 
           return hash
         end
@@ -214,7 +222,7 @@ module URBANopt
           result[:comfort_result] = comfort_result_hash if @comfort_result
 
           emissions_hash = @emissions if @emissions
-          emissions_hash.delete_if { |k, v| v.nil? }
+          #emissions_hash.delete_if { |k, v| v.nil? }
           result[:emissions] = emissions_hash if @emissions
 
           # validates +reporting_period+ properties against schema for reporting period.
@@ -291,15 +299,24 @@ module URBANopt
           end
 
           if existing_period.emissions
-            existing_period.emissions[:future_annual_emissions_mt] = add_values(existing_period.emissions[:future_annual_emissions_mt], new_period.emissions[:future_annual_emissions_mt])
-            existing_period.emissions[:future_hourly_emissions_mt] = add_values(existing_period.emissions[:future_hourly_emissions_mt], new_period.emissions[:future_hourly_emissions_mt])
-            existing_period.emissions[:historical_annual_emissions_mt] = add_values(existing_period.emissions[:historical_annual_emissions_mt], new_period.emissions[:historical_annual_emissions_mt])
-            existing_period.emissions[:historical_hourly_emissions_mt] = add_values(existing_period.emissions[:historical_hourly_emissions_mt], new_period.emissions[:historical_hourly_emissions_mt])
+            existing_period.emissions[:future_annual_electricity_emissions_mt] = add_values(existing_period.emissions[:future_annual_electricity_emissions_mt], new_period.emissions[:future_annual_electricity_emissions_mt])
+            existing_period.emissions[:future_hourly_electricity_emissions_mt] = add_values(existing_period.emissions[:future_hourly_electricity_emissions_mt], new_period.emissions[:future_hourly_electricity_emissions_mt])
+            existing_period.emissions[:historical_annual_electricity_emissions_mt] = add_values(existing_period.emissions[:historical_annual_electricity_emissions_mt], new_period.emissions[:historical_annual_electricity_emissions_mt])
+            existing_period.emissions[:historical_hourly_electricity_emissions_mt] = add_values(existing_period.emissions[:historical_hourly_electricity_emissions_mt], new_period.emissions[:historical_hourly_electricity_emissions_mt])
 
-            existing_period.emissions[:future_annual_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:future_annual_emissions_intensity_kg_per_ft2], new_period.emissions[:future_annual_emissions_intensity_kg_per_ft2])
-            existing_period.emissions[:future_hourly_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:future_hourly_emissions_intensity_kg_per_ft2], new_period.emissions[:future_hourly_emissions_intensity_kg_per_ft2])
-            existing_period.emissions[:historical_annual_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:historical_annual_emissions_intensity_kg_per_ft2], new_period.emissions[:historical_annual_emissions_intensity_kg_per_ft2])
-            existing_period.emissions[:historical_hourly_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:historical_hourly_emissions_intensity_kg_per_ft2], new_period.emissions[:historical_hourly_emissions_intensity_kg_per_ft2])
+            existing_period.emissions[:natural_gas_emissions_mt] = add_values(existing_period.emissions[:natural_gas_emissions_mt], new_period.emissions[:natural_gas_emissions_mt])
+            existing_period.emissions[:propane_emissions_mt] = add_values(existing_period.emissions[:propane_emissions_mt], new_period.emissions[:propane_emissions_mt])
+            existing_period.emissions[:fueloil_no2_emissions_mt] = add_values(existing_period.emissions[:fueloil_no2_emissions_mt], new_period.emissions[:fueloil_no2_emissions_mt])
+           
+            existing_period.emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2], new_period.emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2])
+            existing_period.emissions[:future_hourly_electricity_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:future_hourly_electricity_emissions_intensity_kg_per_ft2], new_period.emissions[:future_hourly_electricity_emissions_intensity_kg_per_ft2])
+            existing_period.emissions[:historical_annual_electricity_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:historical_annual_electricity_emissions_intensity_kg_per_ft2], new_period.emissions[:historical_annual_electricity_emissions_intensity_kg_per_ft2])
+            existing_period.emissions[:historical_hourly_electricity_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:historical_hourly_electricity_emissions_intensity_kg_per_ft2], new_period.emissions[:historical_hourly_electricity_emissions_intensity_kg_per_ft2])
+
+            existing_period.emissions[:natural_gas_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:natural_gas_emissions_intensity_kg_per_ft2], new_period.emissions[:natural_gas_emissions_intensity_kg_per_ft2])
+            existing_period.emissions[:propane_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:propane_emissions_intensity_kg_per_ft2], new_period.emissions[:propane_emissions_intensity_kg_per_ft2])
+            existing_period.emissions[:fueloil_no2_emissions_intensity_kg_per_ft2] = add_values(existing_period.emissions[:fueloil_no2_emissions_intensity_kg_per_ft2], new_period.emissions[:fueloil_no2_emissions_intensity_kg_per_ft2])
+
           end
 
           return existing_period

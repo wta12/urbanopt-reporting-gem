@@ -215,6 +215,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,NaturalGas:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictCooling:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictHeating:Facility,#{reporting_frequency};").get
+    result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Propane:Facility,#{reporting_frequency};").get
+    result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,FuelOilNo2:Facility,#{reporting_frequency};").get
 
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Cooling:Electricity,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Heating:Electricity,#{reporting_frequency};").get
@@ -230,6 +232,15 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load('Output:Variable,*,Heating Coil Heating Rate,hourly; !- HVAC Average [W];').get
     # result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
 
+    ## add environmental factor outputs
+    #result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Output:EnvironmentalImpactFactors,#{reporting_frequency};").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total N2O Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total CH4 Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total CO2 Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact NaturalGas CO2 Emissions Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact NaturalGas CH4 Emissions Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+    # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact NaturalGas N2O Emissions Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
+
     timeseries_data = ['District Cooling Chilled Water Rate', 'District Cooling Mass Flow Rate',
                        'District Cooling Inlet Temperature', 'District Cooling Outlet Temperature',
                        'District Heating Hot Water Rate', 'District Heating Mass Flow Rate',
@@ -240,8 +251,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
-    emissions_timeseries_data = ['Future_Annual_Emissions_Var', 'Future_Hourly_Emissions_Var', 'Historical_Annual_Emissions_Var', 'Historical_Hourly_Emissions_Var',
-                                 'Future_Annual_Emissions_Intensity_Var', 'Future_Hourly_Emissions_Intensity_Var', 'Historical_Annual_Emissions_Intensity_Var', 'Historical_Hourly_Emissions_Intensity_Var']
+    emissions_timeseries_data = ['Future_Annual_Electricity_Emissions', 'Future_Hourly_Electricity_Emissions',
+                                  'Historical_Annual_Electricity_Emissions', 'Historical_Hourly_Electricity_Emissions',
+                                  'Future_Annual_Electricity_Emissions_Intensity', 'Future_Hourly_Electricity_Emissions_Intensity',
+                                  'Historical_Annual_Electricity_Emissions_Intensity', 'Historical_Hourly_Electricity_Emissions_Intensity']
+
+
 
     timeseries_data += tes_timeseries_data
     timeseries_data += emissions_timeseries_data
@@ -819,42 +834,62 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     time_setpoint_not_met_during_occupied_hours = time_setpoint_not_met_during_occupied_heating + time_setpoint_not_met_during_occupied_cooling
     feature_report.reporting_periods[0].comfort_result[:time_setpoint_not_met_during_occupied_hours] = time_setpoint_not_met_during_occupied_hours
 
-    # #emissions
+    # electricity emissions
     begin
-      # future_annual_emissions
-      future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:future_annual_emissions_mt] = future_annual_emissions_ts.get.values.sum
-
-      # future_hourly_emissions
-      future_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:future_hourly_emissions_mt] = future_hourly_emissions_ts.get.values.sum
-
-      # historical_annual_emissions
-      historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:historical_annual_emissions_mt] = historical_annual_emissions_ts.get.values.sum
-
-      # historical_annual_emissions
-      historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_mt] = historical_hourly_emissions_ts.get.values.sum
 
       # future_annual_emissions
-      future_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Emissions_Intensity_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:future_annual_emissions_intensity_kg_per_ft2] = future_annual_emissions_intensity_ts.get.values.sum
+      future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Electricity_Emissions', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_annual_electricity_emissions_mt] = future_annual_emissions_ts.get.values.sum
 
       # future_hourly_emissions
-      future_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Emissions_Intensity_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:future_hourly_emissions_intensity_kg_per_ft2] = future_hourly_emissions_intensity_ts.get.values.sum
+      future_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Electricity_Emissions', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_hourly_electricity_emissions_mt] = future_hourly_emissions_ts.get.values.sum
 
       # historical_annual_emissions
-      historical_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Emissions_Intensity_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:historical_annual_emissions_intensity_kg_per_ft2] = historical_annual_emissions_intensity_ts.get.values.sum
+      historical_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Electricity_Emissions', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_annual_electricity_emissions_mt] = historical_annual_emissions_ts.get.values.sum
 
-      # historical_annual_emissions
-      historical_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Emissions_Intensity_Var', 'EMS')
-      feature_report.reporting_periods[0].emissions[:historical_hourly_emissions_intensity_kg_per_ft2] = historical_hourly_emissions_intensity_ts.get.values.sum
+      # historical_hourly_emissions
+      historical_hourly_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Electricity_Emissions', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_hourly_electricity_emissions_mt] = historical_hourly_emissions_ts.get.values.sum
+
+      # future_annual_emissions_intensity
+      future_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Electricity_Emissions_Intensity', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_annual_electricity_emissions_intensity_kg_per_ft2] = future_annual_emissions_intensity_ts.get.values.sum
+
+      # future_hourly_emissions_intensity
+      future_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Hourly_Electricity_Emissions_Intensity', 'EMS')
+      feature_report.reporting_periods[0].emissions[:future_hourly_electricity_emissions_intensity_kg_per_ft2] = future_hourly_emissions_intensity_ts.get.values.sum
+
+      # historical_annual_emissions_intensity
+      historical_annual_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Annual_Electricity_Emissions_Intensity', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_annual_electricity_emissions_intensity_kg_per_ft2] = historical_annual_emissions_intensity_ts.get.values.sum
+
+      # historical_hourly_emissions_intensity
+      historical_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Electricity_Emissions_Intensity', 'EMS')
+      feature_report.reporting_periods[0].emissions[:historical_hourly_electricity_emissions_intensity_kg_per_ft2] = historical_hourly_emissions_intensity_ts.get.values.sum
+
     rescue StandardError
       @@logger.info('Emissions are not reported for this feature')
     end
+
+    ##########################################################################################################################
+    # set conversion variables
+    conv_J_mwh = 1000000 * 60 * 60 # J to MWh (1000000J/MJ * 60hr/min * 60 min/sec)
+    conv_kg_mt = 0.001 # kg to metric ton
+    conv_kbtu_J = 1054852.32 # KBtu to J (1kBtu = 1054852.32 J)
+
+    ##### Emisison factors for natural gas, propane, and fuel oil based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1
+    ## natural gas :  277.358126 KG/MWH
+    ## propane : 323.896704 KG/MWH
+    ## Fuel oil : 294.962046 KG/MWH
+    nat_gas_val = 277.358126
+    lpg_val = 323.896704
+    fo1_val = 294.962046
+    fo2_val = 294.962046
+
+
+    ##########################################################################################################################
     ######################################## Reporting TImeseries Results FOR CSV File #######################################
 
     # timeseries we want to report
@@ -903,14 +938,20 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'District Heating Outlet Temperature',
       'Cooling Coil Total Cooling Rate',
       'Heating Coil Heating Rate',
-      'Future_Annual_Emissions_Var',
-      'Future_Hourly_Emissions_Var',
-      'Historical_Annual_Emissions_Var',
-      'Historical_Hourly_Emissions_Var',
-      'Future_Annual_Emissions_Intensity_Var',
-      'Future_Hourly_Emissions_Intensity_Var',
-      'Historical_Annual_Emissions_Intensity_Var',
-      'Historical_Hourly_Emissions_Intensity_Var',
+      'Future_Annual_Electricity_Emissions',
+      'Future_Hourly_Electricity_Emissions',
+      'Historical_Annual_Electricity_Emissions',
+      'Historical_Hourly_Electricity_Emissions',
+      'Future_Annual_Electricity_Emissions_Intensity',
+      'Future_Hourly_Electricity_Emissions_Intensity',
+      'Historical_Annual_Electricity_Emissions_Intensity',
+      'Historical_Hourly_Electricity_Emissions_Intensity',
+      'Natural_Gas_Emissions',
+      'Natural_Gas_Emissions_Intensity',
+      'Propane_Emissions', 
+      'Propane_Emissions_Intensity',
+      'FuelOilNo2_Emissions',
+      'FuelOilNo2_Emissions_Intensity',
       'Curtailed EV Power',
       'Daily EV Charge Energy Capacity',
       'EV Charge Ratio',
@@ -939,7 +980,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     runner.registerInfo("All timeseries: #{requested_timeseries_names}")
 
     # timeseries variables to keep to calculate power
-    tsToKeep = ['Electricity:Facility', 'ElectricityProduced:Facility']
+    tsToKeep = ['Electricity:Facility', 'ElectricityProduced:Facility','Propane:Facility', 'NaturalGas:Facility', 'FuelOilNo2:Facility', 'FuelOilNo1:Facility']
     tsToKeepIndexes = {}
 
     ### powerFactor ###
@@ -1086,6 +1127,103 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
           tsToKeepIndexes[timeseries_name] = key_cnt
         end
 
+        ### add emissions for natural gas, propane and fuel oil
+        # # set conversion variables
+        # conv_J_mwh = 1000000 * 60 * 60 # J to MWh (1000000J/MJ * 60hr/min * 60 min/sec)
+        # conv_kg_mt = 0.001 # kg to metric ton
+        # conv_kbtu_J = 1054852.32 # KBtu to J (1kBtu = 1054852.32 J)
+
+        # ##### Emisison factors for natural gas, propane, and fuel oil based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1
+        # ## natural gas :  277.358126 KG/MWH
+        # ## propane : 323.896704 KG/MWH
+        # ## Fuel oil : 294.962046 KG/MWH
+        # nat_gas_val = 277.358126
+        # lpg_val = 323.896704
+        # fo1_val = 294.962046
+        # fo2_val = 294.962046
+
+        if timeseries_name == 'Natural_Gas_Emissions'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f 
+            j += 1
+          end
+          new_unit = 'MT'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:natural_gas_emissions_mt] = newVals.sum
+        end
+
+        if timeseries_name == 'Propane_Emissions'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f 
+            j += 1
+          end
+          new_unit = 'MT'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:propane_emissions_mt] = newVals.sum
+        end
+
+        if timeseries_name == 'FuelOilNo2_Emissions'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f 
+            j += 1
+          end
+          new_unit = 'MT'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:fueloil_no2_emissions_mt] = newVals.sum
+        end
+
+        ### calculate emissions intensity metric
+        # get flr_area
+        flr_area = building.floorArea * 10.764 #change from m2 to ft2
+
+        if timeseries_name == 'Natural_Gas_Emissions_Intensity'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (((nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            j += 1
+          end
+          new_unit = 'KG/FT2'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:natural_gas_emissions_intensity_kg_per_ft2] = newVals.sum
+        end
+
+        if timeseries_name == 'Propane_Emissions_Intensity'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (((lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            j += 1
+          end
+          new_unit = 'KG/FT2'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:propane_emissions_intensity_kg_per_ft2] = newVals.sum
+        end
+
+        if timeseries_name == 'FuelOilNo2_Emissions_Intensity'
+          newVals = Array.new(n, 0)
+          (0..n - 1).each do |j|
+            newVals[j] = (((fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            j += 1
+          end
+          new_unit = 'KG/FT2'
+          values[key_cnt] = newVals
+
+          # add emissions sum to feature report
+          feature_report.reporting_periods[0].emissions[:fueloil_no2_emissions_intensity_kg_per_ft2] = newVals.sum
+        end
+
         # special processing: power
         if powerTimeseries.include? timeseries_name
           # special case: net series (subtract generation from load)
@@ -1142,7 +1280,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
               end
             end
           end
-        end
+        end          
+          
 
         # append units to headers
         new_timeseries_name += "(#{new_unit})"
@@ -1274,6 +1413,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         file.puts(line.join(','))
       end
     end
+
+    puts "values = #{values}"
 
     # closing the sql file
     sql_file.close

@@ -572,38 +572,63 @@
 				"emissions": {
 					"type": "object",
 					"properties": {
-						"future_annual_emissions_mt": {
+						"future_annual_electricity_emissions_mt": {
 							"description": "Future emissions in metric ton (mt) calculated based on an annual emission factor value for the selected future year",
 							"type": "number"
 						},
-						"future_hourly_emissions_mt": {
+						"future_hourly_electricity_emissions_mt": {
 							"description": "Future emissions in metric ton (mt) calculated based on hourly emission factor values for the selected future year",
 							"type": "number"
 						},
-						"historical_annual_emissions_mt": {
+						"historical_annual_electricity_emissions_mt": {
 							"description": "Historical emissions in metric ton (mt) calculated based on an annual emission factor value for the selected historical year",
 							"type": "number"
 						},
-						"historical_hourly_emissions_mt": {
+						"historical_hourly_electricity_emissions_mt": {
 							"description": "Historical emissions in metric ton (mt) calculated based on hourly emission factor values for the selected historical year",
 							"type": "number"
 						},
-						"future_annual_emissions_intensity_kg_per_ft2": {
+						"future_annual_electricity_emissions_intensity_kg_per_ft2": {
 							"description": "Future emissions intensity in kg/ft2 calculated based on an annual emission factor value for the selected future year",
 							"type": "number"
 						},
-						"future_hourly_emissions_intensity_kg_per_ft2": {
+						"future_hourly_electricity_emissions_intensity_kg_per_ft2": {
 							"description": "Future emissions intensity in kg/ft2 calculated based on hourly emission factor values for the selected future year",
 							"type": "number"
 						},
-						"historical_annual_emissions_intensity_kg_per_ft2": {
+						"historical_annual_electricity_emissions_intensity_kg_per_ft2": {
 							"description": "Historical emissions intensity in kg/ft2 calculated based on an annual emission factor value for the selected historical year",
 							"type": "number"
 						},
-						"historical_hourly_emissions_intensity_kg_per_ft2": {
-							"description": "Historical emissions intensity in kg.ft2 calculated based on hourly emission factor values for the selected historical year",
+						"historical_hourly_electricity_emissions_intensity_kg_per_ft2": {
+							"description": "Historical emissions intensity in kg/ft2 calculated based on hourly emission factor values for the selected historical year",
+							"type": "number"
+						},
+						"natural_gas_emissions_mt": {
+							"description": "Natural Gas emissions in mt calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"natural_gas_emissions_intensity_kg_per_ft2": {
+							"description": "Natural Gas emissions intensity in kg/ft2 calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"propane_emissions_mt": {
+							"description": "Propane emissions in mt calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"propane_emissions_intensity_kg_per_ft2": {
+							"description": "Propane emissions intensity in kg/ft2 calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"fueloil_no2_emissions_mt": {
+							"description": "FuelOilNo2 emissions in mt calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
+							"type": "number"
+						},
+						"fueloil_no2_emissions_intensity_kg_per_ft2": {
+							"description": "FuelOilNo2 emissions intensity in kg/ft2 calculated based on EPA eGRID data and calculated using 20-year GWP horizon based on ASHRAE 189.1",
 							"type": "number"
 						}
+						
 					}
 				}
 			},
