@@ -1,5 +1,10 @@
 # URBANopt Reporting Gem
 
+## Version 0.6.1
+Date Range: 05/10-22 - 06/27/22:
+
+- Fixed [#114]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/114 ), added natural gas, propane and fuel oil emissions reporting
+
 ## Version 0.6.0
 Date Range: 11/22/21 - 05/09/22:
 
