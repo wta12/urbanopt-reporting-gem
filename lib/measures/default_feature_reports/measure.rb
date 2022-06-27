@@ -216,7 +216,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictCooling:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,DistrictHeating:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Propane:Facility,#{reporting_frequency};").get
-    result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,FuelOilNo1:Facility,#{reporting_frequency};").get
     result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,FuelOilNo2:Facility,#{reporting_frequency};").get
 
     # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Cooling:Electricity,#{reporting_frequency};").get
