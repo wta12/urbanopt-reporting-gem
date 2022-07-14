@@ -1,5 +1,7 @@
 # URBANopt Reporting Gem
 
+[![Coverage Status](https://coveralls.io/repos/github/urbanopt/urbanopt-reporting-gem/badge.svg?branch=github-actions-coveralls)](https://coveralls.io/github/urbanopt/urbanopt-reporting-gem?branch=github-actions-coveralls)
+
 The URBANopt<sup>&trade;</sup> Reporting Gem defines the URABNopt reports (Scenario and Feature reports). It also includes the default reporting measure which query results from the energyplus sql database and reports it in the Feature reports.
 
 
@@ -27,9 +29,9 @@ Or install it yourself as:
 Check out the repository and then execute:
 
     $ bundle install
-    $ bundle update    
+    $ bundle update
     $ bundle exec rake
-    
+
 ## Releasing
 
 * Update CHANGELOG.md
