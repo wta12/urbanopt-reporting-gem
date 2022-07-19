@@ -222,7 +222,7 @@ module URBANopt
           result[:comfort_result] = comfort_result_hash if @comfort_result
 
           emissions_hash = @emissions if @emissions
-          #emissions_hash.delete_if { |k, v| v.nil? }
+          emissions_hash.delete_if { |k, v| v.nil? }
           result[:emissions] = emissions_hash if @emissions
 
           # validates +reporting_period+ properties against schema for reporting period.
