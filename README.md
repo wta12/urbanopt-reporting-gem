@@ -1,6 +1,6 @@
 # URBANopt Reporting Gem
 
-[![Coverage Status](https://coveralls.io/repos/github/urbanopt/urbanopt-reporting-gem/badge.svg?branch=github-actions-coveralls)](https://coveralls.io/github/urbanopt/urbanopt-reporting-gem?branch=github-actions-coveralls)
+[![Coverage Status](https://coveralls.io/repos/github/urbanopt/urbanopt-reporting-gem/badge.svg?branch=develop)](https://coveralls.io/github/urbanopt/urbanopt-reporting-gem?branch=develop)
 
 The URBANopt<sup>&trade;</sup> Reporting Gem defines the URABNopt reports (Scenario and Feature reports). It also includes the default reporting measure which query results from the energyplus sql database and reports it in the Feature reports.
 
