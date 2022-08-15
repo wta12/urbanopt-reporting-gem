@@ -93,6 +93,7 @@ module URBANopt
           @program = Program.new(hash[:program])
           @distributed_generation = DistributedGeneration.new(hash[:distributed_generation] || {})
           @scenario_power_distribution = ScenarioPowerDistribution.new(hash[:scenario_power_distribution] || {})
+          @scenario_power_distribution_cost = ScenarioPowerDistributionCost.new(hash[:scenario_power_distribution_cost] || {}) 
 
           @construction_costs = []
           hash[:construction_costs].each do |cc|
@@ -233,6 +234,7 @@ module URBANopt
           result[:program] = @program.to_hash if @program
           result[:distributed_generation] = @distributed_generation.to_hash if @distributed_generation
           result[:scenario_power_distribution] = @scenario_power_distribution.to_hash if @scenario_power_distribution
+          result[:scenario_power_distribution_cost] = @scenario_power_distribution_cost.to_hash if @scenario_power_distribution_cost
 
           result[:construction_costs] = []
           @construction_costs&.each { |cc| result[:construction_costs] << cc.to_hash }

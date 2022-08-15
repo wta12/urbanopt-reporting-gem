@@ -69,9 +69,12 @@
 				},
 				"rnm_results": {
 					"$ref": "#definitions/RnmResults"
-        },
+				},
 				"scenario_power_distribution": {
 					"$ref": "#definitions/ScenarioPowerDistribution"
+				},
+				"scenario_power_distribution_cost": {
+					"$ref": "#definitions/ScenarioPowerDistributionCost"
 				}
 			},
 			"required": [
@@ -128,6 +131,13 @@
 					}
 				}
 			}
+		},
+		"ScenarioPowerDistributionCost": {
+			"type": "object",
+			"properties": {
+				
+			}
+
 		},
 		"DistributedGeneration": {
 			"type": "object",
