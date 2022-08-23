@@ -47,6 +47,8 @@ require_relative 'timeseries_csv'
 require_relative 'distributed_generation'
 require_relative 'validator'
 require_relative 'scenario_power_distribution'
+require_relative 'scenario_power_distribution_cost'
+
 
 require 'json'
 require 'json-schema'
@@ -64,7 +66,7 @@ module URBANopt
         attr_accessor :id, :name, :directory_name, :timesteps_per_hour, :number_of_not_started_simulations,
                       :number_of_started_simulations, :number_of_complete_simulations, :number_of_failed_simulations,
                       :timeseries_csv, :location, :program, :construction_costs, :reporting_periods, :feature_reports, :distributed_generation,
-                      :scenario_power_distribution # :nodoc:
+                      :scenario_power_distribution, :scenario_power_distribution_cost # :nodoc:
 
         # ScenarioReport class intializes the scenario report attributes:
         # +:id+ , +:name+ , +:directory_name+, +:timesteps_per_hour+ , +:number_of_not_started_simulations+ ,
