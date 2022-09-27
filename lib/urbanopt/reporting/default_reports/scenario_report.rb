@@ -164,18 +164,21 @@ module URBANopt
         ##
         # [parameters]:
         # +file_name+ - _String_ - Assign a name to the saved scenario results file without an extension
-        def save(file_name = 'default_scenario_report', save_feature_reports = true)
+        def save(file_name = 'default_scenario_report', save_feature_reports = true, save_csv_reports = true)
           # reassign the initialize local variable @file_name to the file name input.
           @file_name = file_name
 
-          # save the scenario reports csv and json data
-          old_timeseries_path = nil
-          if !@timeseries_csv.path.nil?
-            old_timeseries_path = @timeseries_csv.path
+          if save_csv_reports == true
+            # save the scenario reports csv and json data
+            old_timeseries_path = nil
+            if !@timeseries_csv.path.nil?
+              old_timeseries_path = @timeseries_csv.path
+            end
+
+            @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
+            @timeseries_csv.save_data
           end
 
-          @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
-          @timeseries_csv.save_data
 
           hash = {}
           hash[:scenario_report] = to_hash
@@ -196,10 +199,12 @@ module URBANopt
             end
           end
 
-          if !old_timeseries_path.nil?
-            @timeseries_csv.path = old_timeseries_path
-          else
-            @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
+          if save_csv_reports == true
+            if !old_timeseries_path.nil?
+              @timeseries_csv.path = old_timeseries_path
+            else
+              @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
+            end
           end
 
           if save_feature_reports

@@ -102,9 +102,9 @@ module URBANopt
 
                   #TODO: uncomment 
                   # validate power_distribution_cost properties against schema
-                  #if @@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result).any?
-                    #raise "scenario_power_distribution_cost properties does not match schema: #{@@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result)}"
-                  #end
+              #    if @@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result).any?
+              #      raise "scenario_power_distribution_cost properties does not match schema: #{@@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result)}"
+              #    end
 
                   return result
                 end
@@ -127,7 +127,8 @@ module URBANopt
                   hash.delete_if { |k, v| v.nil? }
                   hash = defaults.merge(hash)
                   output = {}
-                  output['log_file']
+                  output[:jobs] = []
+                  output['log_file'] = hash[:log_file]
                   hash[:jobs].each do |job|
                     output['jobs'] << job
                   end
