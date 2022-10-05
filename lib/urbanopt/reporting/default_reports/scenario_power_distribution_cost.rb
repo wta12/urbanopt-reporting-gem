@@ -100,11 +100,10 @@ module URBANopt
                   result[:costs_per_equipment] = @costs_per_equipment if @costs_per_equipment
                   result[:equipment] = @equipment if @equipment
 
-                  #TODO: uncomment 
                   # validate power_distribution_cost properties against schema
-              #    if @@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result).any?
-              #      raise "scenario_power_distribution_cost properties does not match schema: #{@@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result)}"
-              #    end
+                  if @@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result).any?
+                    raise "scenario_power_distribution_cost properties does not match schema: #{@@validator.validate(@@schema[:definitions][:ScenarioPowerDistributionCost][:properties], result)}"
+                  end
 
                   return result
                 end
