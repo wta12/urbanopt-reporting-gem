@@ -1,12 +1,18 @@
 # URBANopt Reporting Gem
 
+## Version 0.6.2
+Date Range: 06/28/22 - 08/17/22
+
+- Fixed [#118]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/118 ), set up actions with coveralls
+- Fixed [#119]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/119 ), emissions bug fix
+
 ## Version 0.6.1
-Date Range: 05/10-22 - 06/27/22:
+Date Range: 05/10-22 - 06/27/22
 
 - Fixed [#114]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/114 ), added natural gas, propane and fuel oil emissions reporting
 
 ## Version 0.6.0
-Date Range: 11/22/21 - 05/09/22:
+Date Range: 11/22/21 - 05/09/22
 
 - Fixed [#95]( https://github.com/urbanopt/urbanopt-reporting-gem/pull/95 ), adding additional PV fields to UO output reports
 - Fixed [#98]( https://github.com/urbanopt/urbanopt-reporting-gem/issues/98 ), add RNM results fields to schema
