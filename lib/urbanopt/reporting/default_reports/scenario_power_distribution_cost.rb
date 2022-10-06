@@ -78,7 +78,7 @@ module URBANopt
                 def defaults
                   hash = {}
                   hash[:results] = []
-                  hash[:outputs] = []
+                  hash[:outputs] = {}
                   hash[:violation_summary] = []
                   hash[:costs_per_equipment] = []
                   hash[:equipment] = []
@@ -90,7 +90,7 @@ module URBANopt
                 # Converts to a Hash equivalent for JSON serialization.
                 ##
                 # - Exclude attributes with nil values.
-                # - Validate power_distribution hash properties against schema.
+                # - Validate power_distribution_cost hash properties against schema.
                 ##
                 def to_hash
                   result = {}
@@ -126,12 +126,12 @@ module URBANopt
                   hash.delete_if { |k, v| v.nil? }
                   hash = defaults.merge(hash)
                   output = {}
-                  output[:jobs] = []
                   output['log_file'] = hash[:log_file]
+                  output['jobs'] = []
                   hash[:jobs].each do |job|
                     output['jobs'] << job
                   end
-                  @outputs << output
+                  @outputs = output
                 end
 
                 ##
