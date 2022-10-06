@@ -175,13 +175,6 @@
 						"items": {}
 					}
 				},
-				"required": [
-					"results",
-					"outputs",
-					"violation_summary",
-					"costs_per_equipment",
-					"equipment"
-				],
 				"additionalProperties": false,
 				"definitions": {
 					"UpgradeJobOutputModel": {

@@ -95,7 +95,7 @@ module URBANopt
                 def to_hash
                   result = {}
                   result[:results] = @results if @results
-                  result[:outputs] = @outputs if @outputs
+                  result[:outputs] = @outputs if !@outputs.empty?
                   result[:violation_summary] = @violation_summary if @violation_summary
                   result[:costs_per_equipment] = @costs_per_equipment if @costs_per_equipment
                   result[:equipment] = @equipment if @equipment
