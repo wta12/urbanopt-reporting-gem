@@ -210,7 +210,7 @@ module URBANopt
         ##
         # [parameters:]
         #
-        # * +hash+ - _Hash_ - A hash containting key/value pairs for the distributed generation system attributes listed above.
+        # * +hash+ - _Hash_ - A hash containing key/value pairs for the distributed generation system attributes listed above.
         #
         def initialize(hash = {})
           hash.delete_if { |k, v| v.nil? }

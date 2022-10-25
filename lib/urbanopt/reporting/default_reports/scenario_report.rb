@@ -47,6 +47,7 @@ require_relative 'timeseries_csv'
 require_relative 'distributed_generation'
 require_relative 'validator'
 require_relative 'scenario_power_distribution'
+require_relative 'qaqc_flags'
 
 require 'json'
 require 'json-schema'
@@ -64,12 +65,13 @@ module URBANopt
         attr_accessor :id, :name, :directory_name, :timesteps_per_hour, :number_of_not_started_simulations,
                       :number_of_started_simulations, :number_of_complete_simulations, :number_of_failed_simulations,
                       :timeseries_csv, :location, :program, :construction_costs, :reporting_periods, :feature_reports, :distributed_generation,
-                      :scenario_power_distribution # :nodoc:
+                      :scenario_power_distribution, :qaqc_flags # :nodoc:
 
         # ScenarioReport class intializes the scenario report attributes:
         # +:id+ , +:name+ , +:directory_name+, +:timesteps_per_hour+ , +:number_of_not_started_simulations+ ,
         # +:number_of_started_simulations+ , +:number_of_complete_simulations+ , +:number_of_failed_simulations+ ,
-        # +:timeseries_csv+ , +:location+ , +:program+ , +:construction_costs+ , +:reporting_periods+ , +:feature_reports+
+        # +:timeseries_csv+ , +:location+ , +:program+ , +:construction_costs+ , +:reporting_periods+ , +:feature_reports+,
+        # +:distributed_generation+, +:scenario_power_distribution+, +:qaqc_flags+
         ##
         # Each ScenarioReport object corresponds to a single Scenario.
         ##
@@ -93,6 +95,7 @@ module URBANopt
           @program = Program.new(hash[:program])
           @distributed_generation = DistributedGeneration.new(hash[:distributed_generation] || {})
           @scenario_power_distribution = ScenarioPowerDistribution.new(hash[:scenario_power_distribution] || {})
+          @qaqc_flags = QAQC.new(hash[:qaqc_flags])
 
           @construction_costs = []
           hash[:construction_costs].each do |cc|
@@ -103,6 +106,8 @@ module URBANopt
           hash[:reporting_periods].each do |rp|
             @reporting_periods << ReportingPeriod.new(rp)
           end
+
+
 
           # feature_report is intialized here to be used in the add_feature_report method
           @feature_reports = []
@@ -136,6 +141,7 @@ module URBANopt
           hash[:timeseries_csv] = TimeseriesCSV.new.to_hash
           hash[:location] = Location.new.defaults
           hash[:program] = Program.new.to_hash
+          hash[:qaqc_flags] = QAQC.new.to_hash
           hash[:construction_costs] = []
           hash[:reporting_periods] = []
           hash[:feature_reports] = []
@@ -233,6 +239,7 @@ module URBANopt
           result[:program] = @program.to_hash if @program
           result[:distributed_generation] = @distributed_generation.to_hash if @distributed_generation
           result[:scenario_power_distribution] = @scenario_power_distribution.to_hash if @scenario_power_distribution
+          result[:qaqc_flags] = @qaqc_flags.to_hash if @qaqc_flags
 
           result[:construction_costs] = []
           @construction_costs&.each { |cc| result[:construction_costs] << cc.to_hash }
@@ -261,6 +268,7 @@ module URBANopt
         # - check feature simulation status
         # - merge timeseries_csv information
         # - merge program information
+        # - merge qaqc_flags information
         # - merge construction_cost information
         # - merge reporting_periods information
         # - add the array of feature_reports
@@ -324,13 +332,18 @@ module URBANopt
           # merge reporting_periods information
           @reporting_periods = ReportingPeriod.merge_reporting_periods(@reporting_periods, feature_report.reporting_periods)
 
+          # merge distributed_generation information
           @distributed_generation = DistributedGeneration.merge_distributed_generation(@distributed_generation, feature_report.distributed_generation)
+
+          # merge qaqc_flags information
+          @qaqc_flags.add_qaqc_flags(feature_report.qaqc_flags)
 
           # add feature_report
           @feature_reports << feature_report
 
           # scenario report location takes the location of the first feature in the list
           @location = feature_reports[0].location
+          
         end
       end
     end
