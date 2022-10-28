@@ -75,6 +75,9 @@
 				},
 				"scenario_power_distribution_cost": {
 					"$ref": "#definitions/ScenarioPowerDistributionCost"
+				},
+				"qaqc_flags": {
+					"$ref": "#/definitions/qaqc_flags"
 				}
 			},
 			"required": [
@@ -532,24 +535,7 @@
 					}
 				},
 				"electrical_lines_length": {
-					"description": "Electrical lines length",
-					"type": "object",
-					"properties": {
-						"low_voltage": {
-							"description": "Low voltage electrical lines length",
-							"type": "object",
-							"properties": {
-								"$ref": "#/definitions/LineLength"
-							}
-						},
-						"medium_voltage": {
-							"description": "Medium voltage electrical lines length",
-							"type": "object",
-							"properties": {
-								"$ref": "#/definitions/LineLength"
-							}
-						}
-					}
+					"$ref": "#/definitions/LineLength"
 				},
 				"distribution_transformers_capacity_kva": {
 					"description": "Distribution transformers capacity in kVA",
@@ -560,18 +546,10 @@
 					"type": "object",
 					"properties": {
 						"investment": {
-							"description": "Investment cost",
-							"type": "object",
-							"properties": {
-								"$ref": "#/definitions/RnmCost"
-							}
+							"$ref": "#/definitions/RnmCost"
 						},
 						"yearly_maintenance": {
-							"description": "Yearly maintenance cost",
-							"type": "object",
-							"properties": {
-								"$ref": "#/definitions/RnmCost"
-							}
+							"$ref": "#/definitions/RnmCost"
 						}
 					}
 				},
@@ -622,6 +600,17 @@
 			"underground_mi": {
 				"description": "Length of underground lines (miles)",
 				"type": "number"
+			},
+			"type": "object",
+			"properties": {
+				"overhead_mi": {
+					"description": "Length of overhead lines (miles)",
+					"type": "number"
+				},
+				"underground_mi": {
+					"description": "Length of underground lines (miles)",
+					"type": "number"
+				}
 			}
 		},
 		"RnmCost": {
@@ -644,6 +633,78 @@
 			"total": {
 				"description": "Total Cost ($)",
 				"type": "number"
+			},
+			"type": "object",
+			"properties": {
+				"low_voltage_network": {
+					"description": "Low Voltage Network Cost ($)",
+					"type": "number"
+				},
+				"distribution_transformers": {
+					"description": "Distribution Transformers Cost ($)",
+					"type": "number"
+				},
+				"medium_voltage_network": {
+					"description": "Medium Voltage Network Cost ($)",
+					"type": "number"
+				},
+				"primary_substations": {
+					"description": "Primary Substations Cost ($)",
+					"type": "number"
+				},
+				"total": {
+					"description": "TOtal Cost ($)",
+					"type": "number"
+				}
+			}
+		},
+		"qaqc_flags": {
+			"type": "object",
+			"properties": {
+				"eui_reasonableness": {
+					"description": "Whether the EUI is within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"end_use_by_category": {
+					"description": "Whether building energy use is within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"mechanical_system_part_load_efficiency": {
+					"description": "Whether 40% & 80% heating and cooling efficiency is within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"simultaneous_heating_and_cooling": {
+					"description": "Whether heating and cooling are occuring during the same hour when cooling load exists",
+					"type": "integer"
+				},
+				"internal_loads": {
+					"description": "Whether lighting, plug, and equipment use is within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"schedules": {
+					"description": "Whether lighting, ventilation, occupant, plug, and equipment schedules are within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"envelope_r_value": {
+					"description": "Whether building envelope is within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"domestic_hot_water": {
+					"description": "Whether DHW energy use is within 2011 ASHRAE handbook bounds for that building type",
+					"type": "integer"
+				},
+				"mechanical_system_efficiency": {
+					"description": "Whether heating and cooling efficiency is within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"supply_and_zone_air_temperature": {
+					"description": "Whether fan effectiveness is within ASHRAE 90.1-2013 bounds for that building type",
+					"type": "integer"
+				},
+				"total_qaqc_flags": {
+					"description": "How many QAQC flags have been raised for this feature or scenario",
+					"type": "integer"
+				}
 			}
 		},
 		"FeatureReport": {
@@ -706,6 +767,9 @@
 				},
 				"thermal_storage": {
 					"$ref": "#/definitions/ThermalStorage"
+				},
+				"qaqc_flags": {
+					"$ref": "#/definitions/qaqc_flags"
 				}
 			},
 			"required": [

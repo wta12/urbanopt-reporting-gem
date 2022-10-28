@@ -41,12 +41,12 @@
 require 'urbanopt/reporting/default_reports'
 require 'csv'
 require 'benchmark'
+require 'json'
 require 'logger'
-
-@@logger = Logger.new($stdout)
 
 # start the measure
 class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
+  @@logger = Logger.new($stdout)
   # human readable name
   def name
     return 'DefaultFeatureReports'
@@ -233,7 +233,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     # result << OpenStudio::IdfObject.load("Output:Variable,*,Exterior Equipment:Electric Vehicles,#{reporting_frequency};").get
 
     ## add environmental factor outputs
-    #result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Output:EnvironmentalImpactFactors,#{reporting_frequency};").get
+    # result << OpenStudio::IdfObject.load("Output:Meter:MeterFileOnly,Output:EnvironmentalImpactFactors,#{reporting_frequency};").get
     # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total N2O Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
     # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total CH4 Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
     # result << OpenStudio::IdfObject.load("Output:Variable,*,Environmental Impact Total CO2 Emissions Carbon Equivalent Mass,#{reporting_frequency}; !- HVAC Sum [kg];").get
@@ -252,11 +252,9 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     ev_timeseries_data = ['Exterior Equipment:Electric Vehicles']
 
     emissions_timeseries_data = ['Future_Annual_Electricity_Emissions', 'Future_Hourly_Electricity_Emissions',
-                                  'Historical_Annual_Electricity_Emissions', 'Historical_Hourly_Electricity_Emissions',
-                                  'Future_Annual_Electricity_Emissions_Intensity', 'Future_Hourly_Electricity_Emissions_Intensity',
-                                  'Historical_Annual_Electricity_Emissions_Intensity', 'Historical_Hourly_Electricity_Emissions_Intensity']
-
-
+                                 'Historical_Annual_Electricity_Emissions', 'Historical_Hourly_Electricity_Emissions',
+                                 'Future_Annual_Electricity_Emissions_Intensity', 'Future_Hourly_Electricity_Emissions_Intensity',
+                                 'Historical_Annual_Electricity_Emissions_Intensity', 'Historical_Hourly_Electricity_Emissions_Intensity']
 
     timeseries_data += tes_timeseries_data
     timeseries_data += emissions_timeseries_data
@@ -289,6 +287,85 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     end
 
     return val
+  end
+
+  def feature_qaqc_flags(runner)
+    # QAQC flags by category
+    qaqc_flags_hash = {} # Make a hash for count of flags of each category
+
+    runner.workflow.workflowSteps.each do |step| # Go through all the steps
+
+      if step.to_MeasureStep.is_initialized
+        measure_step = step.to_MeasureStep.get
+
+        measure_name = measure_step.measureDirName
+
+        if measure_step.name.is_initialized
+          measure_name = measure_step.name.get
+        end
+
+        if measure_name.include? 'qaqc'
+          puts "measure_name = #{measure_name}"
+          if measure_step.result.is_initialized
+            result = measure_step.result.get
+            puts " result = #{result}"
+
+            ## Adding quaqc_flags_list to check the step value name since units key is missing from the result 
+            ## It does show in the out.osw but not in the runner.workflow.workflowSteps object
+            # use this list to define the flags you want to report 
+            qaqc_flags_list = ['eui_reasonableness' , 'end_use_by_category',
+            'mechanical_system_part_load_efficiency', 'simultaneous_heating_and_cooling', 
+            'internal_loads', 'schedules', 'envelope_r_value', 'domestic_hot_water',
+            'mechanical_system_efficiency', 'supply_and_zone_air_temperature', 'total_qaqc_flags' ]
+            
+            result.stepValues.each do |step_value|
+              
+              #get name 
+              name = step_value.name
+
+              if qaqc_flags_list.include? name
+
+                # get value
+                # check if value, double, int, or bool
+                value_type = step_value.variantType.valueDescription
+                if value_type == "Double"
+                  value = step_value.valueAsDouble
+                elsif value_type == "Integer"
+                  value = step_value.valueAsInteger
+                elsif value_type == "Boolean"
+                  value = step_value.valueAsBoolean
+                elsif value_type == "String"
+                  value = step_value.valueAsString
+                else
+                  # catchall for unexpected value types
+                  value = step_value.valueAsVariant.to_s
+                end
+                
+                if qaqc_flags_hash[name]
+                  qaqc_flags_hash[name] += value
+                else 
+                  qaqc_flags_hash[name] = value
+                end
+
+              end
+
+            end
+
+            puts "qaqc_flags_hash = #{qaqc_flags_hash}"
+
+            # Hack to put 'total_qaqc_flags' at the end of the hash
+            temp_hash_for_ordering = { 'total_qaqc_flags' => qaqc_flags_hash['total_qaqc_flags'] }
+            qaqc_flags_hash.delete('total_qaqc_flags')
+            qaqc_flags_hash['total_qaqc_flags'] = temp_hash_for_ordering['total_qaqc_flags']
+
+          end
+        
+        end
+
+      end
+
+    end
+    return qaqc_flags_hash
   end
 
   # unit conversion method
@@ -836,7 +913,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
     # electricity emissions
     begin
-
       # future_annual_emissions
       future_annual_emissions_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Future_Annual_Electricity_Emissions', 'EMS')
       feature_report.reporting_periods[0].emissions[:future_annual_electricity_emissions_mt] = future_annual_emissions_ts.get.values.sum
@@ -868,10 +944,23 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       # historical_hourly_emissions_intensity
       historical_hourly_emissions_intensity_ts = sql_file.timeSeries(ann_env_pd.to_s, reporting_frequency.to_s, 'Historical_Hourly_Electricity_Emissions_Intensity', 'EMS')
       feature_report.reporting_periods[0].emissions[:historical_hourly_electricity_emissions_intensity_kg_per_ft2] = historical_hourly_emissions_intensity_ts.get.values.sum
-
     rescue StandardError
       @@logger.info('Emissions are not reported for this feature')
     end
+
+    # add qaqc results to feature report 
+    qaqc_flags_hash = feature_qaqc_flags(runner)
+    feature_report.qaqc_flags.eui_reasonableness = qaqc_flags_hash['eui_reasonableness']
+    feature_report.qaqc_flags.end_use_by_category = qaqc_flags_hash['end_use_by_category']
+    feature_report.qaqc_flags.mechanical_system_part_load_efficiency = qaqc_flags_hash['mechanical_system_part_load_efficiency']
+    feature_report.qaqc_flags.simultaneous_heating_and_cooling = qaqc_flags_hash['simultaneous_heating_and_cooling']
+    feature_report.qaqc_flags.internal_loads = qaqc_flags_hash['internal_loads']
+    feature_report.qaqc_flags.schedules = qaqc_flags_hash['schedules']
+    feature_report.qaqc_flags.envelope_r_value = qaqc_flags_hash['envelope_r_value']
+    feature_report.qaqc_flags.domestic_hot_water = qaqc_flags_hash['domestic_hot_water']
+    feature_report.qaqc_flags.mechanical_system_efficiency = qaqc_flags_hash['mechanical_system_efficiency']
+    feature_report.qaqc_flags.supply_and_zone_air_temperature = qaqc_flags_hash['supply_and_zone_air_temperature']
+    feature_report.qaqc_flags.total_qaqc_flags = qaqc_flags_hash['total_qaqc_flags']
 
     ##########################################################################################################################
     # set conversion variables
@@ -887,7 +976,6 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     lpg_val = 323.896704
     fo1_val = 294.962046
     fo2_val = 294.962046
-
 
     ##########################################################################################################################
     ######################################## Reporting TImeseries Results FOR CSV File #######################################
@@ -948,7 +1036,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       'Historical_Hourly_Electricity_Emissions_Intensity',
       'Natural_Gas_Emissions',
       'Natural_Gas_Emissions_Intensity',
-      'Propane_Emissions', 
+      'Propane_Emissions',
       'Propane_Emissions_Intensity',
       'FuelOilNo2_Emissions',
       'FuelOilNo2_Emissions_Intensity',
@@ -980,7 +1068,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     runner.registerInfo("All timeseries: #{requested_timeseries_names}")
 
     # timeseries variables to keep to calculate power
-    tsToKeep = ['Electricity:Facility', 'ElectricityProduced:Facility','Propane:Facility', 'NaturalGas:Facility', 'FuelOilNo2:Facility', 'FuelOilNo1:Facility']
+    tsToKeep = ['Electricity:Facility', 'ElectricityProduced:Facility', 'Propane:Facility', 'NaturalGas:Facility', 'FuelOilNo2:Facility', 'FuelOilNo1:Facility']
     tsToKeepIndexes = {}
 
     ### powerFactor ###
@@ -1145,7 +1233,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         if timeseries_name == 'Natural_Gas_Emissions'
           newVals = Array.new(n, 0)
           (0..n - 1).each do |j|
-            newVals[j] = (nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f 
+            newVals[j] = (nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f) * conv_kg_mt.to_f
             j += 1
           end
           new_unit = 'MT'
@@ -1158,7 +1246,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         if timeseries_name == 'Propane_Emissions'
           newVals = Array.new(n, 0)
           (0..n - 1).each do |j|
-            newVals[j] = (lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f 
+            newVals[j] = (lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f) * conv_kg_mt.to_f
             j += 1
           end
           new_unit = 'MT'
@@ -1171,7 +1259,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         if timeseries_name == 'FuelOilNo2_Emissions'
           newVals = Array.new(n, 0)
           (0..n - 1).each do |j|
-            newVals[j] = (fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f 
+            newVals[j] = (fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f) * conv_kg_mt.to_f
             j += 1
           end
           new_unit = 'MT'
@@ -1183,12 +1271,12 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
 
         ### calculate emissions intensity metric
         # get flr_area
-        flr_area = building.floorArea * 10.764 #change from m2 to ft2
+        flr_area = building.floorArea * 10.764 # change from m2 to ft2
 
         if timeseries_name == 'Natural_Gas_Emissions_Intensity'
           newVals = Array.new(n, 0)
           (0..n - 1).each do |j|
-            newVals[j] = (((nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            newVals[j] = (((nat_gas_val * (values[tsToKeepIndexes['NaturalGas:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f) * conv_kg_mt.to_f) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
             j += 1
           end
           new_unit = 'KG/FT2'
@@ -1201,7 +1289,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         if timeseries_name == 'Propane_Emissions_Intensity'
           newVals = Array.new(n, 0)
           (0..n - 1).each do |j|
-            newVals[j] = (((lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            newVals[j] = (((lpg_val * (values[tsToKeepIndexes['Propane:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f) * conv_kg_mt.to_f) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
             j += 1
           end
           new_unit = 'KG/FT2'
@@ -1214,7 +1302,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
         if timeseries_name == 'FuelOilNo2_Emissions_Intensity'
           newVals = Array.new(n, 0)
           (0..n - 1).each do |j|
-            newVals[j] = (((fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f ) * conv_kg_mt.to_f ) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
+            newVals[j] = (((fo2_val * (values[tsToKeepIndexes['FuelOilNo2:Facility']][j].to_f * conv_kbtu_J.to_f) / conv_J_mwh.to_f) * conv_kg_mt.to_f) * 1000 / flr_area) # unit: kg/ft2 - changed mt to kg
             j += 1
           end
           new_unit = 'KG/FT2'
@@ -1280,8 +1368,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
               end
             end
           end
-        end          
-          
+        end
 
         # append units to headers
         new_timeseries_name += "(#{new_unit})"
@@ -1414,7 +1501,7 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
       end
     end
 
-    puts "values = #{values}"
+    #puts "values = #{values}"
 
     # closing the sql file
     sql_file.close
@@ -1425,8 +1512,8 @@ class DefaultFeatureReports < OpenStudio::Measure::ReportingMeasure
     feature_report.timeseries_csv.first_report_datetime = '0'
     feature_report.timeseries_csv.column_names = final_timeseries_names
 
-    ##### Save the 'default_feature_reports.json' file
 
+    ##### Save the 'default_feature_reports.json' file
     feature_report_hash = feature_report.to_hash
 
     File.open('default_feature_reports.json', 'w') do |f|

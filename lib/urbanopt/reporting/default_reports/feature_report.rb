@@ -63,7 +63,7 @@ module URBANopt
       # The DefaultPostProcessor reads these feature reports and aggregates them to create a ScenarioReport.
       ##
       class FeatureReport
-        attr_accessor :id, :name, :directory_name, :feature_type, :timesteps_per_hour, :simulation_status,
+        attr_accessor :id, :name, :directory_name, :feature_type, :timesteps_per_hour, :simulation_status, :qaqc_flags,
                       :timeseries_csv, :location, :program, :design_parameters, :construction_costs, :reporting_periods, :distributed_generation, :power_distribution, :thermal_storage # :nodoc:
 
         ##
@@ -82,6 +82,7 @@ module URBANopt
           @feature_type = hash[:feature_type]
           @timesteps_per_hour = hash[:timesteps_per_hour]
           @simulation_status = hash[:simulation_status]
+          @qaqc_flags = QAQC.new(hash[:qaqc_flags])
           @timeseries_csv = TimeseriesCSV.new(hash[:timeseries_csv])
           @timeseries_csv.run_dir_name(@directory_name)
           @location = Location.new(hash[:location])
@@ -124,6 +125,7 @@ module URBANopt
           hash[:distributed_generation] = {}
           hash[:power_distribution] = {}
           hash[:thermal_storage] = {}
+          hash[:qaqc_flags] = {}
           return hash
         end
 
@@ -226,6 +228,8 @@ module URBANopt
           result[:power_distribution] = @power_distribution.to_hash if @power_distribution
 
           result[:thermal_storage] = @thermal_storage.to_hash if @thermal_storage
+
+          result[:qaqc_flags] = @qaqc_flags.to_hash if @qaqc_flags
 
           # validate feature_report properties against schema
           if @@validator.validate(@@schema[:definitions][:FeatureReport][:properties], result).any?
