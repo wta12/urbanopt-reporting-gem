@@ -663,47 +663,47 @@
 			"properties": {
 				"eui_reasonableness": {
 					"description": "Whether the EUI is within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"end_use_by_category": {
 					"description": "Whether building energy use is within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"mechanical_system_part_load_efficiency": {
 					"description": "Whether 40% & 80% heating and cooling efficiency is within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"simultaneous_heating_and_cooling": {
 					"description": "Whether heating and cooling are occuring during the same hour when cooling load exists",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"internal_loads": {
 					"description": "Whether lighting, plug, and equipment use is within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"schedules": {
 					"description": "Whether lighting, ventilation, occupant, plug, and equipment schedules are within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"envelope_r_value": {
 					"description": "Whether building envelope is within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"domestic_hot_water": {
 					"description": "Whether DHW energy use is within 2011 ASHRAE handbook bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"mechanical_system_efficiency": {
 					"description": "Whether heating and cooling efficiency is within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"supply_and_zone_air_temperature": {
 					"description": "Whether fan effectiveness is within ASHRAE 90.1-2013 bounds for that building type",
-					"type": "integer"
+					"type": ["integer", "null"]
 				},
 				"total_qaqc_flags": {
 					"description": "How many QAQC flags have been raised for this feature or scenario",
-					"type": "integer"
+					"type": ["integer", "null"]
 				}
 			}
 		},
