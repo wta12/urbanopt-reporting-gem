@@ -47,6 +47,7 @@ require_relative 'timeseries_csv'
 require_relative 'distributed_generation'
 require_relative 'validator'
 require_relative 'scenario_power_distribution'
+require_relative 'scenario_power_distribution_cost'
 require_relative 'qaqc_flags'
 
 require 'json'
@@ -65,7 +66,8 @@ module URBANopt
         attr_accessor :id, :name, :directory_name, :timesteps_per_hour, :number_of_not_started_simulations,
                       :number_of_started_simulations, :number_of_complete_simulations, :number_of_failed_simulations,
                       :timeseries_csv, :location, :program, :construction_costs, :reporting_periods, :feature_reports, :distributed_generation,
-                      :scenario_power_distribution, :qaqc_flags # :nodoc:
+                      :scenario_power_distribution, :scenario_power_distribution_cost # :nodoc:
+                      :qaqc_flags # :nodoc:
 
         # ScenarioReport class intializes the scenario report attributes:
         # +:id+ , +:name+ , +:directory_name+, +:timesteps_per_hour+ , +:number_of_not_started_simulations+ ,
@@ -95,6 +97,7 @@ module URBANopt
           @program = Program.new(hash[:program])
           @distributed_generation = DistributedGeneration.new(hash[:distributed_generation] || {})
           @scenario_power_distribution = ScenarioPowerDistribution.new(hash[:scenario_power_distribution] || {})
+          @scenario_power_distribution_cost = ScenarioPowerDistributionCost.new(hash[:scenario_power_distribution_cost] || {}) 
           @qaqc_flags = QAQC.new(hash[:qaqc_flags])
 
           @construction_costs = []
@@ -167,18 +170,21 @@ module URBANopt
         ##
         # [parameters]:
         # +file_name+ - _String_ - Assign a name to the saved scenario results file without an extension
-        def save(file_name = 'default_scenario_report', save_feature_reports = true)
+        def save(file_name = 'default_scenario_report', save_feature_reports = true, save_csv_reports = true)
           # reassign the initialize local variable @file_name to the file name input.
           @file_name = file_name
 
-          # save the scenario reports csv and json data
-          old_timeseries_path = nil
-          if !@timeseries_csv.path.nil?
-            old_timeseries_path = @timeseries_csv.path
+          if save_csv_reports == true
+            # save the scenario reports csv and json data
+            old_timeseries_path = nil
+            if !@timeseries_csv.path.nil?
+              old_timeseries_path = @timeseries_csv.path
+            end
+
+            @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
+            @timeseries_csv.save_data
           end
 
-          @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
-          @timeseries_csv.save_data
 
           hash = {}
           hash[:scenario_report] = to_hash
@@ -199,10 +205,12 @@ module URBANopt
             end
           end
 
-          if !old_timeseries_path.nil?
-            @timeseries_csv.path = old_timeseries_path
-          else
-            @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
+          if save_csv_reports == true
+            if !old_timeseries_path.nil?
+              @timeseries_csv.path = old_timeseries_path
+            else
+              @timeseries_csv.path = File.join(@directory_name, "#{file_name}.csv")
+            end
           end
 
           if save_feature_reports
@@ -239,6 +247,7 @@ module URBANopt
           result[:program] = @program.to_hash if @program
           result[:distributed_generation] = @distributed_generation.to_hash if @distributed_generation
           result[:scenario_power_distribution] = @scenario_power_distribution.to_hash if @scenario_power_distribution
+          result[:scenario_power_distribution_cost] = @scenario_power_distribution_cost.to_hash if @scenario_power_distribution_cost
           result[:qaqc_flags] = @qaqc_flags.to_hash if @qaqc_flags
 
           result[:construction_costs] = []

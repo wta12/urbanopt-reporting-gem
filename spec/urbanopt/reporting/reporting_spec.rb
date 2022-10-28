@@ -249,4 +249,11 @@ RSpec.describe URBANopt::Reporting do
     expect(solar_pv.size_kw).to eq 100
     expect(solar_pv.location).to eq 'roof'
   end
+
+  it 'can report power distribution cost results' do
+    distribution_cost = URBANopt::Reporting::DefaultReports::ScenarioPowerDistributionCost.new({ "results": [ {"name": "baseline_scenario","num_violations": 0,"total_cost_usd": 546950.36419523}], "violation_summary": [ { "name": "baseline_scenario"}]})
+    expect(distribution_cost.results[0][:name]).to eq 'baseline_scenario'
+    expect(distribution_cost.violation_summary[0][:name]).to eq 'baseline_scenario'
+  end
+
 end
